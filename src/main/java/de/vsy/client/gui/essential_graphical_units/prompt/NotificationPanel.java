@@ -17,6 +17,7 @@ import javax.swing.JTextArea;
 
 public
 class NotificationPanel extends JPanel {
+
   @Serial
   private static final long serialVersionUID = 6289227728904151492L;
   private final String notification;

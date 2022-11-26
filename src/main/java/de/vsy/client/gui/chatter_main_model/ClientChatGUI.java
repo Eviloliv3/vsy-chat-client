@@ -45,7 +45,6 @@ public class ClientChatGUI extends JFrame
 
   @Serial
   private static final long serialVersionUID = -2230576956326479400L;
-  private final boolean guiClosedFlag;
   private transient GUIEssentialActions guiControl;
   private transient GUIChatActions guiChatControl;
   private JLabel activeChatLabel;
@@ -56,36 +55,8 @@ public class ClientChatGUI extends JFrame
   private JTextArea messageInput;
 
   public ClientChatGUI() {
-    guiClosedFlag = false;
     initComponents();
     initContactlist();
-
-    validate();
-    pack();
-  }
-
-  public static void main(String[] args) {
-    /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-     * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-     */
-    try {
-      for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-        if ("Nimbus".equals(info.getName())) {
-          javax.swing.UIManager.setLookAndFeel(info.getClassName());
-          break;
-        }
-      }
-    } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException |
-             InstantiationException ex) {
-      java.util.logging.Logger.getLogger(ClientChatGUI.class.getName())
-          .log(java.util.logging.Level.SEVERE, null, ex);
-    }
-    //</editor-fold>
-
-    /* Create and display the form */
-    SwingUtilities.invokeLater(() -> new ClientChatGUI().setVisible(true));
   }
 
   private void initComponents() {
@@ -286,11 +257,12 @@ public class ClientChatGUI extends JFrame
   /**
    * Inits the GUI control.
    *
-   * @param guiController the gui essential action controller
+   * @param guiController     the gui essential action controller
    * @param guiChatController the chat relation action controller
-   * @param chatterMenu   the chatter menu
+   * @param chatterMenu       the chatter menu
    */
-  public void initGUIControl(final GUIEssentialActions guiController, final GUIChatActions guiChatController, final JMenuBar chatterMenu) {
+  public void initGUIControl(final GUIEssentialActions guiController,
+      final GUIChatActions guiChatController, final JMenuBar chatterMenu) {
 
     if (this.guiControl == null) {
       setGUIActionController(guiController, guiChatController);
@@ -304,10 +276,11 @@ public class ClientChatGUI extends JFrame
   /**
    * Sets the GUI action controller.
    *
-   * @param guiControl the new GUI essential action controller
+   * @param guiControl     the new GUI essential action controller
    * @param guiChatControl the new GUI chat relation action controller
    */
-  private void setGUIActionController(final GUIEssentialActions guiControl, final GUIChatActions guiChatControl) {
+  private void setGUIActionController(final GUIEssentialActions guiControl,
+      final GUIChatActions guiChatControl) {
     this.guiControl = guiControl;
     this.guiChatControl = guiChatControl;
   }
@@ -324,9 +297,27 @@ public class ClientChatGUI extends JFrame
 
   @Override
   public void run() {
+    try {
+      for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+        if ("Nimbus".equals(info.getName())) {
+          javax.swing.UIManager.setLookAndFeel(info.getClassName());
+          break;
+        }
+      }
+    } catch (ClassNotFoundException | UnsupportedLookAndFeelException | IllegalAccessException |
+             InstantiationException ex) {
+      java.util.logging.Logger.getLogger(ClientChatGUI.class.getName())
+          .log(java.util.logging.Level.SEVERE, null, ex);
+    }
+
     Thread.currentThread().setName("GUI-Thread");
-    setLocationRelativeTo(null);
-    setVisible(true);
+    SwingUtilities.invokeLater(() -> {
+      var currentGUI = ClientChatGUI.this;
+      currentGUI.validate();
+      currentGUI.pack();
+      currentGUI.setLocationRelativeTo(null);
+      currentGUI.setVisible(true);
+    });
   }
 
   /**

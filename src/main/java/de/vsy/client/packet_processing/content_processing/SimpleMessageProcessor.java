@@ -4,6 +4,8 @@
 package de.vsy.client.packet_processing.content_processing;
 
 import de.vsy.client.controlling.data_access_interfaces.ChatDataModelAccess;
+import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
+import de.vsy.client.packet_processing.ResultingPacketContentHandler;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
 import de.vsy.shared_transmission.packet.content.PacketContent;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
@@ -17,18 +19,21 @@ import de.vsy.shared_utility.id_manipulation.IdComparator;
 public class SimpleMessageProcessor implements ContentProcessor<TextMessageDTO> {
 
   private final ChatDataModelAccess dataModel;
+  private final ResultingPacketContentHandler contentHandler;
 
   /**
    * Instantiates a new simple message handler.
    *
    * @param dataModel the update unit
    */
-  public SimpleMessageProcessor(final ChatDataModelAccess dataModel) {
+  public SimpleMessageProcessor(final ChatDataModelAccess dataModel,
+      final ResultingContentHandlingProvider handlerProvider) {
     this.dataModel = dataModel;
+    this.contentHandler = handlerProvider.getResultingPacketContentHandler();
   }
 
   @Override
-  public PacketContent processContent(TextMessageDTO toProcess) {
+  public void processContent(TextMessageDTO toProcess) {
     PacketContent processedData = null;
     final var messageReceived = toProcess.getReceptionState();
     final var iAmInitiator =
@@ -43,6 +48,6 @@ public class SimpleMessageProcessor implements ContentProcessor<TextMessageDTO> 
     } else if (!messageReceived) {
       processedData = toProcess;
     }
-    return processedData;
+    this.contentHandler.addRequest(processedData);
   }
 }

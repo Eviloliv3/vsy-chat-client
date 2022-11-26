@@ -11,26 +11,21 @@ import de.vsy.client.connection_handling.ServerConnectionController;
 import de.vsy.client.data_model.ClientDataManager;
 import de.vsy.client.data_model.ClientNotificationManager;
 import de.vsy.client.data_model.ContactDataManager;
-import de.vsy.client.data_model.DataInputController;
 import de.vsy.client.data_model.GUIStateManager;
+import de.vsy.client.data_model.InputController;
 import de.vsy.client.data_model.MessageManager;
 import de.vsy.client.data_model.ServerDataCache;
 import de.vsy.client.data_model.notification.SimpleInformation;
 import de.vsy.client.gui.GUIController;
 import de.vsy.client.gui.chatter_main_model.ClientChatGUI;
-import de.vsy.client.packet_exception_processing.PacketHandlingExceptionProcessor;
+import de.vsy.client.packet_processing.PacketManagementUtilityProvider;
 import de.vsy.client.packet_processing.PacketProcessingService;
 import de.vsy.client.packet_processing.RequestPacketCreator;
-import de.vsy.client.packet_processing.processor_provisioning.PacketProcessorManager;
-import de.vsy.client.packet_processing.processor_provisioning.StandardProcessorFactoryProvider;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferLabel;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
-import de.vsy.shared_module.packet_validation.SemanticPacketValidator;
-import de.vsy.shared_module.packet_validation.SimplePacketChecker;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.authentication.ReconnectRequestDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
-import de.vsy.shared_transmission.packet.content.error.ErrorDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
 import java.util.concurrent.ExecutorService;
@@ -46,7 +41,8 @@ import org.apache.logging.log4j.Logger;
 public class ChatClientController implements ClientDataProvider, StatusMessageTriggeredActions {
 
   private final ServerConnectionController connectionManager;
-  private final DataInputController dataController;
+  private final InputController dataController;
+  private final PacketManagementUtilityProvider packetManagement;
   private final GUIController guiController;
   private final GUIStateManager guiDataModel;
   private final Logger LOGGER = LogManager.getLogger();
@@ -81,7 +77,8 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
 
     this.guiController =
         new GUIController(gui, this.serverDataModel, this.guiDataModel, this.requester);
-    this.dataController = new DataInputController(this.serverDataModel, this);
+    this.dataController = new InputController(this.serverDataModel, this);
+    this.packetManagement = new PacketManagementUtilityProvider();
     this.notificationProcessor = Executors.newSingleThreadExecutor();
     this.packetProcessor = Executors.newSingleThreadExecutor();
   }
@@ -98,15 +95,15 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
     this.packetProcessor.shutdownNow();
     this.notificationProcessor.shutdownNow();
 
-    try{
+    try {
       this.notificationProcessor.awaitTermination(500, TimeUnit.MILLISECONDS);
-    }catch(InterruptedException ie){
+    } catch (InterruptedException ie) {
       Thread.currentThread().interrupt();
       LOGGER.error("Interrupted while waiting for NotificationProcessingService to terminate.");
     }
-    try{
+    try {
       this.packetProcessor.awaitTermination(100, TimeUnit.MILLISECONDS);
-    }catch(InterruptedException ie){
+    } catch (InterruptedException ie) {
       Thread.currentThread().interrupt();
       LOGGER.error("Interrupted while waiting for PacketProcessingService to terminate.");
     }
@@ -152,7 +149,8 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
 
   @Override
   public void reconnectFailed() {
-    this.serverDataModel.addNotification(new SimpleInformation("Authentication failed. Please reenter your credentials."));
+    this.serverDataModel.addNotification(
+        new SimpleInformation("Authentication failed. Please reenter your credentials."));
     removeAllData();
   }
 
@@ -190,48 +188,28 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
   }
 
   /**
-   * Gets the dataManagement input controller.
-   *
-   * @return the dataManagement input controller
-   */
-  public DataInputController getDataInputController() {
-    return this.dataController;
-  }
-
-  /**
-   * Gets the request creator.
-   *
-   * @return the request creator
-   */
-  public RequestPacketCreator getRequestCreator() {
-    return this.requester;
-  }
-
-  /**
    * Start controller.
    *
    * @throws InterruptedException the interrupted exception
    */
   public void startController() throws InterruptedException {
-    final var reconnected = this.serverDataModel.getCommunicatorId() != STANDARD_SERVER_ID;
+    final var noCredentials = this.serverDataModel.getCommunicatorId() != STANDARD_SERVER_ID;
 
     if (connect()) {
       LOGGER.info("Connection initiated.");
 
-      if (!reconnected) {
+      if (noCredentials) {
         final var packetProcessor = createPacketProcessingService();
         final var notificationProcessor = createNotificationProcessingService();
         this.packetProcessor.execute(packetProcessor);
         LOGGER.info("Started processing packets.");
         this.notificationProcessor.execute(notificationProcessor);
         LOGGER.info("Started processing notifications.");
-      }
-
-      if (!reconnected) {
-        LOGGER.info("GUI initiated.");
         initiateGUI();
+        LOGGER.info("GUI initiated.");
+      } else {
+        LOGGER.trace("All processes should still be running.");
       }
-      LOGGER.info("GUI started.");
 
       keepClientAlive();
     }
@@ -242,13 +220,8 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
   }
 
   private PacketProcessingService createPacketProcessingService() {
-    final var packetProcessorManager = new PacketProcessorManager(this.dataController,
-            new StandardProcessorFactoryProvider());
-    final var processingExceptionHandler = new PacketHandlingExceptionProcessor();
-    final var packetCheck = new SimplePacketChecker(new SemanticPacketValidator());
-
-    return new PacketProcessingService(this.packetBuffers, packetProcessorManager,
-        processingExceptionHandler, packetCheck, this.connectionManager);
+    return new PacketProcessingService(this.packetManagement, this.dataController,
+        this.packetBuffers, this.connectionManager);
   }
 
   /**
@@ -257,19 +230,20 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
    * @return true, if successful
    */
   private boolean connect() {
+    final var connectionEstablished = this.connectionManager.initiateConnection();
 
-    if (this.guiController.guiNotTerminated() && this.connectionManager.initiateConnection()) {
-      tryReconnection();
-      return true;
-    }
-
-    if (!this.connectionManager.getConnectionState()) {
-      final var errorMessage = "You are not connected to the server (offline).";
+    if (connectionEstablished) {
+      if (this.guiController.guiNotTerminated()) {
+        tryReconnection();
+      } else {
+        LOGGER.trace("Reconnection not attempted, GUI not ready.");
+      }
+    } else {
       final var errorCause = "No connection could be initiated. Please close the application now.";
-      this.serverDataModel.addNotification(new ErrorDTO(errorMessage + errorCause, null));
+      this.serverDataModel.addNotification(new SimpleInformation(errorCause));
       removeAllData();
     }
-    return false;
+    return connectionEstablished;
   }
 
   private void initiateGUI() {

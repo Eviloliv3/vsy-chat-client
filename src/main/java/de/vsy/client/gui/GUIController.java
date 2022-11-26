@@ -17,7 +17,6 @@ import de.vsy.client.packet_processing.RequestPacketCreator;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.swing.SwingUtilities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,12 +50,12 @@ public class GUIController {
     this.gui = gui;
     this.serverDataModel = serverData;
     this.guiDataModel = guiData;
-    this.guiInteractions = new GUIInteractionProcessor(this.gui, this.serverDataModel, this.guiDataModel, requester);
+    this.guiInteractions = new GUIInteractionProcessor(this.gui, this.serverDataModel,
+        this.guiDataModel, requester);
   }
 
   //TODO Variablen pruefen und umbennen
   public void closeController() {
-    SwingUtilities.invokeLater(gui);
     this.guiExecutor.shutdownNow();
     try {
       this.guiExecutor.awaitTermination(1000, TimeUnit.MILLISECONDS);
@@ -97,7 +96,7 @@ public class GUIController {
    * @return true, if successful
    */
   public boolean guiNotTerminated() {
-    return !this.guiInteractions.getCloseFlag();
+    return this.gui.isDisplayable();
   }
 
   public void initGUIControlling() {
@@ -106,9 +105,6 @@ public class GUIController {
     this.gui.setMessageHistory(this.guiDataModel.getActiveChatHistory());
     this.gui.setContactListModel(this.guiDataModel.getContactListModel());
   }
-
-  // -------------------------------------------
-  // ---Dialog-Request-Handler------------------
 
   public void processClientData() {
     final var communicationEntity =

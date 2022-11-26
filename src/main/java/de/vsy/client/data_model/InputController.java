@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  *
  */
-public class DataInputController
+public class InputController
     implements AuthenticationDataModelAccess, ChatDataModelAccess, StatusDataModelAccess {
 
   private final StatusMessageTriggeredActions dataTrigger;
@@ -34,7 +34,8 @@ public class DataInputController
    * @param dataModel   the dataManagement model
    * @param dataTrigger the dataManagement trigger
    */
-  public DataInputController(final ServerDataCache dataModel, final StatusMessageTriggeredActions dataTrigger) {
+  public InputController(final ServerDataCache dataModel,
+      final StatusMessageTriggeredActions dataTrigger) {
     this.serverDataModel = dataModel;
     this.dataTrigger = dataTrigger;
   }

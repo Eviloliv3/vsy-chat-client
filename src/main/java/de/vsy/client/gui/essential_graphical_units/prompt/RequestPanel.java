@@ -22,7 +22,8 @@ public class RequestPanel extends JPanel {
 
   /**
    * Create the dialog.
-   * @param request          the request
+   *
+   * @param request the request
    */
   public RequestPanel(final String request) {
     initComponents(request);

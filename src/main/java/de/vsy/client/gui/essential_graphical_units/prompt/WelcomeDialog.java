@@ -72,11 +72,11 @@ public class WelcomeDialog extends JDialog {
     this.closeApplicationButton.setPreferredSize(new Dimension(138, 25));
     this.closeApplicationButton.setActionCommand("CLOSE_APPLICATION");
     this.closeApplicationButton.addActionListener(ac);
-    this.addWindowListener(new WindowAdapter(){
+    this.addWindowListener(new WindowAdapter() {
       @Override
-      public void windowClosing(WindowEvent e){
-          ac.actionPerformed(new ActionEvent(this, e.getID(),"CLOSE_APPLICATION"));
-          dispose();
+      public void windowClosing(WindowEvent e) {
+        ac.actionPerformed(new ActionEvent(this, e.getID(), "CLOSE_APPLICATION"));
+        dispose();
       }
     });
 

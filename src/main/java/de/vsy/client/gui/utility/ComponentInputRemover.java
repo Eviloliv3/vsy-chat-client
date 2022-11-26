@@ -5,9 +5,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class ComponentInputRemover {
-  private ComponentInputRemover(){}
 
-  public static void clearInput(Component comp){
+  private ComponentInputRemover() {
+  }
+
+  public static void clearInput(Component comp) {
 
     if (comp != null) {
       final var compList = comp.getParent().getComponents();

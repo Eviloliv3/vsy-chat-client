@@ -6,8 +6,9 @@
 package de.vsy.client.packet_processing.content_processing;
 
 import de.vsy.client.controlling.data_access_interfaces.AuthenticationDataModelAccess;
+import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
+import de.vsy.client.packet_processing.ResultingPacketContentHandler;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
-import de.vsy.shared_transmission.packet.content.PacketContent;
 import de.vsy.shared_transmission.packet.content.authentication.NewAccountRequestDTO;
 
 /**
@@ -18,18 +19,21 @@ import de.vsy.shared_transmission.packet.content.authentication.NewAccountReques
 public class NewAccountRequestProcessor implements ContentProcessor<NewAccountRequestDTO> {
 
   private final AuthenticationDataModelAccess dataModel;
+  private final ResultingPacketContentHandler contentHandler;
 
   /**
    * Instantiates a new account request handler.
    *
    * @param dataModel the update unit
    */
-  public NewAccountRequestProcessor(final AuthenticationDataModelAccess dataModel) {
+  public NewAccountRequestProcessor(final AuthenticationDataModelAccess dataModel,
+      final ResultingContentHandlingProvider handlerProvider) {
     this.dataModel = dataModel;
+    this.contentHandler = handlerProvider.getResultingPacketContentHandler();
   }
 
   @Override
-  public PacketContent processContent(NewAccountRequestDTO toProcess) {
-    return toProcess;
+  public void processContent(NewAccountRequestDTO toProcess) {
+    this.contentHandler.addRequest(toProcess);
   }
 }

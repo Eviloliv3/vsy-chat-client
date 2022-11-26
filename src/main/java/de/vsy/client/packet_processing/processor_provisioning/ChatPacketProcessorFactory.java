@@ -7,6 +7,7 @@ import static de.vsy.client.packet_processing.processor_provisioning.ContentProc
 
 import de.vsy.client.controlling.data_access_interfaces.ChatDataModelAccess;
 import de.vsy.client.packet_processing.ClientPacketProcessor;
+import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.content_processing.SimpleMessageProcessor;
 import de.vsy.shared_module.packet_processing.PacketProcessor;
 import de.vsy.shared_module.packet_processing.ProcessingConditionType;
@@ -23,14 +24,17 @@ import de.vsy.shared_transmission.packet.content.chat.ChatContent;
 public class ChatPacketProcessorFactory implements ContentBasedProcessorFactory {
 
   private final ChatDataModelAccess dataManager;
+  private final ResultingContentHandlingProvider handlerProvider;
 
   /**
    * Instantiates a new chat handler.
    *
    * @param dataManager the dataManagement manager
    */
-  public ChatPacketProcessorFactory(final ChatDataModelAccess dataManager) {
+  public ChatPacketProcessorFactory(final ChatDataModelAccess dataManager,
+      final ResultingContentHandlingProvider handlerProvider) {
     this.dataManager = dataManager;
+    this.handlerProvider = handlerProvider;
   }
 
   @Override
@@ -41,7 +45,7 @@ public class ChatPacketProcessorFactory implements ContentBasedProcessorFactory 
       return new ClientPacketProcessor<>(
           getContentProcessingCondition(ProcessingConditionType.AUTHENTICATED, this.dataManager),
           new TextMessageValidator(),
-          new SimpleMessageProcessor(this.dataManager));
+          new SimpleMessageProcessor(this.dataManager, this.handlerProvider));
     }
     return null;
   }

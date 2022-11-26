@@ -2,7 +2,6 @@ package de.vsy.client.packet_processing.content_processing;
 
 import de.vsy.client.controlling.data_access_interfaces.AuthenticationDataModelAccess;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
-import de.vsy.shared_transmission.packet.content.PacketContent;
 import de.vsy.shared_transmission.packet.content.authentication.LoginResponseDTO;
 
 public class LoginResponseProcessor implements ContentProcessor<LoginResponseDTO> {
@@ -19,8 +18,7 @@ public class LoginResponseProcessor implements ContentProcessor<LoginResponseDTO
   }
 
   @Override
-  public PacketContent processContent(LoginResponseDTO toProcess) {
+  public void processContent(LoginResponseDTO toProcess) {
     this.dataModel.addClientData(toProcess.getClientData());
-    return null;
   }
 }

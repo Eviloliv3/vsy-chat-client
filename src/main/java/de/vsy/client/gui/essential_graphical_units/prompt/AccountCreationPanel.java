@@ -187,15 +187,15 @@ public class AccountCreationPanel extends JPanel {
     getAccessibleContext().setAccessibleName("accountCreationPanel");
   }
 
-  public void clearInput(){
+  public void clearInput() {
     this.newAccFirstNameField.setText(STANDARD_EMPTY_STRING);
     this.newAccLastNameField.setText(STANDARD_EMPTY_STRING);
     this.newAccUsernameField.setText(STANDARD_EMPTY_STRING);
     this.newAccPasswordField.setText(STANDARD_EMPTY_STRING);
-    
-    
+
+
   }
-  
+
   /**
    * Gets the first name.
    *

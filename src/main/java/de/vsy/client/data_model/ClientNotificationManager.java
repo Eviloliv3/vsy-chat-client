@@ -9,52 +9,50 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ClientNotificationManager {
+
   private static final Logger LOGGER = LogManager.getLogger();
   private final ReadWriteLock lock;
   private final BlockingDeque<Translatable> notifications;
 
-  public ClientNotificationManager(){
+  public ClientNotificationManager() {
     this.lock = new ReentrantReadWriteLock();
     this.notifications = new LinkedBlockingDeque<>();
   }
 
-  public
-  void addNotification(Translatable notification){
+  public void addNotification(Translatable notification) {
     this.lock.writeLock().lock();
-    try{
-      if(!(this.notifications.contains(notification))) {
+    try {
+      if (!(this.notifications.contains(notification))) {
         this.notifications.add(notification);
-      }else{
+      } else {
         LOGGER.trace("Already contained, request discarded: {}", notification);
       }
-    }finally{
+    } finally {
       this.lock.writeLock().unlock();
     }
   }
 
-  public
-  void prependNotification(Translatable notification){
+  public void prependNotification(Translatable notification) {
     this.lock.writeLock().lock();
-    try{
-      if(!(this.notifications.contains(notification))) {
+    try {
+      if (!(this.notifications.contains(notification))) {
         this.notifications.addFirst(notification);
-      }else{
+      } else {
         LOGGER.trace("Already contained, request discarded: {}", notification);
       }
-    }finally{
+    } finally {
       this.lock.writeLock().unlock();
     }
   }
 
-  public
-  Translatable getNextNotification() {
+  public Translatable getNextNotification() {
     this.lock.writeLock().lock();
-    try{
+    try {
       return this.notifications.take();
-    }catch(InterruptedException ie) {
+    } catch (InterruptedException ie) {
       Thread.currentThread().interrupt();
       LOGGER.error("Interrupted while waiting for next notification.");
-    } finally{
+    } finally {
       this.lock.writeLock().unlock();
     }
     return null;

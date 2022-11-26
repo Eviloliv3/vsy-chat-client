@@ -33,6 +33,7 @@ public class ServerConnectionController {
 
   /**
    * Instantiates a new connection manager.
+   *
    * @param serverAddress the server address
    * @param serverPorts   the server ports
    * @param packetBuffers the packet buffer manager
@@ -75,7 +76,7 @@ public class ServerConnectionController {
    * @return true, if successful
    */
   public boolean initiateConnection() {
-    LOGGER.info("\nConnection initiated.");
+    LOGGER.info("Connection initiated.");
 
     var reconnectTries = 3;
 
@@ -84,13 +85,13 @@ public class ServerConnectionController {
       while (reconnectTries > 0) {
 
         if (setupConnection()) {
-          LOGGER.info("\nConnection established.");
+          LOGGER.info("Connection established.");
           return true;
         }
         reconnectTries--;
       }
     }
-    LOGGER.error("\nConnection failed.");
+    LOGGER.error("Connection failed.");
     return false;
   }
 
@@ -150,12 +151,13 @@ public class ServerConnectionController {
 
         try {
           socket = new Socket(this.serverAddress, portToTest);
-
           LOGGER.info("Connected to server: {}", portToTest);
         } catch (final UnknownHostException uhe) {
-          LOGGER.error("{} occurred testing {}:{}", uhe.getClass().getSimpleName(), this.serverAddress, portToTest);
+          LOGGER.error("{} occurred testing {}:{}", uhe.getClass().getSimpleName(),
+              this.serverAddress, portToTest);
         } catch (final IOException ioe) {
-          LOGGER.error("{} occurred connecting to {}:{}", ioe.getClass().getSimpleName(), this.serverAddress, portToTest);
+          LOGGER.error("{} occurred connecting to {}:{}", ioe.getClass().getSimpleName(),
+              this.serverAddress, portToTest);
         }
         testedPorts.add(portToTest);
       } else {

@@ -3,7 +3,8 @@
  */
 package de.vsy.client.packet_processing.processor_provisioning;
 
-import de.vsy.client.data_model.DataInputController;
+import de.vsy.client.data_model.InputController;
+import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.shared_module.packet_processing.PacketProcessor;
 import de.vsy.shared_module.packet_processing.processor_provision.ContentBasedPacketProcessorProvider;
 import de.vsy.shared_module.packet_processing.processor_provision.PacketProcessorProvider;
@@ -18,9 +19,10 @@ import java.util.Optional;
  */
 public class PacketProcessorManager {
 
-  private final DataInputController dataModel;
+  private final InputController dataModel;
   private final PacketProcessorProvider contentHandlerProvider;
   private final CategoryProcessorFactoryProvider processorFactoryProvider;
+  private final ResultingContentHandlingProvider handlerProvider;
 
   /**
    * Instantiates a new PacketHandler factory.
@@ -28,11 +30,13 @@ public class PacketProcessorManager {
    * @param dataModel the dataManagement model
    */
   public PacketProcessorManager(
-      final DataInputController dataModel,
-      final CategoryProcessorFactoryProvider processorFactoryProvider) {
+      final InputController dataModel,
+      final CategoryProcessorFactoryProvider processorFactoryProvider,
+      final ResultingContentHandlingProvider handlerProvider) {
     this.contentHandlerProvider = new PacketProcessorProvider();
     this.dataModel = dataModel;
     this.processorFactoryProvider = processorFactoryProvider;
+    this.handlerProvider = handlerProvider;
   }
 
   public Optional<PacketProcessor> getProcessor(
@@ -44,7 +48,7 @@ public class PacketProcessorManager {
       var factory =
           new ContentBasedPacketProcessorProvider(
               this.processorFactoryProvider.getCategoryHandlerFactory(
-                  identifier.getPacketCategory(), this.dataModel));
+                  identifier.getPacketCategory(), this.dataModel, this.handlerProvider));
       this.contentHandlerProvider.registerTypeProcessingProvider(
           identifier.getPacketCategory(), factory);
       categoryProcessing = factory.getProcessor(contentType);

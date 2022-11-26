@@ -20,13 +20,11 @@ public class GUIStateManager {
 
   private final DefaultListModel<CommunicatorDTO> contactListModel;
   private final MessageHistory messages;
-  private boolean guiClosedFlag;
   private CommunicatorDTO activeChatContact;
   private CommunicatorDTO activeClient;
   private GUILabelChangeListener labelModifier;
 
   public GUIStateManager() {
-    this.guiClosedFlag = false;
     this.contactListModel = new DefaultListModel<>();
     this.activeClient = CommunicatorDTO.valueOf(STANDARD_CLIENT_ID, STANDARD_EMPTY_STRING);
     this.activeChatContact = CommunicatorDTO.valueOf(STANDARD_CLIENT_ID, STANDARD_EMPTY_STRING);
@@ -79,13 +77,9 @@ public class GUIStateManager {
    *
    * @return the active chat contact
    */
-  // -------------------------------------------
   public CommunicatorDTO getActiveChatContact() {
     return this.activeChatContact;
   }
-
-  // -------------------------------------------
-  // ---Active-Chat-----------------------------
 
   /**
    * Sets the active chat contact.
@@ -100,28 +94,21 @@ public class GUIStateManager {
     }
   }
 
-  // -------------------------------------------
-  // ---Active-Chat-History---------------------
-
   /**
    * Gets the active chat history.
    *
    * @return the active chat history
    */
-  // -------------------------------------------
   public MessageHistory getActiveChatHistory() {
     return this.messages;
   }
 
-  // -------------------------------------------
-  // ---Client-Data-----------------------------
 
   /**
    * Gets the active client.
    *
    * @return the active client
    */
-  // -------------------------------------------
   public CommunicatorDTO getActiveClient() {
     return this.activeClient;
   }
@@ -138,8 +125,6 @@ public class GUIStateManager {
       drawNewClientLabel();
     }
   }
-  // -------------------------------------------
-  // ---Active-Dialogs--------------------------
 
   /**
    * Gets the contact list model.
@@ -148,28 +133,6 @@ public class GUIStateManager {
    */
   public DefaultListModel<CommunicatorDTO> getContactListModel() {
     return this.contactListModel;
-  }
-
-  // -------------------------------------------
-  // ---GUI-Closed-Flag-------------------------
-
-  /**
-   * Gets the GUI state flag.
-   *
-   * @return the GUI state flag
-   */
-  // -------------------------------------------
-  public boolean getGUIStateFlag() {
-    return this.guiClosedFlag;
-  }
-
-  /**
-   * Sets the GUI state flag.
-   *
-   * @param newState the new GUI state flag
-   */
-  public void setGUIStateFlag(final boolean newState) {
-    this.guiClosedFlag = newState;
   }
 
   /**
@@ -190,8 +153,6 @@ public class GUIStateManager {
     this.messages.clearMessageHistory();
   }
 
-  // -------------------------------------------
-  // ---Helper-Methods--------------------------
   public void removeActiveChatContact() {
     setActiveChatContact(CommunicatorDTO.valueOf(STANDARD_CLIENT_ID, STANDARD_EMPTY_STRING));
   }
@@ -203,9 +164,6 @@ public class GUIStateManager {
     }
   }
 
-  // -------------------------------------------
-  // ---GUI-Label-Listener----------------------
-  // -------------------------------------------
   public void resetAllData() {
     removeActiveClient();
     clearActiveChat();
@@ -216,8 +174,6 @@ public class GUIStateManager {
     setActiveClient(CommunicatorDTO.valueOf(STANDARD_CLIENT_ID, STANDARD_EMPTY_STRING));
   }
 
-  // -------------------------------------------
-  // ---Active-Chat-Contact-&-History-----------
   private void drawNewClientLabel() {
 
     if (this.labelModifier != null) {
@@ -230,7 +186,6 @@ public class GUIStateManager {
    *
    * @param listener the new GUI label change listener
    */
-  // -------------------------------------------
   public void setGUILabelChangeListener(final GUILabelChangeListener listener) {
 
     if (listener != null) {
@@ -244,7 +199,6 @@ public class GUIStateManager {
    * @param contactData the contact dataManagement
    * @param messages    the messages
    */
-  // -------------------------------------------
   public void setNewActiveChat(
       final CommunicatorDTO contactData, final List<TextMessageDTO> messages) {
 

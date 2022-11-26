@@ -8,7 +8,8 @@ import java.awt.event.ActionListener;
 public class IntroductionActionListener implements ActionListener {
 
   private final DialogInitNavigation navigator;
-  public IntroductionActionListener(final DialogInitNavigation navigator){
+
+  public IntroductionActionListener(final DialogInitNavigation navigator) {
     this.navigator = navigator;
   }
 
@@ -17,15 +18,16 @@ public class IntroductionActionListener implements ActionListener {
     final NavigationGoal type;
     try {
       final String eventValue = e.getActionCommand().toUpperCase().trim();
-      if(eventValue.equals("CLOSE_APPLICATION")){
+      if (eventValue.equals("CLOSE_APPLICATION")) {
         navigator.closeApplication();
       } else {
         type = NavigationGoal.valueOf(e.getActionCommand());
         navigator.navigate(type);
       }
-    }catch(IllegalArgumentException iae){
-        final var message = "Invalid ActionEvent triggered by "+e.getSource()+ ".Allowed types " + NavigationGoal.class + " and CLOSE, but got "+ e.getActionCommand()+".";
-        throw new RuntimeException(message, iae);
+    } catch (IllegalArgumentException iae) {
+      final var message = "Invalid ActionEvent triggered by " + e.getSource() + ".Allowed types "
+          + NavigationGoal.class + " and CLOSE, but got " + e.getActionCommand() + ".";
+      throw new RuntimeException(message, iae);
     }
   }
 }

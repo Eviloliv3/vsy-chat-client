@@ -45,7 +45,7 @@ public class ChatClient {
   }
 
   public void start() {
-    LOGGER.info("\nClient gestartet.");
+    LOGGER.info("Client gestartet.");
 
     try {
       this.clientController.startController();

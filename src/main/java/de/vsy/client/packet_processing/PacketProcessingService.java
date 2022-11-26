@@ -4,16 +4,21 @@
 package de.vsy.client.packet_processing;
 
 import de.vsy.client.connection_handling.ServerConnectionController;
-import de.vsy.client.packet_exception_processing.PacketHandlingExceptionProcessor;
+import de.vsy.client.data_model.InputController;
 import de.vsy.client.packet_processing.processor_provisioning.PacketProcessorManager;
+import de.vsy.client.packet_processing.processor_provisioning.StandardProcessorFactoryProvider;
 import de.vsy.shared_module.packet_exception.PacketHandlingException;
 import de.vsy.shared_module.packet_management.PacketBuffer;
+import de.vsy.shared_module.packet_management.PacketDispatcher;
+import de.vsy.shared_module.packet_management.PacketTransmissionCache;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferLabel;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
 import de.vsy.shared_module.packet_processing.PacketProcessor;
-import de.vsy.shared_module.packet_validation.PacketCheck;
+import de.vsy.shared_module.packet_processing.PacketSyntaxCheckLink;
+import de.vsy.shared_module.packet_validation.SemanticPacketValidator;
+import de.vsy.shared_module.packet_validation.SimplePacketChecker;
 import de.vsy.shared_transmission.packet.Packet;
-import java.util.Optional;
+import de.vsy.shared_transmission.packet.content.error.ErrorDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,97 +28,77 @@ import org.apache.logging.log4j.Logger;
 public class PacketProcessingService implements Runnable {
 
   private final Logger LOGGER = LogManager.getLogger();
-  private final PacketHandlingExceptionProcessor pheProcessor;
-  private final PacketProcessorManager phf;
   private final ServerConnectionController connectionControl;
-  private final PacketCheck validator;
   private final PacketBuffer inputBuffer;
-  private final PacketBuffer outputBuffer;
+  private final ResultingPacketCreator packetCreator;
+  private final PacketTransmissionCache packetsToTransmit;
+  private final ResultingPacketContentHandler contentHandler;
+  private final PacketDispatcher dispatcher;
+  private final PacketProcessor processor;
 
   /**
    * Instantiates a new PacketProcessingService.
    *
-   * @param packetBuffers     the Packetbuffers
-   * @param phf               the phf
-   * @param pheProcessor      the phe handler
-   * @param validator         the validator
+   * @param packetManagement  the packet management utility
+   * @param dataController    the data input controller
+   * @param packetBuffers     the packet buffer manager
    * @param connectionControl the connection control
    */
-  //TODO ueberarbeiten?
-  public PacketProcessingService(
+  public PacketProcessingService(final PacketManagementUtilityProvider packetManagement, final
+  InputController dataController,
       final ThreadPacketBufferManager packetBuffers,
-      final PacketProcessorManager phf,
-      final PacketHandlingExceptionProcessor pheProcessor,
-      final PacketCheck validator,
       final ServerConnectionController connectionControl) {
 
-    this.phf = phf;
-    this.pheProcessor = pheProcessor;
-    this.validator = validator;
+    this.packetCreator = packetManagement.getResultingPacketCreator();
+    this.packetsToTransmit = packetManagement.getPacketTransmissionCache();
+    this.contentHandler = packetManagement.getResultingPacketContentHandler();
     this.connectionControl = connectionControl;
     this.inputBuffer = packetBuffers.getPacketBuffer(ThreadPacketBufferLabel.HANDLER_BOUND);
-    this.outputBuffer = packetBuffers.getPacketBuffer(ThreadPacketBufferLabel.OUTSIDE_BOUND);
+    this.dispatcher = new ClientPacketDispatcher(packetBuffers);
+    this.processor = createProcessor(dataController, packetManagement);
+  }
+
+  private PacketProcessor createProcessor(final InputController dataController,
+      final PacketManagementUtilityProvider packetManagement) {
+    final var processorManager = new PacketProcessorManager(dataController,
+        new StandardProcessorFactoryProvider(), packetManagement);
+    final var processorLink = new ClientPacketProcessorLink(processorManager);
+    return new PacketSyntaxCheckLink(processorLink, new SimplePacketChecker(
+        new SemanticPacketValidator()));
+
   }
 
   @Override
   public void run() {
     LOGGER.info("Service gestartet.");
+    while (this.connectionControl.getConnectionState() && Thread.currentThread().isInterrupted()) {
 
-    do {
       processInput();
-    } while (this.connectionControl.getConnectionState() && Thread.currentThread().isInterrupted());
+    }
     LOGGER.info("Service beendet.");
   }
 
   private void processInput() {
-    Packet inputPacket;
+    Packet input;
 
     try {
-      inputPacket = this.inputBuffer.getPacket();
+      input = this.inputBuffer.getPacket();
     } catch (InterruptedException ie) {
       Thread.currentThread().interrupt();
       LOGGER.error("Beim Holen des naechsten Pakets unterbrochen.");
-      inputPacket = null;
+      input = null;
     }
 
-    if (inputPacket != null) {
-      Packet response = null;
+    if (input != null) {
+      this.packetCreator.setCurrentPacket(input);
 
       try {
-        final var validatorString = this.validator.checkPacket(inputPacket);
-
-        if (validatorString.isEmpty()) {
-          final var packetProcessor = preparePacketProcessor(inputPacket);
-
-          if (packetProcessor.isPresent()) {
-            response = packetProcessor.get().processPacket(inputPacket);
-          } else {
-            final var errorMessage = "Packet not processed: no processor found.";
-            throw new PacketHandlingException(errorMessage);
-          }
-        } else {
-          final var errorMessage = "Das zuletzt gelesene Packetkonnte nicht verifiziert werden. ";
-          throw new PacketHandlingException(errorMessage + validatorString.get());
-        }
+        this.processor.processPacket(input);
       } catch (final PacketHandlingException phe) {
-        this.pheProcessor.processException(phe, inputPacket);
+        final var errorContent = new ErrorDTO(phe.getMessage(), input);
+        this.contentHandler.setError(errorContent);
       }
-
-      if (response != null) {
-        this.outputBuffer.appendPacket(response);
-      }
+      this.packetsToTransmit.transmitPackets(this.dispatcher);
     }
-  }
-
-  /**
-   * Prepare PacketHandler.
-   *
-   * @param inputPacket the input
-   * @return the PacketHandler
-   */
-  private Optional<PacketProcessor> preparePacketProcessor(final Packet inputPacket) {
-    final var identifier = inputPacket.getPacketProperties().getPacketIdentificationProvider();
-    final var contentType = inputPacket.getPacketContent().getClass();
-    return this.phf.getProcessor(identifier, contentType);
   }
 }

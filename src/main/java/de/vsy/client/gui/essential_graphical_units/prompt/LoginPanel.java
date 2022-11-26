@@ -116,7 +116,7 @@ public class LoginPanel extends JPanel {
                                 PREFERRED_SIZE,
                                 DEFAULT_SIZE,
                                 PREFERRED_SIZE)))
-                    .addGap(15, 15, 15));
+            .addGap(15, 15, 15));
 
     getAccessibleContext().setAccessibleName("loginPanel");
   }

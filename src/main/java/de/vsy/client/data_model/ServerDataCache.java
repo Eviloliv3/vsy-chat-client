@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
  * Manages all dataManagement that originated from server response Packet.
  */
 public class ServerDataCache {
+
   private final Logger LOGGER = LogManager.getLogger();
   private final ContactDataManager activeContactController;
   private final MessageManager messageController;
@@ -25,7 +26,8 @@ public class ServerDataCache {
   private ClientDataManager clientData;
 
   public ServerDataCache(final ClientDataManager clientDataManager,
-      final ContactDataManager activeContactManager, final MessageManager messageManager, final ClientNotificationManager notificationManager) {
+      final ContactDataManager activeContactManager, final MessageManager messageManager,
+      final ClientNotificationManager notificationManager) {
     this.clientData = clientDataManager;
     this.activeContactController = activeContactManager;
     this.messageController = messageManager;
@@ -69,11 +71,11 @@ public class ServerDataCache {
     this.notificationManager.addNotification(notification);
   }
 
-  public void addPriorityNotification(final Translatable notification){
+  public void addPriorityNotification(final Translatable notification) {
     this.notificationManager.prependNotification(notification);
   }
 
-  public ClientNotificationManager getClientNotificationManager(){
+  public ClientNotificationManager getClientNotificationManager() {
     return this.notificationManager;
   }
 
@@ -134,6 +136,7 @@ public class ServerDataCache {
   public List<TextMessageDTO> getMessageList(final int clientId) {
     return this.messageController.getMessages(clientId);
   }
+
   /**
    * Initial messenger setup.
    *
