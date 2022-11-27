@@ -246,7 +246,9 @@ public class ChatClientController implements StatusMessageTriggeredActions {
   }
 
   private void setupConnectionWatcher(){
-    this.connectionWatcher.cancel();
+    if(this.connectionWatcher != null) {
+      this.connectionWatcher.cancel();
+    }
     this.connectionWatcher = new Timer("ClientConnectionWatcher");
     this.connectionWaiter = new CountDownLatch(1);
     var connectionWatcherTask = new ClientConnectionWatcher(this.connectionManager, this.connectionWaiter);
