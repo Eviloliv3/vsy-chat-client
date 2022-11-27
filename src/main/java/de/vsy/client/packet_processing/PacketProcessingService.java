@@ -11,7 +11,7 @@ import de.vsy.client.packet_processing.processor_provisioning.PacketProcessorMan
 import de.vsy.client.packet_processing.processor_provisioning.StandardProcessorFactoryProvider;
 import de.vsy.shared_module.packet_exception.PacketHandlingException;
 import de.vsy.shared_module.packet_management.ClientDataProvider;
-import de.vsy.shared_module.packet_management.ClientPacketDispatcher;
+import de.vsy.shared_module.packet_management.BasicClientPacketDispatcher;
 import de.vsy.shared_module.packet_management.PacketBuffer;
 import de.vsy.shared_module.packet_management.PacketDispatcher;
 import de.vsy.shared_module.packet_management.PacketTransmissionCache;
