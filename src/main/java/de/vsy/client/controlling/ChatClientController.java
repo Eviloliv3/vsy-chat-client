@@ -53,7 +53,7 @@ public class ChatClientController implements StatusMessageTriggeredActions {
   private final ServerDataCache serverDataModel;
   private final ExecutorService notificationProcessor;
   private final ExecutorService packetProcessor;
-  private final Timer connectionWatcher;
+  private Timer connectionWatcher;
   private CountDownLatch connectionWaiter;
   private ThreadPacketBufferManager packetBuffers;
 
@@ -86,7 +86,6 @@ public class ChatClientController implements StatusMessageTriggeredActions {
     this.packetManagement = new PacketManagementUtilityProvider();
     this.notificationProcessor = Executors.newSingleThreadExecutor();
     this.packetProcessor = Executors.newSingleThreadExecutor();
-    this.connectionWatcher = new Timer("ClientConnectionWatcher");
   }
 
   private void setupPacketBuffers() {
@@ -229,9 +228,8 @@ public class ChatClientController implements StatusMessageTriggeredActions {
     final var connectionEstablished = this.connectionManager.initiateConnection();
 
     if (connectionEstablished) {
-      this.connectionWaiter = new CountDownLatch(1);
-      var connectionWatcherTask = new ClientConnectionWatcher(this.connectionManager, this.connectionWaiter);
-      this.connectionWatcher.scheduleAtFixedRate(connectionWatcherTask, 50, 1000);
+      setupConnectionWatcher();
+
       if (this.guiController.guiNotTerminated()) {
         tryReconnection();
       } else {
@@ -245,6 +243,14 @@ public class ChatClientController implements StatusMessageTriggeredActions {
       removeAllData();
     }
     return connectionEstablished;
+  }
+
+  private void setupConnectionWatcher(){
+    this.connectionWatcher.cancel();
+    this.connectionWatcher = new Timer("ClientConnectionWatcher");
+    this.connectionWaiter = new CountDownLatch(1);
+    var connectionWatcherTask = new ClientConnectionWatcher(this.connectionManager, this.connectionWaiter);
+    this.connectionWatcher.scheduleAtFixedRate(connectionWatcherTask, 50, 1000);
   }
 
   private void initiateGUI() {
