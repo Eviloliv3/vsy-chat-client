@@ -21,6 +21,7 @@ import de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal;
 import de.vsy.client.gui.essential_graphical_units.prompt.WelcomeDialog;
 import de.vsy.client.gui.utility.ComponentInputRemover;
 import de.vsy.client.packet_processing.RequestPacketCreator;
+import de.vsy.shared_module.data_element_validation.StringCheck;
 import de.vsy.shared_module.security.password.PasswordHasher;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.dto.authentication.AccountCreationDTO;
@@ -219,7 +220,7 @@ public class GUIInteractionProcessor
       final var creationOption = JOptionPane.showOptionDialog(null, accountCreationPanel,
           "Account Creation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,
           options, options[1]);
-
+      //TODO string checks
       if (creationOption == JOptionPane.OK_OPTION) {
         final PacketContent data;
         var firstName = accountCreationPanel.getFirstName();
