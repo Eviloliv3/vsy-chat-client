@@ -171,7 +171,6 @@ public class ServerConnectionController {
    * Setup connection control.
    */
   private void setupConnectionControl() {
-
     if (this.connectionControl == null) {
       this.connectionControl =
           new ConnectionThreadControl(this.connectionSocket, this.packetBuffers);

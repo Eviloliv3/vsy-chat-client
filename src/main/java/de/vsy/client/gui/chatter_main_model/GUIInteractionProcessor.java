@@ -21,8 +21,6 @@ import de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal;
 import de.vsy.client.gui.essential_graphical_units.prompt.WelcomeDialog;
 import de.vsy.client.gui.utility.ComponentInputRemover;
 import de.vsy.client.packet_processing.RequestPacketCreator;
-import de.vsy.shared_module.data_element_validation.StringCheck;
-import de.vsy.shared_module.security.password.PasswordHasher;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.dto.authentication.AccountCreationDTO;
 import de.vsy.shared_transmission.dto.authentication.AuthenticationDTO;
@@ -75,8 +73,8 @@ public class GUIInteractionProcessor
       this.requester.request(
           new ContactRelationRequestDTO(
               EligibleContactEntity.CLIENT,
-              this.serverDataModel.getCommunicatorId(),
-              contactId, this.serverDataModel.getClientAccountData().getCommunicatorDTO(),
+              this.serverDataModel.getClientId(),
+              contactId, this.serverDataModel.getCommunicatorData(),
               false),
           contactId);
     } else {
@@ -113,7 +111,7 @@ public class GUIInteractionProcessor
     if (message != null && !message.isBlank()) {
       final var contactId = activeChat.getCommunicatorId();
       this.requester.request(
-          new TextMessageDTO(this.serverDataModel.getCommunicatorId(), EligibleContactEntity.CLIENT,
+          new TextMessageDTO(this.serverDataModel.getClientId(), EligibleContactEntity.CLIENT,
               contactId, message),
           contactId);
     }
@@ -131,16 +129,16 @@ public class GUIInteractionProcessor
 
   public void handleLogout() {
 
-    if (this.serverDataModel.getCommunicatorId() != STANDARD_CLIENT_ID) {
+    if (this.serverDataModel.getClientId() != STANDARD_CLIENT_ID) {
       this.requester.request(
           new ContactMessengerStatusDTO(
               EligibleContactEntity.CLIENT,
               false,
-              this.serverDataModel.getClientAccountData().getCommunicatorDTO(),
+              this.serverDataModel.getCommunicatorData(),
               null),
           STANDARD_SERVER_ID);
       this.requester.request(
-          new LogoutRequestDTO(this.serverDataModel.getClientAccountData().getCommunicatorDTO()),
+          new LogoutRequestDTO(this.serverDataModel.getCommunicatorData()),
           STANDARD_SERVER_ID);
     }
   }
@@ -176,7 +174,7 @@ public class GUIInteractionProcessor
   // Accounterstellung Username falsch angeordnet
   // Login -> Login erstellt neuen Login Account -> JOptionPane auto dispose()?
   private void handleLogin() {
-    if (this.serverDataModel.getCommunicatorId() == STANDARD_CLIENT_ID) {
+    if (this.serverDataModel.getClientId() == STANDARD_CLIENT_ID) {
       final var loginPanel = new LoginPanel();
       final String[] options = {"Login", "Cancel"};
       final var loginOption = JOptionPane.showOptionDialog(null, loginPanel, "Enter credentials",
@@ -213,7 +211,7 @@ public class GUIInteractionProcessor
   }
 
   private void handleAccountCreation() {
-    if (this.serverDataModel.getCommunicatorId() == STANDARD_CLIENT_ID) {
+    if (this.serverDataModel.getClientId() == STANDARD_CLIENT_ID) {
 
       var accountCreationPanel = new AccountCreationPanel();
       String[] options = {"Create", "Cancel"};

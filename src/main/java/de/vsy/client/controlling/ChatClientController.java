@@ -7,6 +7,7 @@ import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_C
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
 import static java.util.Collections.emptyList;
 
+import de.vsy.client.connection_handling.ClientConnectionWatcher;
 import de.vsy.client.connection_handling.ServerConnectionController;
 import de.vsy.client.data_model.ClientDataManager;
 import de.vsy.client.data_model.ClientNotificationManager;
@@ -28,6 +29,8 @@ import de.vsy.shared_transmission.packet.content.authentication.ReconnectRequest
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
+import java.util.Timer;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +41,7 @@ import org.apache.logging.log4j.Logger;
  * Base controller for all client actions. Handles basic procedures like the sequence in which the
  * initializing Packet are sent.
  */
-public class ChatClientController implements ClientDataProvider, StatusMessageTriggeredActions {
+public class ChatClientController implements StatusMessageTriggeredActions {
 
   private final ServerConnectionController connectionManager;
   private final InputController dataController;
@@ -50,6 +53,8 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
   private final ServerDataCache serverDataModel;
   private final ExecutorService notificationProcessor;
   private final ExecutorService packetProcessor;
+  private final Timer connectionWatcher;
+  private CountDownLatch connectionWaiter;
   private ThreadPacketBufferManager packetBuffers;
 
   /**
@@ -81,6 +86,7 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
     this.packetManagement = new PacketManagementUtilityProvider();
     this.notificationProcessor = Executors.newSingleThreadExecutor();
     this.packetProcessor = Executors.newSingleThreadExecutor();
+    this.connectionWatcher = new Timer("ClientConnectionWatcher");
   }
 
   private void setupPacketBuffers() {
@@ -172,19 +178,9 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
         new ContactMessengerStatusDTO(
             EligibleContactEntity.CLIENT,
             newStatus,
-            this.serverDataModel.getClientAccountData().getCommunicatorDTO(),
+            this.serverDataModel.getCommunicatorData(),
             emptyList()),
         STANDARD_CLIENT_BROADCAST_ID);
-  }
-
-  /**
-   * Gets the client dataManagement.
-   *
-   * @return the client dataManagement
-   */
-  @Override
-  public CommunicatorDTO getCommunicatorDTO() {
-    return this.serverDataModel.getClientAccountData().getCommunicatorDTO();
   }
 
   /**
@@ -193,7 +189,7 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
    * @throws InterruptedException the interrupted exception
    */
   public void startController() throws InterruptedException {
-    final var noCredentials = this.serverDataModel.getCommunicatorId() != STANDARD_SERVER_ID;
+    final var noCredentials = this.serverDataModel.getClientId() != STANDARD_SERVER_ID;
 
     if (connect()) {
       LOGGER.info("Connection initiated.");
@@ -220,8 +216,8 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
   }
 
   private PacketProcessingService createPacketProcessingService() {
-    return new PacketProcessingService(this.packetManagement, this.dataController,
-        this.packetBuffers, this.connectionManager);
+    return new PacketProcessingService(this.packetManagement, this.dataController, this.serverDataModel,
+        this.packetBuffers,  this.connectionManager);
   }
 
   /**
@@ -233,6 +229,9 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
     final var connectionEstablished = this.connectionManager.initiateConnection();
 
     if (connectionEstablished) {
+      this.connectionWaiter = new CountDownLatch(1);
+      var connectionWatcherTask = new ClientConnectionWatcher(this.connectionManager, this.connectionWaiter);
+      this.connectionWatcher.scheduleAtFixedRate(connectionWatcherTask, 50, 1000);
       if (this.guiController.guiNotTerminated()) {
         tryReconnection();
       } else {
@@ -259,24 +258,17 @@ public class ChatClientController implements ClientDataProvider, StatusMessageTr
   private void keepClientAlive() throws InterruptedException {
 
     while (this.guiController.guiNotTerminated()) {
-
-      if (!this.connectionManager.getConnectionState()) {
-        this.connectionManager.closeConnection();
-        startController();
-      } else {
-        try {
-          Thread.sleep(1000);
-        } catch (final InterruptedException ex) {
-          Thread.currentThread().interrupt();
-          LOGGER.info("Client can be terminated through GUI closure only.");
-        }
-      }
+      this.connectionWaiter.await();
+      this.connectionWatcher.cancel();
+      this.connectionWatcher.purge();
+      this.connectionManager.closeConnection();
+      startController();
     }
     closeApplication();
   }
 
   private void tryReconnection() {
-    CommunicatorDTO clientData = this.serverDataModel.getClientAccountData().getCommunicatorDTO();
+    CommunicatorDTO clientData = this.serverDataModel.getCommunicatorData();
 
     if (clientData != null) {
       final var clientId = clientData.getCommunicatorId();

@@ -17,6 +17,7 @@ import de.vsy.client.packet_processing.RequestPacketCreator;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.swing.SwingUtilities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -108,7 +109,7 @@ public class GUIController {
 
   public void processClientData() {
     final var communicationEntity =
-        this.serverDataModel.getClientAccountData().getCommunicatorDTO();
+        this.serverDataModel.getCommunicatorData();
 
     if (communicationEntity.getCommunicatorId() != STANDARD_CLIENT_ID) {
       this.guiDataModel.setActiveClient(communicationEntity);
@@ -122,6 +123,6 @@ public class GUIController {
   public void startGUI() {
     this.guiDataModel.setGUILabelChangeListener(this.gui);
     this.guiExecutor.execute(this.gui);
-    this.guiInteractions.navigate(INITIAL);
+    SwingUtilities.invokeLater(() ->this.guiInteractions.navigate(INITIAL));
   }
 }

@@ -2,7 +2,6 @@ package de.vsy.client.gui.essential_graphical_units;
 
 import de.vsy.client.controlling.essential_gui_action_interfaces.DialogInitNavigation;
 import de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

@@ -45,7 +45,7 @@ public class NotificationProcessingService implements Runnable {
         JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     final var decision = requestOption == JOptionPane.YES_OPTION;
     this.requester.request(
-        request.setDecision(this.dataProvider.getClientAccountData().getCommunicatorDTO(),
+        request.setDecision(this.dataProvider.getCommunicatorData(),
             decision), request.getOriginatorId());
   }
 

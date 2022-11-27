@@ -2,6 +2,7 @@ package de.vsy.client.data_model;
 
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 
+import de.vsy.shared_module.packet_management.ClientDataProvider;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.Translatable;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
@@ -17,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Manages all dataManagement that originated from server response Packet.
  */
-public class ServerDataCache {
+public class ServerDataCache implements ClientDataProvider {
 
   private final Logger LOGGER = LogManager.getLogger();
   private final ContactDataManager activeContactController;
@@ -105,7 +106,8 @@ public class ServerDataCache {
    *
    * @return the client id
    */
-  public int getCommunicatorId() {
+  @Override
+  public int getClientId() {
     int clientId = STANDARD_CLIENT_ID;
 
     if (this.clientData != null) {
@@ -116,6 +118,11 @@ public class ServerDataCache {
       }
     }
     return clientId;
+  }
+
+  @Override
+  public CommunicatorDTO getCommunicatorData() {
+    return this.clientData.getCommunicatorDTO();
   }
 
   /**

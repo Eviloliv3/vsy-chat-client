@@ -46,7 +46,7 @@ public class InputController
     if (clientData != null) {
       this.serverDataModel.setCommunicatorDTO(clientData);
       this.dataTrigger.completeLogin();
-    } else if (this.serverDataModel.getCommunicatorId() != STANDARD_CLIENT_ID) {
+    } else if (this.serverDataModel.getClientId() != STANDARD_CLIENT_ID) {
       this.dataTrigger.reconnectFailed();
     }
   }
@@ -72,7 +72,7 @@ public class InputController
 
   @Override
   public int getClientId() {
-    return this.serverDataModel.getCommunicatorId();
+    return this.serverDataModel.getClientId();
   }
 
   @Override
