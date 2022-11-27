@@ -198,7 +198,7 @@ public class GUIInteractionProcessor
           handleLogin();
         } else {
           //var hashedPassword = PasswordHasher.calculateHash(passwordChars);
-          this.requester.request(new LoginRequestDTO(username, String.valueOf(passwordChars)), STANDARD_CLIENT_ID);
+          this.requester.request(new LoginRequestDTO(username, String.valueOf(passwordChars)), STANDARD_SERVER_ID);
         }
       } else {
         ComponentInputRemover.clearInput(loginPanel);
