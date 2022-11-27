@@ -42,7 +42,7 @@ public class NotificationProcessingService implements Runnable {
     String[] options = {"Accept", "Deny"};
 
     final var requestOption = JOptionPane.showOptionDialog(null, requestPanel, "Client request",
-        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     final var decision = requestOption == JOptionPane.YES_OPTION;
     this.requester.request(
         request.setDecision(this.dataProvider.getClientAccountData().getCommunicatorDTO(),

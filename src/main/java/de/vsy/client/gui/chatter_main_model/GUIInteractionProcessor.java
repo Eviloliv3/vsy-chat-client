@@ -180,7 +180,7 @@ public class GUIInteractionProcessor
       final var loginPanel = new LoginPanel();
       final String[] options = {"Login", "Cancel"};
       final var loginOption = JOptionPane.showOptionDialog(null, loginPanel, "Enter credentials",
-          JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+          JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
       if (loginOption == JOptionPane.OK_OPTION) {
         final PacketContent data;
@@ -219,7 +219,7 @@ public class GUIInteractionProcessor
       String[] options = {"Create", "Cancel"};
       final var creationOption = JOptionPane.showOptionDialog(null, accountCreationPanel,
           "Account Creation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-          options, options[1]);
+          options, options[0]);
       //TODO string checks
       if (creationOption == JOptionPane.OK_OPTION) {
         final PacketContent data;
@@ -248,7 +248,7 @@ public class GUIInteractionProcessor
 
     final var contactAdditionOption = JOptionPane.showOptionDialog(null, contactAdd,
         "Contact request", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options,
-        options[1]);
+        options[0]);
 
     if (contactAdditionOption == JOptionPane.OK_OPTION) {
       int contactId;
