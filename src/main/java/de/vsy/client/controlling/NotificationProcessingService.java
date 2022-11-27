@@ -54,7 +54,7 @@ public class NotificationProcessingService implements Runnable {
 
     if (message != null) {
       final var notificationPanel = new NotificationPanel(message);
-      JOptionPane.showConfirmDialog(null, notificationPanel);
+      JOptionPane.showMessageDialog(null, notificationPanel, "Information", JOptionPane.INFORMATION_MESSAGE);
     } else {
       LOGGER.warn("Empty notification:\n{}", notification);
     }
