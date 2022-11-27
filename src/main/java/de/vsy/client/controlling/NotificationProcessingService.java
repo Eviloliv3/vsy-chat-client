@@ -39,10 +39,10 @@ public class NotificationProcessingService implements Runnable {
   private void handleContactRequest(HumanInteractionRequest request) {
     String translatedRequest = ClientNotificationTranslator.translate(request);
     var requestPanel = new RequestPanel(translatedRequest);
-    String[] options = {"Deny", "Accept"};
+    String[] options = {"Accept", "Deny"};
 
     final var requestOption = JOptionPane.showOptionDialog(null, requestPanel, "Client request",
-        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
     final var decision = requestOption == JOptionPane.YES_OPTION;
     this.requester.request(
         request.setDecision(this.dataProvider.getClientAccountData().getCommunicatorDTO(),

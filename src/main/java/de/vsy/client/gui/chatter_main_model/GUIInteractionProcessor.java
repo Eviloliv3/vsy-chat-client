@@ -170,13 +170,16 @@ public class GUIInteractionProcessor
       case CONTACT_ADDITION -> handleContactAddition();
     }
   }
-
+  //TODO options und default option checken -> Reihenfolge wichtig?
+  // WelcomeDialog bleibt im Hintergrund -> dispose()
+  // Accounterstellung Username falsch angeordnet
+  // Login -> Login erstellt neuen Login Account -> JOptionPane auto dispose()?
   private void handleLogin() {
     if (this.serverDataModel.getCommunicatorId() == STANDARD_CLIENT_ID) {
       final var loginPanel = new LoginPanel();
-      final String[] options = {"Discard", "Login"};
+      final String[] options = {"Login", "Cancel"};
       final var loginOption = JOptionPane.showOptionDialog(null, loginPanel, "Enter credentials",
-          JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+          JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
 
       if (loginOption == JOptionPane.OK_OPTION) {
         final PacketContent data;
@@ -195,8 +198,8 @@ public class GUIInteractionProcessor
               "Retry: password length has to be greater than 5, provided " + passwordChars.length));
           handleLogin();
         } else {
-          var hashedPassword = PasswordHasher.calculateHash(passwordChars);
-          this.requester.request(new LoginRequestDTO(username, hashedPassword), STANDARD_CLIENT_ID);
+          //var hashedPassword = PasswordHasher.calculateHash(passwordChars);
+          this.requester.request(new LoginRequestDTO(username, String.valueOf(passwordChars)), STANDARD_CLIENT_ID);
         }
       } else {
         ComponentInputRemover.clearInput(loginPanel);
@@ -212,16 +215,17 @@ public class GUIInteractionProcessor
     if (this.serverDataModel.getCommunicatorId() == STANDARD_CLIENT_ID) {
 
       var accountCreationPanel = new AccountCreationPanel();
-      String[] options = {"Discard", "Create"};
+      String[] options = {"Create", "Cancel"};
       final var creationOption = JOptionPane.showOptionDialog(null, accountCreationPanel,
           "Account Creation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-          options, options[0]);
+          options, options[1]);
 
       if (creationOption == JOptionPane.OK_OPTION) {
         final PacketContent data;
         var firstName = accountCreationPanel.getFirstName();
         var lastName = accountCreationPanel.getLastName();
-        var password = PasswordHasher.calculateHash(accountCreationPanel.getPassword());
+        //var password = PasswordHasher.calculateHash(accountCreationPanel.getPassword());
+        var password = String.valueOf(accountCreationPanel.getPassword());
         var username = accountCreationPanel.getLogin();
 
         this.requester.request(new NewAccountRequestDTO(
@@ -239,11 +243,11 @@ public class GUIInteractionProcessor
 
   private void handleContactAddition() {
     var contactAdd = new ContactAdditionPanel();
-    String[] options = {"Discard", "Request"};
+    String[] options = {"Request", "Cancel"};
 
     final var contactAdditionOption = JOptionPane.showOptionDialog(null, contactAdd,
         "Contact request", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options,
-        options[0]);
+        options[1]);
 
     if (contactAdditionOption == JOptionPane.OK_OPTION) {
       int contactId;
