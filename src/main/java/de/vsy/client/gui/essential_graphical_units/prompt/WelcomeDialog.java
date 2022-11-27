@@ -16,6 +16,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.Serial;
@@ -44,6 +45,12 @@ public class WelcomeDialog extends JDialog {
     this.welcomeLoginButton = new JButton();
     this.welcomeNewAccButton = new JButton();
     this.closeApplicationButton = new JButton();
+    var closeDialog = new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            WelcomeDialog.this.setVisible(false);
+          }
+        };
 
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     setTitle("Welcome");
@@ -60,11 +67,13 @@ public class WelcomeDialog extends JDialog {
     this.welcomeLoginButton.setPreferredSize(new Dimension(138, 25));
     this.welcomeLoginButton.setActionCommand(String.valueOf(LOGIN));
     this.welcomeLoginButton.addActionListener(ac);
+    this.welcomeLoginButton.addActionListener(closeDialog);
 
     this.welcomeNewAccButton.setText("New Account");
     this.welcomeNewAccButton.setPreferredSize(new Dimension(138, 25));
     this.welcomeNewAccButton.setActionCommand(String.valueOf(ACCOUNT_CREATION));
     this.welcomeNewAccButton.addActionListener(ac);
+    this.welcomeNewAccButton.addActionListener(closeDialog);
 
     this.closeApplicationButton.setText("Close Application");
     this.closeApplicationButton.setMaximumSize(new Dimension(138, 25));
@@ -72,6 +81,7 @@ public class WelcomeDialog extends JDialog {
     this.closeApplicationButton.setPreferredSize(new Dimension(138, 25));
     this.closeApplicationButton.setActionCommand("CLOSE_APPLICATION");
     this.closeApplicationButton.addActionListener(ac);
+    this.closeApplicationButton.addActionListener(closeDialog);
     this.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {

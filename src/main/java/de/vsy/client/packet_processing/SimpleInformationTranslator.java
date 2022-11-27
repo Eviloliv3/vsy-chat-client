@@ -1,4 +1,4 @@
-package de.vsy.client.packet_processing.content_processing;
+package de.vsy.client.packet_processing;
 
 import de.vsy.client.data_model.notification.SimpleInformation;
 import de.vsy.shared_transmission.packet.content.Translatable;
