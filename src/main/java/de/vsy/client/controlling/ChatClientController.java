@@ -240,6 +240,8 @@ public class ChatClientController implements StatusMessageTriggeredActions {
     } else {
       final var errorCause = "No connection could be initiated. Please close the application now.";
       this.serverDataModel.addNotification(new SimpleInformation(errorCause));
+      //TODO einfach automatisch beenden
+      //this.closeApplication();
       removeAllData();
     }
     return connectionEstablished;

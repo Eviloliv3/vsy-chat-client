@@ -55,7 +55,6 @@ public class GUIController {
         this.guiDataModel, requester);
   }
 
-  //TODO Variablen pruefen und umbennen
   public void closeController() {
     this.guiExecutor.shutdownNow();
     try {

@@ -169,10 +169,8 @@ public class GUIInteractionProcessor
       case CONTACT_ADDITION -> handleContactAddition();
     }
   }
-  //TODO options und default option checken -> Reihenfolge wichtig?
-  // WelcomeDialog bleibt im Hintergrund -> dispose()
-  // Accounterstellung Username falsch angeordnet
-  // Login -> Login erstellt neuen Login Account -> JOptionPane auto dispose()?
+
+  //TODO Accounterstellung Username falsch angeordnet
   private void handleLogin() {
     if (this.serverDataModel.getClientId() == STANDARD_CLIENT_ID) {
       final var loginPanel = new LoginPanel();
