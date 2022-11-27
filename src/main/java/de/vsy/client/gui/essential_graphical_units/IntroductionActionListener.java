@@ -23,7 +23,6 @@ public class IntroductionActionListener implements ActionListener {
         navigator.closeApplication();
       } else {
         type = NavigationGoal.valueOf(e.getActionCommand());
-        ((Component) e.getSource()).getFocusCycleRootAncestor().setVisible(false);
         navigator.navigate(type);
       }
     } catch (IllegalArgumentException iae) {
