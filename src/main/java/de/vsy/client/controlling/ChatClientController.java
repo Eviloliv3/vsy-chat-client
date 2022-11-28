@@ -4,6 +4,7 @@
 package de.vsy.client.controlling;
 
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_BROADCAST_ID;
+import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
 import static java.util.Collections.emptyList;
 
@@ -188,7 +189,7 @@ public class ChatClientController implements StatusMessageTriggeredActions {
    * @throws InterruptedException the interrupted exception
    */
   public void startController() throws InterruptedException {
-    final var noCredentials = this.serverDataModel.getClientId() != STANDARD_SERVER_ID;
+    final var noCredentials = this.serverDataModel.getClientId() == STANDARD_CLIENT_ID;
 
     if (connect()) {
       LOGGER.info("Connection initiated.");
