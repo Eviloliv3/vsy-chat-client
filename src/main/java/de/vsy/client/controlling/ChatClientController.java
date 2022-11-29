@@ -4,6 +4,7 @@
 package de.vsy.client.controlling;
 
 import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.HANDLER_BOUND;
+import static de.vsy.shared_transmission.packet.content.status.ClientService.MESSENGER;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getClientEntity;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getServerEntity;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_BROADCAST_ID;
@@ -33,6 +34,8 @@ import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.authentication.ReconnectRequestDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
+import de.vsy.shared_transmission.packet.content.status.ClientService;
+import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
 import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
 import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
 import java.util.Arrays;
@@ -163,11 +166,7 @@ public class ChatClientController implements StatusMessageTriggeredActions {
    */
   private void sendMessengerStatus(final boolean newStatus) {
     this.requester.request(
-        new ContactMessengerStatusDTO(
-            EligibleContactEntity.CLIENT,
-            newStatus,
-            this.serverDataModel.getCommunicatorData(),
-            emptyList()),
+        new ClientStatusChangeDTO(MESSENGER, newStatus, this.serverDataModel.getCommunicatorData()),
         getClientEntity(STANDARD_CLIENT_BROADCAST_ID));
   }
 
