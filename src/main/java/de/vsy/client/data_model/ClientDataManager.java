@@ -74,4 +74,8 @@ public class ClientDataManager {
     this.personalData = Objects.requireNonNullElseGet(clientData,
         () -> CommunicatorDTO.valueOf(STANDARD_CLIENT_ID, STANDARD_EMPTY_STRING));
   }
+
+  public boolean clientNotLoggedIn(){
+    return this.personalData.getCommunicatorId() == STANDARD_CLIENT_ID;
+  }
 }

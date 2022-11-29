@@ -21,14 +21,12 @@ public class ChatClient {
 
   private static final String SERVER_ADDRESS = "127.0.0.1";
   private final ChatClientController clientController;
-  private final ClientChatGUI clientGui;
   private final Logger LOGGER = LogManager.getLogger();
   private final int[] serverPorts = {7370, 7371};
 
   public ChatClient() {
-    this.clientGui = new ClientChatGUI();
     this.clientController =
-        new ChatClientController(SERVER_ADDRESS, this.serverPorts, this.clientGui);
+        new ChatClientController(SERVER_ADDRESS, this.serverPorts);
   }
 
   /**

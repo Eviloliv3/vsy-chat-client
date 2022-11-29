@@ -6,6 +6,7 @@ package de.vsy.client.controlling;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_BROADCAST_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 import de.vsy.client.connection_handling.ClientConnectionWatcher;
@@ -52,8 +53,8 @@ public class ChatClientController implements StatusMessageTriggeredActions {
   private final Logger LOGGER = LogManager.getLogger();
   private final RequestPacketCreator requester;
   private final ServerDataCache serverDataModel;
-  private final ExecutorService notificationProcessor;
-  private final ExecutorService packetProcessor;
+  private ExecutorService notificationProcessor;
+  private ExecutorService packetProcessor;
   private Timer connectionWatcher;
   private CountDownLatch connectionWaiter;
   private ThreadPacketBufferManager packetBuffers;
@@ -63,30 +64,20 @@ public class ChatClientController implements StatusMessageTriggeredActions {
    *
    * @param serverAddress the server address
    * @param serverPorts   the server ports
-   * @param gui           the gui
    */
-  public ChatClientController(
-      final String serverAddress, final int[] serverPorts, final ClientChatGUI gui) {
+  public ChatClientController(final String serverAddress, final int[] serverPorts) {
     setupPacketBuffers();
     this.connectionManager = new ServerConnectionController(serverAddress, serverPorts,
         this.packetBuffers);
-
     this.serverDataModel = new ServerDataCache(new ClientDataManager(), new ContactDataManager(),
         new MessageManager(), new ClientNotificationManager());
     this.guiDataModel = new GUIStateManager();
-
-    //TODO nachfolgende Zuweisungen erfolgen erst nach erfolgreichem
-    // Verbindungsaufbau ?
     this.requester =
         new RequestPacketCreator(
             this.packetBuffers.getPacketBuffer(ThreadPacketBufferLabel.HANDLER_BOUND));
-
-    this.guiController =
-        new GUIController(gui, this.serverDataModel, this.guiDataModel, this.requester);
     this.dataController = new InputController(this.serverDataModel, this);
     this.packetManagement = new PacketManagementUtilityProvider();
-    this.notificationProcessor = Executors.newSingleThreadExecutor();
-    this.packetProcessor = Executors.newSingleThreadExecutor();
+    this.guiController = new GUIController(new ClientChatGUI(), this.serverDataModel, this.guiDataModel, this.requester);
   }
 
   private void setupPacketBuffers() {
@@ -98,21 +89,8 @@ public class ChatClientController implements StatusMessageTriggeredActions {
   public void closeApplication() {
     this.connectionManager.closeConnection();
     this.guiController.closeController();
-    this.packetProcessor.shutdownNow();
-    this.notificationProcessor.shutdownNow();
-
-    try {
-      this.notificationProcessor.awaitTermination(500, TimeUnit.MILLISECONDS);
-    } catch (InterruptedException ie) {
-      Thread.currentThread().interrupt();
-      LOGGER.error("Interrupted while waiting for NotificationProcessingService to terminate.");
-    }
-    try {
-      this.packetProcessor.awaitTermination(100, TimeUnit.MILLISECONDS);
-    } catch (InterruptedException ie) {
-      Thread.currentThread().interrupt();
-      LOGGER.error("Interrupted while waiting for PacketProcessingService to terminate.");
-    }
+    stopProcessor(this.notificationProcessor);
+    stopProcessor(this.packetProcessor);
     removeAllData();
   }
 
@@ -183,40 +161,75 @@ public class ChatClientController implements StatusMessageTriggeredActions {
         STANDARD_CLIENT_BROADCAST_ID);
   }
 
+  private void startNewNotificationProcessor(){
+    stopProcessor(this.notificationProcessor);
+    final var notificationProcessingService = new NotificationProcessingService(this.serverDataModel, this.requester);
+    this.notificationProcessor = Executors.newSingleThreadExecutor();
+    this.notificationProcessor.execute(notificationProcessingService);
+  }
+
+  private void startNewPacketProcessor(){
+    stopProcessor(this.packetProcessor);
+    final var packetProcessingService = new PacketProcessingService(this.packetManagement, this.dataController, this.serverDataModel,
+        this.packetBuffers,  this.connectionManager);
+    this.packetProcessor = Executors.newSingleThreadExecutor();
+    this.packetProcessor.execute(packetProcessingService);
+  }
+
+  private void stopProcessor(ExecutorService serviceToStop){
+    if(serviceToStop != null) {
+      try {
+        final var threadList = serviceToStop.shutdownNow();
+        var serviceStopped = serviceToStop.awaitTermination(1000, TimeUnit.MILLISECONDS);
+        if (serviceStopped) {
+          for (final var currentThread : threadList) {
+            LOGGER.info("{} instance stopped.", currentThread.getClass().getSimpleName());
+          }
+        } else {
+          final var errorMessage = "Thread instances could not be stopped: " + threadList.toArray();
+          throw new RuntimeException(errorMessage);
+        }
+      } catch (InterruptedException ie) {
+        LOGGER.error("Interrupted while waiting for service termination. {}",
+            asList(ie.getStackTrace()));
+      }
+    }
+  }
+
   /**
    * Start controller.
    *
    * @throws InterruptedException the interrupted exception
    */
   public void startController() throws InterruptedException {
-    final var noCredentials = this.serverDataModel.getClientId() == STANDARD_CLIENT_ID;
 
     if (connect()) {
       LOGGER.info("Connection initiated.");
 
-      if (noCredentials) {
-        final var packetProcessor = createPacketProcessingService();
-        this.packetProcessor.execute(packetProcessor);
-        LOGGER.info("Started processing packets.");
-        final var notificationProcessor = createNotificationProcessingService();
-        this.notificationProcessor.execute(notificationProcessor);
-        LOGGER.info("Started processing notifications.");
+      if (this.packetProcessor == null || this.packetProcessor.isShutdown()) {
+        startNewPacketProcessor();
+        LOGGER.info("PacketProcessingService started.");
+      } else {
+        LOGGER.trace("PacketProcessingService is still working.");
+      }
+
+      if (this.notificationProcessor == null || this.notificationProcessor.isShutdown()) {
+        startNewNotificationProcessor();
+        LOGGER.info("NotificationProcessor started.");
+      } else {
+        LOGGER.trace("NotificationProcessor is still working.");
+      }
+
+      if (!this.guiController.guiNotTerminated()) {
         initiateGUI();
         LOGGER.info("GUI initiated.");
       } else {
-        LOGGER.trace("All processes should still be running.");
+        LOGGER.trace("GUI is still active.");
       }
       keepClientAlive();
+    } else {
+      LOGGER.error("No connection could be established.");
     }
-  }
-
-  private NotificationProcessingService createNotificationProcessingService() {
-    return new NotificationProcessingService(this.serverDataModel, this.requester);
-  }
-
-  private PacketProcessingService createPacketProcessingService() {
-    return new PacketProcessingService(this.packetManagement, this.dataController, this.serverDataModel,
-        this.packetBuffers,  this.connectionManager);
   }
 
   /**
@@ -236,13 +249,13 @@ public class ChatClientController implements StatusMessageTriggeredActions {
         LOGGER.trace("Reconnection not attempted, GUI not ready.");
       }
     } else {
-      final var errorCause = "No connection could be initiated. Please close the application now.";
+      final var errorCause = "No connection could be initiated. If you do not want to attempt another reconnection try close the application within 10 seconds.";
       final var notification = new SimpleInformation(errorCause);
       this.serverDataModel.addNotification(notification);
       //TODO einfach automatisch beenden
       //this.closeApplication();
       try {
-        Thread.currentThread().sleep(1000);
+        Thread.currentThread().sleep(10000);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }

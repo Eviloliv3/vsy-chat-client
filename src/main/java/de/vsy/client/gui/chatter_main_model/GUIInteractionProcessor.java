@@ -172,7 +172,9 @@ public class GUIInteractionProcessor
 
   //TODO Accounterstellung Username falsch angeordnet
   private void handleLogin() {
-    if (this.serverDataModel.getClientId() == STANDARD_CLIENT_ID) {
+    final var notLoggedIn = this.serverDataModel.getClientAccountData().clientNotLoggedIn();
+
+    if (notLoggedIn) {
       final var loginPanel = new LoginPanel();
       final String[] options = {"Login", "Cancel"};
       final var loginOption = JOptionPane.showOptionDialog(null, loginPanel, "Enter credentials",
@@ -209,7 +211,9 @@ public class GUIInteractionProcessor
   }
 
   private void handleAccountCreation() {
-    if (this.serverDataModel.getClientId() == STANDARD_CLIENT_ID) {
+    final var noLoggedIn = this.serverDataModel.getClientAccountData().clientNotLoggedIn();
+
+    if (noLoggedIn) {
 
       var accountCreationPanel = new AccountCreationPanel();
       String[] options = {"Create", "Cancel"};

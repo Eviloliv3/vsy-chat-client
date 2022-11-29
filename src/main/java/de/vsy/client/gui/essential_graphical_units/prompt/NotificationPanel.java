@@ -41,6 +41,7 @@ class NotificationPanel extends JPanel {
     setPreferredSize(new Dimension(260, 160));
 
     statusMessageField.setLineWrap(true);
+    statusMessageField.setWrapStyleWord(true);
     statusMessageField.setEditable(false);
 
     final var statusDialogLayout = new GroupLayout(this);

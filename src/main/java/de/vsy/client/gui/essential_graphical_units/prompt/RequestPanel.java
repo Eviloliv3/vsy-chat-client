@@ -36,6 +36,7 @@ public class RequestPanel extends JPanel {
     setPreferredSize(new Dimension(260, 160));
 
     this.requestMessageField.setLineWrap(true);
+    this.requestMessageField.setWrapStyleWord(true);
     this.requestMessageField.setEditable(false);
 
     final var statusDialogLayout = new GroupLayout(this);
