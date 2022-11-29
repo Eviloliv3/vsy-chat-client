@@ -108,11 +108,6 @@ public class AccountCreationPanel extends JPanel {
                                 TRAILING,
                                 newAccountDialogLayout
                                     .createSequentialGroup()
-                                    .addComponent(this.newAccountUsernameLabel))
-                            .addGroup(
-                                TRAILING,
-                                newAccountDialogLayout
-                                    .createSequentialGroup()
                                     .addComponent(this.newAccountUsernameLabel)
                                     .addPreferredGap(RELATED, 25, MAX_VALUE)
                                     .addComponent(

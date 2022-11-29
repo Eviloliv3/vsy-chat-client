@@ -196,9 +196,9 @@ public class ChatClientController implements StatusMessageTriggeredActions {
 
       if (noCredentials) {
         final var packetProcessor = createPacketProcessingService();
-        final var notificationProcessor = createNotificationProcessingService();
         this.packetProcessor.execute(packetProcessor);
         LOGGER.info("Started processing packets.");
+        final var notificationProcessor = createNotificationProcessingService();
         this.notificationProcessor.execute(notificationProcessor);
         LOGGER.info("Started processing notifications.");
         initiateGUI();
@@ -206,7 +206,6 @@ public class ChatClientController implements StatusMessageTriggeredActions {
       } else {
         LOGGER.trace("All processes should still be running.");
       }
-
       keepClientAlive();
     }
   }
@@ -238,9 +237,15 @@ public class ChatClientController implements StatusMessageTriggeredActions {
       }
     } else {
       final var errorCause = "No connection could be initiated. Please close the application now.";
-      this.serverDataModel.addNotification(new SimpleInformation(errorCause));
+      final var notification = new SimpleInformation(errorCause);
+      this.serverDataModel.addNotification(notification);
       //TODO einfach automatisch beenden
       //this.closeApplication();
+      try {
+        Thread.currentThread().sleep(1000);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
       removeAllData();
     }
     return connectionEstablished;
