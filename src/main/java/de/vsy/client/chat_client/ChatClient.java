@@ -6,7 +6,6 @@ package de.vsy.client.chat_client;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 
 import de.vsy.client.controlling.ChatClientController;
-import de.vsy.client.gui.chatter_main_model.ClientChatGUI;
 import de.vsy.shared_module.packet_creation.ContentIdentificationProviderImpl;
 import de.vsy.shared_module.packet_creation.PacketCompiler;
 import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
@@ -22,11 +21,11 @@ public class ChatClient {
   private static final String SERVER_ADDRESS = "127.0.0.1";
   private final ChatClientController clientController;
   private final Logger LOGGER = LogManager.getLogger();
-  private final int[] serverPorts = {7370, 7371};
 
   public ChatClient() {
+    int[] serverPorts = {7370, 7371};
     this.clientController =
-        new ChatClientController(SERVER_ADDRESS, this.serverPorts);
+        new ChatClientController(SERVER_ADDRESS, serverPorts);
   }
 
   /**

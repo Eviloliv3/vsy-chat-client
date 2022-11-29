@@ -24,13 +24,6 @@ class ChatterMenu extends JMenuBar {
 
   @Serial
   private static final long serialVersionUID = -2264168742233506774L;
-  private JMenuItem addContactMenuButton;
-  private JMenu chatterOptions;
-  private JMenu contactOptions;
-  private JMenuItem loginMenuButton;
-  private JMenuItem logoutMenuButton;
-  private JMenuItem newAccountMenuButton;
-  private JMenuItem removeContactMenuButton;
 
   /**
    * Instantiates a new chatter menu.
@@ -40,39 +33,39 @@ class ChatterMenu extends JMenuBar {
   }
 
   private void initComponents(final ActionListener ac) {
-    this.chatterOptions = new JMenu("Options");
-    this.contactOptions = new JMenu("Contacts");
+    JMenu chatterOptions = new JMenu("Options");
+    JMenu contactOptions = new JMenu("Contacts");
 
-    this.loginMenuButton = new JMenuItem("Login");
-    this.newAccountMenuButton = new JMenuItem("Create Account");
-    this.logoutMenuButton = new JMenuItem("Logout");
+    JMenuItem loginMenuButton = new JMenuItem("Login");
+    JMenuItem newAccountMenuButton = new JMenuItem("Create Account");
+    JMenuItem logoutMenuButton = new JMenuItem("Logout");
 
-    this.addContactMenuButton = new JMenuItem("Add Contact");
-    this.removeContactMenuButton = new JMenuItem("Remove Contact");
+    JMenuItem addContactMenuButton = new JMenuItem("Add Contact");
+    JMenuItem removeContactMenuButton = new JMenuItem("Remove Contact");
 
-    this.loginMenuButton.setActionCommand(String.valueOf(LOGIN));
-    this.loginMenuButton.addActionListener(ac);
+    loginMenuButton.setActionCommand(String.valueOf(LOGIN));
+    loginMenuButton.addActionListener(ac);
 
-    this.newAccountMenuButton.setActionCommand(String.valueOf(ACCOUNT_CREATION));
-    this.newAccountMenuButton.addActionListener(ac);
+    newAccountMenuButton.setActionCommand(String.valueOf(ACCOUNT_CREATION));
+    newAccountMenuButton.addActionListener(ac);
 
-    this.logoutMenuButton.setActionCommand(String.valueOf(LOGOUT));
-    this.logoutMenuButton.addActionListener(ac);
+    logoutMenuButton.setActionCommand(String.valueOf(LOGOUT));
+    logoutMenuButton.addActionListener(ac);
 
-    this.addContactMenuButton.setActionCommand(String.valueOf(CONTACT_ADDITION));
-    this.addContactMenuButton.addActionListener(ac);
+    addContactMenuButton.setActionCommand(String.valueOf(CONTACT_ADDITION));
+    addContactMenuButton.addActionListener(ac);
 
-    this.removeContactMenuButton.setActionCommand(String.valueOf(CONTACT_REMOVAL));
-    this.removeContactMenuButton.addActionListener(ac);
+    removeContactMenuButton.setActionCommand(String.valueOf(CONTACT_REMOVAL));
+    removeContactMenuButton.addActionListener(ac);
 
-    this.chatterOptions.add(this.loginMenuButton);
-    this.chatterOptions.add(this.newAccountMenuButton);
-    this.chatterOptions.add(this.logoutMenuButton);
+    chatterOptions.add(loginMenuButton);
+    chatterOptions.add(newAccountMenuButton);
+    chatterOptions.add(logoutMenuButton);
 
-    this.contactOptions.add(this.addContactMenuButton);
-    this.contactOptions.add(this.removeContactMenuButton);
+    contactOptions.add(addContactMenuButton);
+    contactOptions.add(removeContactMenuButton);
 
-    add(this.chatterOptions);
-    add(this.contactOptions);
+    add(chatterOptions);
+    add(contactOptions);
   }
 }

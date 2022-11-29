@@ -18,7 +18,6 @@ public class RequestPanel extends JPanel {
 
   @Serial
   private static final long serialVersionUID = -3450550022346056050L;
-  private JTextArea requestMessageField;
 
   /**
    * Create the dialog.
@@ -30,14 +29,14 @@ public class RequestPanel extends JPanel {
   }
 
   public final void initComponents(final String request) {
-    this.requestMessageField = new JTextArea(request);
+    JTextArea requestMessageField = new JTextArea(request);
     setMaximumSize(new Dimension(260, 160));
     setMinimumSize(new Dimension(260, 160));
     setPreferredSize(new Dimension(260, 160));
 
-    this.requestMessageField.setLineWrap(true);
-    this.requestMessageField.setWrapStyleWord(true);
-    this.requestMessageField.setEditable(false);
+    requestMessageField.setLineWrap(true);
+    requestMessageField.setWrapStyleWord(true);
+    requestMessageField.setEditable(false);
 
     final var statusDialogLayout = new GroupLayout(this);
     setLayout(statusDialogLayout);
@@ -55,7 +54,7 @@ public class RequestPanel extends JPanel {
                                     .createSequentialGroup()
                                     .addGap(18)
                                     .addComponent(
-                                        this.requestMessageField,
+                                        requestMessageField,
                                         PREFERRED_SIZE,
                                         208,
                                         PREFERRED_SIZE)))
@@ -67,7 +66,7 @@ public class RequestPanel extends JPanel {
                 statusDialogLayout
                     .createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(this.requestMessageField, PREFERRED_SIZE, 73, PREFERRED_SIZE)
+                    .addComponent(requestMessageField, PREFERRED_SIZE, 73, PREFERRED_SIZE)
                     .addPreferredGap(RELATED)
                     .addGap(15)));
   }

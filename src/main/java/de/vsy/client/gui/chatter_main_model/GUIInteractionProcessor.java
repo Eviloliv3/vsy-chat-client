@@ -4,6 +4,8 @@
 package de.vsy.client.gui.chatter_main_model;
 
 import static de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal.INITIAL;
+import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getClientEntity;
+import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getServerEntity;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
 
@@ -33,6 +35,7 @@ import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.ContactRelationRequestDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
+import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -76,7 +79,7 @@ public class GUIInteractionProcessor
               this.serverDataModel.getClientId(),
               contactId, this.serverDataModel.getCommunicatorData(),
               false),
-          contactId);
+          getClientEntity(contactId));
     } else {
       final var errorMessage = "Relationship was not upended. No contact list entry selected";
       this.serverDataModel.addNotification(new SimpleInformation(errorMessage));
@@ -113,7 +116,7 @@ public class GUIInteractionProcessor
       this.requester.request(
           new TextMessageDTO(this.serverDataModel.getClientId(), EligibleContactEntity.CLIENT,
               contactId, message),
-          contactId);
+          getClientEntity(contactId));
     }
   }
 
@@ -136,10 +139,10 @@ public class GUIInteractionProcessor
               false,
               this.serverDataModel.getCommunicatorData(),
               null),
-          STANDARD_SERVER_ID);
+          getServerEntity(STANDARD_SERVER_ID));
       this.requester.request(
           new LogoutRequestDTO(this.serverDataModel.getCommunicatorData()),
-          STANDARD_SERVER_ID);
+          getServerEntity(STANDARD_SERVER_ID));
     }
   }
 
@@ -198,7 +201,7 @@ public class GUIInteractionProcessor
           handleLogin();
         } else {
           //var hashedPassword = PasswordHasher.calculateHash(passwordChars);
-          this.requester.request(new LoginRequestDTO(username, String.valueOf(passwordChars)), STANDARD_SERVER_ID);
+          this.requester.request(new LoginRequestDTO(username, String.valueOf(passwordChars)), getServerEntity(STANDARD_SERVER_ID));
         }
       } else {
         ComponentInputRemover.clearInput(loginPanel);
@@ -231,7 +234,7 @@ public class GUIInteractionProcessor
 
         this.requester.request(new NewAccountRequestDTO(
             new AccountCreationDTO(AuthenticationDTO.valueOf(username, password),
-                PersonalData.valueOf(firstName, lastName))), STANDARD_SERVER_ID);
+                PersonalData.valueOf(firstName, lastName))), getServerEntity(STANDARD_SERVER_ID));
       } else {
         ComponentInputRemover.clearInput(accountCreationPanel);
         this.navigate(INITIAL);
@@ -267,7 +270,7 @@ public class GUIInteractionProcessor
       } else {
         this.requester.request(new ContactRelationRequestDTO(EligibleContactEntity.CLIENT,
             STANDARD_CLIENT_ID, contactId, this.serverDataModel.getClientAccountData()
-            .getCommunicatorDTO(), true), contactId);
+            .getCommunicatorDTO(), true), getClientEntity(contactId));
       }
     } else {
       ComponentInputRemover.clearInput(contactAdd);

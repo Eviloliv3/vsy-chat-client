@@ -3,10 +3,11 @@ package de.vsy.client.controlling;
 import de.vsy.client.data_model.ServerDataCache;
 import de.vsy.client.gui.essential_graphical_units.prompt.NotificationPanel;
 import de.vsy.client.gui.essential_graphical_units.prompt.RequestPanel;
-import de.vsy.client.packet_processing.RequestPacketCreator;
 import de.vsy.client.packet_processing.ClientNotificationTranslator;
+import de.vsy.client.packet_processing.RequestPacketCreator;
 import de.vsy.shared_transmission.packet.content.HumanInteractionRequest;
 import de.vsy.shared_transmission.packet.content.Translatable;
+import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
 import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,7 +47,7 @@ public class NotificationProcessingService implements Runnable {
     final var decision = requestOption == JOptionPane.YES_OPTION;
     this.requester.request(
         request.setDecision(this.dataProvider.getCommunicatorData(),
-            decision), request.getOriginatorId());
+            decision), CommunicationEndpoint.getClientEntity(request.getOriginatorId()));
   }
 
   private void handleNotification(Translatable notification) {

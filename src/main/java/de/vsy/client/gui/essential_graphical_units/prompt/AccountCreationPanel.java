@@ -27,13 +27,9 @@ public class AccountCreationPanel extends JPanel {
   private static final long serialVersionUID = 7076022514835506538L;
 
   private JTextField newAccFirstNameField;
-  private JLabel newAccFirstNameLabel;
   private JTextField newAccLastNameField;
-  private JLabel newAccLastNameLabel;
   private JTextField newAccUsernameField;
-  private JLabel newAccountUsernameLabel;
   private JPasswordField newAccPasswordField;
-  private JLabel newAccPasswordLabel;
 
   /**
    * Create the dialog.
@@ -44,28 +40,28 @@ public class AccountCreationPanel extends JPanel {
 
   private void initComponents() {
 
-    this.newAccountUsernameLabel = new JLabel();
-    this.newAccPasswordLabel = new JLabel();
-    this.newAccountUsernameLabel = new JLabel();
+    JLabel newAccountUsernameLabel = new JLabel();
+    JLabel newAccPasswordLabel = new JLabel();
+    newAccountUsernameLabel = new JLabel();
     this.newAccUsernameField = new JTextField();
     this.newAccPasswordField = new JPasswordField();
-    this.newAccLastNameLabel = new JLabel();
-    this.newAccFirstNameLabel = new JLabel();
+    JLabel newAccLastNameLabel = new JLabel();
+    JLabel newAccFirstNameLabel = new JLabel();
     this.newAccFirstNameField = new JTextField();
     this.newAccLastNameField = new JTextField();
 
     setPreferredSize(new Dimension(260, 265));
     setSize(new Dimension(260, 265));
 
-    this.newAccountUsernameLabel.setText("Username:");
+    newAccountUsernameLabel.setText("Username:");
 
-    this.newAccPasswordLabel.setText("Password:");
+    newAccPasswordLabel.setText("Password:");
 
     this.newAccUsernameField.setMinimumSize(new Dimension(5, 20));
 
-    this.newAccLastNameLabel.setText("Last name:");
+    newAccLastNameLabel.setText("Last name:");
 
-    this.newAccFirstNameLabel.setText("First name:");
+    newAccFirstNameLabel.setText("First name:");
 
     this.newAccFirstNameField.setMinimumSize(new Dimension(5, 20));
 
@@ -86,7 +82,7 @@ public class AccountCreationPanel extends JPanel {
                             .addGroup(
                                 newAccountDialogLayout
                                     .createSequentialGroup()
-                                    .addComponent(this.newAccFirstNameLabel)
+                                    .addComponent(newAccFirstNameLabel)
                                     .addPreferredGap(RELATED, DEFAULT_SIZE, MAX_VALUE)
                                     .addComponent(
                                         this.newAccFirstNameField,
@@ -97,7 +93,7 @@ public class AccountCreationPanel extends JPanel {
                                 TRAILING,
                                 newAccountDialogLayout
                                     .createSequentialGroup()
-                                    .addComponent(this.newAccLastNameLabel)
+                                    .addComponent(newAccLastNameLabel)
                                     .addPreferredGap(RELATED, DEFAULT_SIZE, MAX_VALUE)
                                     .addComponent(
                                         this.newAccLastNameField,
@@ -108,7 +104,7 @@ public class AccountCreationPanel extends JPanel {
                                 TRAILING,
                                 newAccountDialogLayout
                                     .createSequentialGroup()
-                                    .addComponent(this.newAccountUsernameLabel)
+                                    .addComponent(newAccountUsernameLabel)
                                     .addPreferredGap(RELATED, 25, MAX_VALUE)
                                     .addComponent(
                                         this.newAccUsernameField,
@@ -119,7 +115,7 @@ public class AccountCreationPanel extends JPanel {
                                 TRAILING,
                                 newAccountDialogLayout
                                     .createSequentialGroup()
-                                    .addComponent(this.newAccPasswordLabel)
+                                    .addComponent(newAccPasswordLabel)
                                     .addPreferredGap(RELATED, DEFAULT_SIZE, MAX_VALUE)
                                     .addComponent(
                                         this.newAccPasswordField,
@@ -137,7 +133,7 @@ public class AccountCreationPanel extends JPanel {
                     .addGroup(
                         newAccountDialogLayout
                             .createParallelGroup(BASELINE)
-                            .addComponent(this.newAccFirstNameLabel)
+                            .addComponent(newAccFirstNameLabel)
                             .addComponent(
                                 this.newAccFirstNameField,
                                 PREFERRED_SIZE,
@@ -147,7 +143,7 @@ public class AccountCreationPanel extends JPanel {
                     .addGroup(
                         newAccountDialogLayout
                             .createParallelGroup(BASELINE)
-                            .addComponent(this.newAccLastNameLabel)
+                            .addComponent(newAccLastNameLabel)
                             .addComponent(
                                 this.newAccLastNameField,
                                 PREFERRED_SIZE,
@@ -162,7 +158,7 @@ public class AccountCreationPanel extends JPanel {
                                 PREFERRED_SIZE,
                                 DEFAULT_SIZE,
                                 PREFERRED_SIZE)
-                            .addComponent(this.newAccountUsernameLabel))
+                            .addComponent(newAccountUsernameLabel))
                     .addPreferredGap(UNRELATED)
                     .addGroup(
                         newAccountDialogLayout
@@ -172,12 +168,12 @@ public class AccountCreationPanel extends JPanel {
                                 PREFERRED_SIZE,
                                 DEFAULT_SIZE,
                                 PREFERRED_SIZE)
-                            .addComponent(this.newAccPasswordLabel))
+                            .addComponent(newAccPasswordLabel))
                     .addPreferredGap(UNRELATED)
                     .addGroup(
                         newAccountDialogLayout
                             .createParallelGroup(BASELINE)
-                            .addComponent(this.newAccountUsernameLabel))
+                            .addComponent(newAccountUsernameLabel))
                     .addGap(15, 15, 15)));
     getAccessibleContext().setAccessibleName("accountCreationPanel");
   }

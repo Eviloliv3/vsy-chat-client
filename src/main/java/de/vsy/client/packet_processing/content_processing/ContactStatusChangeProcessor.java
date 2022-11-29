@@ -17,7 +17,6 @@ import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDT
 public class ContactStatusChangeProcessor implements ContentProcessor<ContactMessengerStatusDTO> {
 
   private final StatusDataModelAccess dataModel;
-  private final ResultingPacketContentHandler contentHandler;
 
   /**
    * Instantiates a new client status change handler.
@@ -27,7 +26,7 @@ public class ContactStatusChangeProcessor implements ContentProcessor<ContactMes
   public ContactStatusChangeProcessor(final StatusDataModelAccess dataModel,
       final ResultingContentHandlingProvider handlerProvider) {
     this.dataModel = dataModel;
-    this.contentHandler = handlerProvider.getResultingPacketContentHandler();
+    ResultingPacketContentHandler contentHandler = handlerProvider.getResultingPacketContentHandler();
   }
 
   @Override

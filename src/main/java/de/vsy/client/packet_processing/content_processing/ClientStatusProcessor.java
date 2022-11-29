@@ -8,13 +8,11 @@ import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
 
 public class ClientStatusProcessor implements ContentProcessor<ClientStatusChangeDTO> {
 
-  private final StatusDataModelAccess dataModel;
   private final ResultingPacketContentHandler contentHandler;
 
 
   public ClientStatusProcessor(StatusDataModelAccess dataModel,
       ResultingContentHandlingProvider handlerProvider) {
-    this.dataModel = dataModel;
     this.contentHandler = handlerProvider.getResultingPacketContentHandler();
   }
 

@@ -13,7 +13,6 @@ import de.vsy.client.gui.chatter_main_model.ClientChatGUI;
 import de.vsy.client.gui.chatter_main_model.GUIInteractionProcessor;
 import de.vsy.client.gui.essential_graphical_units.ChatterMenu;
 import de.vsy.client.gui.essential_graphical_units.IntroductionActionListener;
-import de.vsy.client.packet_processing.RequestPacketCreator;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -39,20 +38,19 @@ public class GUIController {
    * @param gui        the gui
    * @param serverData the server dataManagement
    * @param guiData    the gui dataManagement
-   * @param requester  the requester
+   * @param guiInteractions the gui interactions
    */
   public GUIController(
       final ClientChatGUI gui,
       final ServerDataCache serverData,
       final GUIStateManager guiData,
-      final RequestPacketCreator requester) {
+      final GUIInteractionProcessor guiInteractions) {
 
     this.guiExecutor = newSingleThreadExecutor();
     this.gui = gui;
     this.serverDataModel = serverData;
     this.guiDataModel = guiData;
-    this.guiInteractions = new GUIInteractionProcessor(this.gui, this.serverDataModel,
-        this.guiDataModel, requester);
+    this.guiInteractions = guiInteractions;
   }
 
   public void closeController() {

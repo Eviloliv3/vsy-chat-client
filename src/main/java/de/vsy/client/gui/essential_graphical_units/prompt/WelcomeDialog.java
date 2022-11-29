@@ -16,7 +16,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.Serial;
@@ -28,9 +27,6 @@ public class WelcomeDialog extends JDialog {
 
   @Serial
   private static final long serialVersionUID = 4922916412599991228L;
-  private JButton closeApplicationButton;
-  private JButton welcomeLoginButton;
-  private JButton welcomeNewAccButton;
 
   /**
    * Instantiates a new welcome dialog.
@@ -42,9 +38,9 @@ public class WelcomeDialog extends JDialog {
   }
 
   private void initComponents(final ActionListener ac) {
-    this.welcomeLoginButton = new JButton();
-    this.welcomeNewAccButton = new JButton();
-    this.closeApplicationButton = new JButton();
+    JButton welcomeLoginButton = new JButton();
+    JButton welcomeNewAccButton = new JButton();
+    JButton closeApplicationButton = new JButton();
     var closeDialog = new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
@@ -61,27 +57,27 @@ public class WelcomeDialog extends JDialog {
     setSize(new Dimension(260, 160));
     setResizable(false);
 
-    this.welcomeLoginButton.setText("Login");
-    this.welcomeLoginButton.setMaximumSize(new Dimension(138, 25));
-    this.welcomeLoginButton.setMinimumSize(new Dimension(138, 25));
-    this.welcomeLoginButton.setPreferredSize(new Dimension(138, 25));
-    this.welcomeLoginButton.setActionCommand(String.valueOf(LOGIN));
-    this.welcomeLoginButton.addActionListener(ac);
-    this.welcomeLoginButton.addActionListener(closeDialog);
+    welcomeLoginButton.setText("Login");
+    welcomeLoginButton.setMaximumSize(new Dimension(138, 25));
+    welcomeLoginButton.setMinimumSize(new Dimension(138, 25));
+    welcomeLoginButton.setPreferredSize(new Dimension(138, 25));
+    welcomeLoginButton.setActionCommand(String.valueOf(LOGIN));
+    welcomeLoginButton.addActionListener(ac);
+    welcomeLoginButton.addActionListener(closeDialog);
 
-    this.welcomeNewAccButton.setText("New Account");
-    this.welcomeNewAccButton.setPreferredSize(new Dimension(138, 25));
-    this.welcomeNewAccButton.setActionCommand(String.valueOf(ACCOUNT_CREATION));
-    this.welcomeNewAccButton.addActionListener(ac);
-    this.welcomeNewAccButton.addActionListener(closeDialog);
+    welcomeNewAccButton.setText("New Account");
+    welcomeNewAccButton.setPreferredSize(new Dimension(138, 25));
+    welcomeNewAccButton.setActionCommand(String.valueOf(ACCOUNT_CREATION));
+    welcomeNewAccButton.addActionListener(ac);
+    welcomeNewAccButton.addActionListener(closeDialog);
 
-    this.closeApplicationButton.setText("Close Application");
-    this.closeApplicationButton.setMaximumSize(new Dimension(138, 25));
-    this.closeApplicationButton.setMinimumSize(new Dimension(138, 25));
-    this.closeApplicationButton.setPreferredSize(new Dimension(138, 25));
-    this.closeApplicationButton.setActionCommand("CLOSE_APPLICATION");
-    this.closeApplicationButton.addActionListener(ac);
-    this.closeApplicationButton.addActionListener(closeDialog);
+    closeApplicationButton.setText("Close Application");
+    closeApplicationButton.setMaximumSize(new Dimension(138, 25));
+    closeApplicationButton.setMinimumSize(new Dimension(138, 25));
+    closeApplicationButton.setPreferredSize(new Dimension(138, 25));
+    closeApplicationButton.setActionCommand("CLOSE_APPLICATION");
+    closeApplicationButton.addActionListener(ac);
+    closeApplicationButton.addActionListener(closeDialog);
     this.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {
@@ -103,11 +99,11 @@ public class WelcomeDialog extends JDialog {
                         welcomeDialogLayout
                             .createParallelGroup(LEADING)
                             .addComponent(
-                                this.closeApplicationButton, PREFERRED_SIZE, 138, PREFERRED_SIZE)
+                                closeApplicationButton, PREFERRED_SIZE, 138, PREFERRED_SIZE)
                             .addComponent(
-                                this.welcomeNewAccButton, PREFERRED_SIZE, 138, PREFERRED_SIZE)
+                                welcomeNewAccButton, PREFERRED_SIZE, 138, PREFERRED_SIZE)
                             .addComponent(
-                                this.welcomeLoginButton, PREFERRED_SIZE, 138, PREFERRED_SIZE))
+                                welcomeLoginButton, PREFERRED_SIZE, 138, PREFERRED_SIZE))
                     .addContainerGap(67, MAX_VALUE)));
     welcomeDialogLayout.setVerticalGroup(
         welcomeDialogLayout
@@ -118,13 +114,13 @@ public class WelcomeDialog extends JDialog {
                     .createSequentialGroup()
                     .addGap(15, 15, 15)
                     .addComponent(
-                        this.welcomeLoginButton, PREFERRED_SIZE, DEFAULT_SIZE, PREFERRED_SIZE)
+                        welcomeLoginButton, PREFERRED_SIZE, DEFAULT_SIZE, PREFERRED_SIZE)
                     .addPreferredGap(UNRELATED)
                     .addComponent(
-                        this.welcomeNewAccButton, PREFERRED_SIZE, DEFAULT_SIZE, PREFERRED_SIZE)
+                        welcomeNewAccButton, PREFERRED_SIZE, DEFAULT_SIZE, PREFERRED_SIZE)
                     .addGap(18, 18, 18)
                     .addComponent(
-                        this.closeApplicationButton, PREFERRED_SIZE, DEFAULT_SIZE, PREFERRED_SIZE)
+                        closeApplicationButton, PREFERRED_SIZE, DEFAULT_SIZE, PREFERRED_SIZE)
                     .addContainerGap(40, MAX_VALUE)));
   }
 }

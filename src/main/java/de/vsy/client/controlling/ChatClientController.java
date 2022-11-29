@@ -3,8 +3,10 @@
  */
 package de.vsy.client.controlling;
 
+import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.HANDLER_BOUND;
+import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getClientEntity;
+import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getServerEntity;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_BROADCAST_ID;
-import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -21,6 +23,7 @@ import de.vsy.client.data_model.ServerDataCache;
 import de.vsy.client.data_model.notification.SimpleInformation;
 import de.vsy.client.gui.GUIController;
 import de.vsy.client.gui.chatter_main_model.ClientChatGUI;
+import de.vsy.client.gui.chatter_main_model.GUIInteractionProcessor;
 import de.vsy.client.packet_processing.PacketManagementUtilityProvider;
 import de.vsy.client.packet_processing.PacketProcessingService;
 import de.vsy.client.packet_processing.RequestPacketCreator;
@@ -31,6 +34,8 @@ import de.vsy.shared_transmission.packet.content.authentication.ReconnectRequest
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
+import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -72,18 +77,23 @@ public class ChatClientController implements StatusMessageTriggeredActions {
     this.serverDataModel = new ServerDataCache(new ClientDataManager(), new ContactDataManager(),
         new MessageManager(), new ClientNotificationManager());
     this.guiDataModel = new GUIStateManager();
-    this.requester =
-        new RequestPacketCreator(
-            this.packetBuffers.getPacketBuffer(ThreadPacketBufferLabel.HANDLER_BOUND));
-    this.dataController = new InputController(this.serverDataModel, this);
     this.packetManagement = new PacketManagementUtilityProvider();
-    this.guiController = new GUIController(new ClientChatGUI(), this.serverDataModel, this.guiDataModel, this.requester);
+    this.requester = new RequestPacketCreator(this.packetBuffers.getPacketBuffer(HANDLER_BOUND), this.packetManagement.getPacketTransmissionCache(),
+            this.packetManagement.getResultingPacketContentHandler());
+    this.dataController = new InputController(this.serverDataModel, this);
+    this.guiController = setupGUIController();
   }
 
   private void setupPacketBuffers() {
     this.packetBuffers = new ThreadPacketBufferManager();
-    this.packetBuffers.registerPacketBuffer(ThreadPacketBufferLabel.HANDLER_BOUND);
+    this.packetBuffers.registerPacketBuffer(HANDLER_BOUND);
     this.packetBuffers.registerPacketBuffer(ThreadPacketBufferLabel.OUTSIDE_BOUND);
+  }
+
+  private GUIController setupGUIController(){
+    ClientChatGUI gui = new ClientChatGUI();
+    GUIInteractionProcessor guiInteractions = new GUIInteractionProcessor(gui, this.serverDataModel, this.guiDataModel, this.requester);
+    return new GUIController(gui, this.serverDataModel, this.guiDataModel, guiInteractions);
   }
 
   public void closeApplication() {
@@ -158,7 +168,7 @@ public class ChatClientController implements StatusMessageTriggeredActions {
             newStatus,
             this.serverDataModel.getCommunicatorData(),
             emptyList()),
-        STANDARD_CLIENT_BROADCAST_ID);
+        getClientEntity(STANDARD_CLIENT_BROADCAST_ID));
   }
 
   private void startNewNotificationProcessor(){
@@ -186,7 +196,8 @@ public class ChatClientController implements StatusMessageTriggeredActions {
             LOGGER.info("{} instance stopped.", currentThread.getClass().getSimpleName());
           }
         } else {
-          final var errorMessage = "Thread instances could not be stopped: " + threadList.toArray();
+          final var errorMessage = "Thread instances could not be stopped: " + Arrays.toString(
+              threadList.toArray());
           throw new RuntimeException(errorMessage);
         }
       } catch (InterruptedException ie) {
@@ -255,7 +266,7 @@ public class ChatClientController implements StatusMessageTriggeredActions {
       //TODO einfach automatisch beenden
       //this.closeApplication();
       try {
-        Thread.currentThread().sleep(10000);
+        Thread.sleep(10000);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
@@ -304,7 +315,7 @@ public class ChatClientController implements StatusMessageTriggeredActions {
 
       if (clientId != STANDARD_SERVER_ID) {
         final var reconnectRequest = new ReconnectRequestDTO(clientData);
-        this.requester.request(reconnectRequest, STANDARD_CLIENT_BROADCAST_ID);
+        this.requester.request(reconnectRequest, getServerEntity(STANDARD_SERVER_ID));
         LOGGER.info("ReconnectRequest sent.");
       }
     } else {

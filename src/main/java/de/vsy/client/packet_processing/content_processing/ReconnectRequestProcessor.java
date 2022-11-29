@@ -8,7 +8,6 @@ import de.vsy.shared_transmission.packet.content.authentication.ReconnectRequest
 
 public class ReconnectRequestProcessor implements ContentProcessor<ReconnectRequestDTO> {
 
-  private final AuthenticationDataModelAccess dataModel;
   private final ResultingPacketContentHandler contentHandler;
 
   /**
@@ -18,7 +17,6 @@ public class ReconnectRequestProcessor implements ContentProcessor<ReconnectRequ
    */
   public ReconnectRequestProcessor(final AuthenticationDataModelAccess dataModel,
       final ResultingContentHandlingProvider handlerProvider) {
-    this.dataModel = dataModel;
     this.contentHandler = handlerProvider.getResultingPacketContentHandler();
   }
 

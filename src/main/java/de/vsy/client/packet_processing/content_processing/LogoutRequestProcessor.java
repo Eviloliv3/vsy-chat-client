@@ -8,12 +8,10 @@ import de.vsy.shared_transmission.packet.content.authentication.LogoutRequestDTO
 
 public class LogoutRequestProcessor implements ContentProcessor<LogoutRequestDTO> {
 
-  private final AuthenticationDataModelAccess dataModel;
   private final ResultingPacketContentHandler contentHandler;
 
   public LogoutRequestProcessor(final AuthenticationDataModelAccess dataModel,
       final ResultingContentHandlingProvider handlerProvider) {
-    this.dataModel = dataModel;
     this.contentHandler = handlerProvider.getResultingPacketContentHandler();
   }
 

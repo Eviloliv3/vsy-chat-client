@@ -8,7 +8,6 @@ import de.vsy.shared_transmission.packet.content.authentication.LoginRequestDTO;
 
 public class LoginRequestProcessor implements ContentProcessor<LoginRequestDTO> {
 
-  private final AuthenticationDataModelAccess dataModel;
   private final ResultingPacketContentHandler contentHandler;
 
   /**
@@ -18,7 +17,6 @@ public class LoginRequestProcessor implements ContentProcessor<LoginRequestDTO> 
    */
   public LoginRequestProcessor(final AuthenticationDataModelAccess dataModel,
       final ResultingContentHandlingProvider handlerProvider) {
-    this.dataModel = dataModel;
     this.contentHandler = handlerProvider.getResultingPacketContentHandler();
   }
 

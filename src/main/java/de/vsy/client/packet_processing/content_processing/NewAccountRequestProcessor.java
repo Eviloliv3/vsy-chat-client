@@ -18,7 +18,6 @@ import de.vsy.shared_transmission.packet.content.authentication.NewAccountReques
  */
 public class NewAccountRequestProcessor implements ContentProcessor<NewAccountRequestDTO> {
 
-  private final AuthenticationDataModelAccess dataModel;
   private final ResultingPacketContentHandler contentHandler;
 
   /**
@@ -28,7 +27,6 @@ public class NewAccountRequestProcessor implements ContentProcessor<NewAccountRe
    */
   public NewAccountRequestProcessor(final AuthenticationDataModelAccess dataModel,
       final ResultingContentHandlingProvider handlerProvider) {
-    this.dataModel = dataModel;
     this.contentHandler = handlerProvider.getResultingPacketContentHandler();
   }
 

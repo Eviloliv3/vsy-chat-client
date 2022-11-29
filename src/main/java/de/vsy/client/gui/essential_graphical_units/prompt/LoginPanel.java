@@ -27,9 +27,7 @@ public class LoginPanel extends JPanel {
   private static final long serialVersionUID = -290337388982445470L;
 
   private JTextField usernameField;
-  private JLabel usernameLabel;
   private JPasswordField loginPasswordField;
-  private JLabel loginPasswordLabel;
 
   /**
    * Create the dialog.
@@ -39,8 +37,8 @@ public class LoginPanel extends JPanel {
   }
 
   private void initComponents() {
-    this.usernameLabel = new JLabel();
-    this.loginPasswordLabel = new JLabel();
+    JLabel usernameLabel = new JLabel();
+    JLabel loginPasswordLabel = new JLabel();
 
     this.usernameField = new JTextField();
     this.loginPasswordField = new JPasswordField();
@@ -50,9 +48,9 @@ public class LoginPanel extends JPanel {
     setPreferredSize(new Dimension(260, 160));
     setSize(new Dimension(260, 160));
 
-    this.usernameLabel.setText("Username");
+    usernameLabel.setText("Username");
 
-    this.loginPasswordLabel.setText("Password");
+    loginPasswordLabel.setText("Password");
 
     this.usernameField.setPreferredSize(new Dimension(120, 19));
 
@@ -76,8 +74,8 @@ public class LoginPanel extends JPanel {
                                     .addGroup(
                                         loginDialogLayout
                                             .createParallelGroup(LEADING)
-                                            .addComponent(this.usernameLabel)
-                                            .addComponent(this.loginPasswordLabel))
+                                            .addComponent(usernameLabel)
+                                            .addComponent(loginPasswordLabel))
                                     .addPreferredGap(RELATED)
                                     .addGroup(
                                         loginDialogLayout
@@ -103,14 +101,14 @@ public class LoginPanel extends JPanel {
                     .addGroup(
                         loginDialogLayout
                             .createParallelGroup(BASELINE)
-                            .addComponent(this.usernameLabel)
+                            .addComponent(usernameLabel)
                             .addComponent(
                                 this.usernameField, PREFERRED_SIZE, DEFAULT_SIZE, PREFERRED_SIZE))
                     .addPreferredGap(UNRELATED)
                     .addGroup(
                         loginDialogLayout
                             .createParallelGroup(TRAILING)
-                            .addComponent(this.loginPasswordLabel)
+                            .addComponent(loginPasswordLabel)
                             .addComponent(
                                 this.loginPasswordField,
                                 PREFERRED_SIZE,
