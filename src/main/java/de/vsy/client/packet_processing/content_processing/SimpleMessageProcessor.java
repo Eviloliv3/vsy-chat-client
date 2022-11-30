@@ -34,20 +34,17 @@ public class SimpleMessageProcessor implements ContentProcessor<TextMessageDTO> 
 
   @Override
   public void processContent(TextMessageDTO toProcess) {
-    PacketContent processedData = null;
     final var messageReceived = toProcess.getReceptionState();
     final var iAmInitiator =
         IdComparator.determineIfOriginator(
             this.dataModel.getClientId(), toProcess.getOriginatorId());
+
+    //TODO ueberarbeiten: es wird nichts zurueckgesandt -> nur angezeigt, wenns ne antwort ist
     if (!iAmInitiator || messageReceived) {
       this.dataModel.addMessage(toProcess);
     }
-
-    if (!iAmInitiator) {
-      processedData = toProcess.setReceptionState();
-    } else if (!messageReceived) {
-      processedData = toProcess;
+    if(iAmInitiator && !messageReceived) {
+      this.contentHandler.addRequest(toProcess);
     }
-    this.contentHandler.addRequest(processedData);
   }
 }
