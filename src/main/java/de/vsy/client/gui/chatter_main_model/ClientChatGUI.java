@@ -4,6 +4,7 @@
 package de.vsy.client.gui.chatter_main_model;
 
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
+import static de.vsy.shared_utility.standard_value.StandardStringProvider.STANDARD_EMPTY_STRING;
 import static java.lang.Short.MAX_VALUE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 import static javax.swing.GroupLayout.Alignment.TRAILING;
@@ -56,7 +57,7 @@ public class ClientChatGUI extends JFrame
 
   public ClientChatGUI() {
     initComponents();
-    initContactlist();
+    initContactList();
   }
 
   private void initComponents() {
@@ -225,12 +226,12 @@ public class ClientChatGUI extends JFrame
         });
   }
 
-  private void initContactlist() {
+  private void initContactList() {
     this.contactList = new JList<>();
     this.contactListScrollBar.add(this.contactList);
     this.contactList.setCellRenderer(new ContactListRenderer());
     this.contactList.setSelectionMode(SINGLE_SELECTION);
-    this.contactList.setToolTipText("");
+    this.contactList.setToolTipText(STANDARD_EMPTY_STRING);
     this.contactList.addMouseListener(
         new MouseAdapter() {
           @Override
@@ -238,14 +239,14 @@ public class ClientChatGUI extends JFrame
             guiChatControl.chooseContact(evt);
           }
         });
-    this.contactList.getAccessibleContext().setAccessibleName("");
+    this.contactList.getAccessibleContext().setAccessibleName(STANDARD_EMPTY_STRING);
     this.contactListScrollBar.setViewportView(this.contactList);
   }
 
   @Override
   public String getMessage() {
     final var message = this.messageInput.getText();
-    this.messageInput.setText("");
+    this.messageInput.setText(STANDARD_EMPTY_STRING);
     return message;
   }
 
@@ -255,7 +256,7 @@ public class ClientChatGUI extends JFrame
   }
 
   /**
-   * Inits the GUI control.
+   * Initializes the GUI control.
    *
    * @param guiController     the gui essential action controller
    * @param guiChatController the chat relation action controller
@@ -321,15 +322,6 @@ public class ClientChatGUI extends JFrame
   }
 
   /**
-   * Sets the chat label.
-   *
-   * @param newLabel the new chat label
-   */
-  public void setChatLabel(final String newLabel) {
-    this.activeChatLabel.setText(newLabel);
-  }
-
-  /**
    * Sets the contact list model.
    *
    * @param contactList the new contact list model
@@ -371,7 +363,7 @@ public class ClientChatGUI extends JFrame
       int clientId = contactData.getCommunicatorId();
 
       if (clientId != STANDARD_CLIENT_ID) {
-        sb.append("Eingeloggt als: ")
+        sb.append("You are ")
             .append(contactData.getDisplayLabel())
             .append(" (ID: ")
             .append(clientId)
@@ -380,7 +372,7 @@ public class ClientChatGUI extends JFrame
     }
 
     if (sb.length() == 0) {
-      sb.append("Nicht authentifiziert");
+      sb.append("Not authenticated");
     }
 
     setTitle(sb.toString());

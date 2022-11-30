@@ -24,7 +24,7 @@ public class MessengerTearDownProcessor implements ContentProcessor<MessengerTea
       this.dataModel.tearDownMessenger();
     } else {
       this.dataModel.addNotification(new SimpleInformation(
-          "Abmeldung vom Chat-Dienst ist fehlgeschlagen."));
+          "Checkout from messenger service failed."));
     }
   }
 }

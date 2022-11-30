@@ -37,18 +37,18 @@ public class ChatClient {
     final var client = new ChatClient();
     PacketCompiler.addOriginatorEntityProvider(
         () -> CommunicationEndpoint.getClientEntity(STANDARD_CLIENT_ID));
-    PacketCompiler.addContentIdentificator(new ContentIdentificationProviderImpl());
+    PacketCompiler.addContentIdentificationProvider(new ContentIdentificationProviderImpl());
     client.start();
   }
 
   public void start() {
-    LOGGER.info("Client gestartet.");
+    LOGGER.info("Client started.");
 
     try {
       this.clientController.startController();
     } catch (final InterruptedException ie) {
       Thread.currentThread().interrupt();
-      LOGGER.error("Klient unterbrochen.");
+      LOGGER.error("Client startup interrupted.");
     }
   }
 }

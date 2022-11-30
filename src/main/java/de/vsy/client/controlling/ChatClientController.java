@@ -10,7 +10,6 @@ import static de.vsy.shared_transmission.packet.property.communicator.Communicat
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_BROADCAST_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 
 import de.vsy.client.connection_handling.ClientConnectionWatcher;
 import de.vsy.client.connection_handling.ServerConnectionController;
@@ -33,11 +32,7 @@ import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.authentication.ReconnectRequestDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
-import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
-import de.vsy.shared_transmission.packet.content.status.ClientService;
 import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
-import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
-import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.concurrent.CountDownLatch;
@@ -116,7 +111,7 @@ public class ChatClientController implements StatusMessageTriggeredActions {
   public void completeLogin() {
     this.guiController.processClientData();
     this.guiController.addContactsToGui();
-    sendMessengerStatus(true);
+    sendMessengerStatus();
   }
 
   @Override
@@ -161,12 +156,10 @@ public class ChatClientController implements StatusMessageTriggeredActions {
 
   /**
    * Send messenger status.
-   *
-   * @param newStatus the new status
    */
-  private void sendMessengerStatus(final boolean newStatus) {
+  private void sendMessengerStatus() {
     this.requester.request(
-        new ClientStatusChangeDTO(MESSENGER, newStatus, this.serverDataModel.getCommunicatorData()),
+        new ClientStatusChangeDTO(MESSENGER, true, this.serverDataModel.getCommunicatorData()),
         getClientEntity(STANDARD_CLIENT_BROADCAST_ID));
   }
 
@@ -262,7 +255,7 @@ public class ChatClientController implements StatusMessageTriggeredActions {
       final var errorCause = "No connection could be initiated. If you do not want to attempt another reconnection try close the application within 10 seconds.";
       final var notification = new SimpleInformation(errorCause);
       this.serverDataModel.addNotification(notification);
-      //TODO einfach automatisch beenden
+      //TODO should the application shutdown automatically at this point?
       //this.closeApplication();
       try {
         Thread.sleep(10000);
@@ -290,7 +283,7 @@ public class ChatClientController implements StatusMessageTriggeredActions {
   }
 
   /**
-   * Versucht Verbindungswiederaufbau, solange das GUI nicht geschlossen wurde.
+   * Tries to reconnect to server, until the GUI is closed.
    *
    * @throws InterruptedException the interrupted exception
    */

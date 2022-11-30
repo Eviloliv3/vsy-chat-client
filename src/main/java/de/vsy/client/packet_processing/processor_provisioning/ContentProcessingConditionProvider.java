@@ -17,23 +17,17 @@ public class ContentProcessingConditionProvider {
       case NOT_AUTHENTICATED -> new HandlerProcessingCondition<>(
           dataModel::isClientLoggedIn,
           FALSE,
-          "Anfrage nicht bearbeitet. Sie sind bereits authentifiziert.");
+          "Request will not be processed. You already authenticated yourself.");
       case AUTHENTICATED -> new HandlerProcessingCondition<>(
           dataModel::isClientLoggedIn,
           TRUE,
-          "Anfrage nicht bearbeitet. Sie sind noch nicht authentifiziert.");
-        /* case ACTIVE_MESSENGER:
-            createdConditionProvider = new HandlerProcessingCondition<>(
+          "Request will not be processed. You already authenticated yourself.");
+        case ACTIVE_MESSENGER -> new HandlerProcessingCondition<>(
                     dataModel::isClientLoggedIn, Boolean.TRUE,
-                    "Anfrage nicht bearbeitet. Sie sind als Messenger registriert.");
-            break;
-        case NOT_ACTIVE_MESSENGER:
-            createdConditionProvider = new HandlerProcessingCondition<>(
+                    "Request will not be processed. You are registered as active messenger.");
+        case NOT_ACTIVE_MESSENGER ->new HandlerProcessingCondition<>(
                     dataModel::isClientLoggedIn, Boolean.FALSE,
-                    "Anfrage nicht bearbeitet. Sie sind nicht als Messenger registriert.");
-            break;
-        */
-      default -> null;
+                    "Request will not be processed. You are not registered as active messenger.");
     };
   }
 }

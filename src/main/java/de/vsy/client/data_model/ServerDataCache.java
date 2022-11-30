@@ -163,12 +163,11 @@ public class ServerDataCache implements ClientDataProvider {
    *
    * @param contactType the client id
    * @param contactData the contact dataManagement
-   * @return the active contact
    */
-  public boolean removeContact(
+  public void removeContact(
       final EligibleContactEntity contactType, final CommunicatorDTO contactData) {
-    return this.activeContactController.removeContact(contactType, contactData)
-        && this.messageController.removeMessagesForClient(contactData.getCommunicatorId());
+    this.activeContactController.removeContact(contactType, contactData);
+        this.messageController.removeMessagesForClient(contactData.getCommunicatorId());
   }
 
   public void resetAllData() {

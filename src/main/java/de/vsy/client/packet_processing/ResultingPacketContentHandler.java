@@ -25,11 +25,6 @@ public class ResultingPacketContentHandler {
     this.packetCache.addPacket(request);
   }
 
-  public void addResponse(PacketContent content) {
-    final var response = this.standardResultCreator.createResponse(content);
-    this.packetCache.addPacket(response);
-  }
-
   public void setError(final PacketContent errorContent) {
     final var response = this.standardResultCreator.createResponse(errorContent);
     this.packetCache.putError(response);

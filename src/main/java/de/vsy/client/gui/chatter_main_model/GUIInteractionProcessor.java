@@ -27,7 +27,6 @@ import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.dto.authentication.AccountCreationDTO;
 import de.vsy.shared_transmission.dto.authentication.AuthenticationDTO;
 import de.vsy.shared_transmission.dto.authentication.PersonalData;
-import de.vsy.shared_transmission.packet.content.PacketContent;
 import de.vsy.shared_transmission.packet.content.authentication.LoginRequestDTO;
 import de.vsy.shared_transmission.packet.content.authentication.LogoutRequestDTO;
 import de.vsy.shared_transmission.packet.content.authentication.NewAccountRequestDTO;
@@ -35,7 +34,6 @@ import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.ContactRelationRequestDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
-import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -173,7 +171,7 @@ public class GUIInteractionProcessor
     }
   }
 
-  //TODO Accounterstellung Username falsch angeordnet
+  //TODO account creation: layout wrong for username label
   private void handleLogin() {
     final var notLoggedIn = this.serverDataModel.getClientAccountData().clientNotLoggedIn();
 
@@ -184,7 +182,6 @@ public class GUIInteractionProcessor
           JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
       if (loginOption == JOptionPane.OK_OPTION) {
-        final PacketContent data;
         final String username;
         char[] passwordChars;
 
@@ -208,7 +205,7 @@ public class GUIInteractionProcessor
         navigate(INITIAL);
       }
     } else {
-      final var notification = new SimpleInformation("Bitte melden Sie sich zuerst ab.");
+      final var notification = new SimpleInformation("You cannot do this right now. Please logout before retrying.");
       this.serverDataModel.addNotification(notification);
     }
   }
@@ -225,7 +222,6 @@ public class GUIInteractionProcessor
           options, options[0]);
       //TODO string checks
       if (creationOption == JOptionPane.OK_OPTION) {
-        final PacketContent data;
         var firstName = accountCreationPanel.getFirstName();
         var lastName = accountCreationPanel.getLastName();
         //var password = PasswordHasher.calculateHash(accountCreationPanel.getPassword());
@@ -240,7 +236,7 @@ public class GUIInteractionProcessor
         this.navigate(INITIAL);
       }
     } else {
-      final var notification = new SimpleInformation("Bitte melden Sie sich zuerst ab.");
+      final var notification = new SimpleInformation("You cannot do this right now. Please logout before retrying.");
       this.serverDataModel.addNotification(notification);
     }
   }

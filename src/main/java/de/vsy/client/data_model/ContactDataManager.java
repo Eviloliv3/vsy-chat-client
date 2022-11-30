@@ -33,7 +33,7 @@ public class ContactDataManager {
       final Map<EligibleContactEntity, Set<CommunicatorDTO>> activeContactMap) {
 
     if (activeContactMap == null) {
-      throw new NullPointerException("Es waren wurde keine Map aktiver Kontakte uebergeben.");
+      throw new NullPointerException("Contact map null.");
     }
     this.activeContactMap = activeContactMap;
   }
@@ -71,18 +71,16 @@ public class ContactDataManager {
    *
    * @param contactType the contact type
    * @param contactData the contact dataManagement
-   * @return the active contact
    */
-  public boolean removeContact(
+  public void removeContact(
       final EligibleContactEntity contactType, final CommunicatorDTO contactData) {
     var contactRemoved = false;
     final var contactSet = this.activeContactMap.get(contactType);
 
     if (contactSet != null) {
-      contactRemoved = contactSet.remove(contactData);
+      contactSet.remove(contactData);
       this.activeContactMap.put(contactType, contactSet);
     }
-    return contactRemoved;
   }
 
   /**

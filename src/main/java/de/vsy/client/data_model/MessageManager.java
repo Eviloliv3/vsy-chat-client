@@ -106,8 +106,8 @@ public class MessageManager {
    *
    * @param clientId the client id
    */
-  public boolean removeMessagesForClient(final int clientId) {
-    return this.oldMessages.remove(clientId) != null;
+  public void removeMessagesForClient(final int clientId) {
+    this.oldMessages.remove(clientId);
   }
 
   /**

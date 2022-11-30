@@ -103,16 +103,6 @@ public class GUIStateManager {
     return this.messages;
   }
 
-
-  /**
-   * Gets the active client.
-   *
-   * @return the active client
-   */
-  public CommunicatorDTO getActiveClient() {
-    return this.activeClient;
-  }
-
   /**
    * Sets the active client.
    *

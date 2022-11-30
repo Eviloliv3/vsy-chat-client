@@ -39,7 +39,7 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer<Obje
       setText(client.getDisplayLabel());
     } catch (final ClassCastException cc) {
       err.println(
-          "Element konnte nicht gezeichnet werden: Cast " + "nach TextMessage nicht moeglich");
+          "CommunicatorDTO could not be be painted: {} " + cc.getClass().getSimpleName() + " occurred for " + value);
     }
 
     if (isSelected) {

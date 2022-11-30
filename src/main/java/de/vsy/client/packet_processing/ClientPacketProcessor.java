@@ -28,7 +28,6 @@ public class ClientPacketProcessor<RequestContent extends PacketContent>
   @Override
   public void processPacket(Packet input)
       throws PacketProcessingException, PacketValidationException {
-    String errorMessage = null;
 
     if (processingCondition.checkCondition()) {
       final var content = input.getPacketContent();

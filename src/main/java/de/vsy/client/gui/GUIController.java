@@ -56,10 +56,16 @@ public class GUIController {
   public void closeController() {
     this.guiExecutor.shutdownNow();
     try {
-      this.guiExecutor.awaitTermination(1000, TimeUnit.MILLISECONDS);
+      var guiTerminated = this.guiExecutor.awaitTermination(5000, TimeUnit.MILLISECONDS);
+
+      if(guiTerminated){
+        LOGGER.trace("GUI successfully shutdown.");
+      }else{
+        LOGGER.error("GUI shutdown unexpectedly took more than 5 second and may be deadlocked.");
+      }
     } catch (final InterruptedException e) {
       Thread.currentThread().interrupt();
-      LOGGER.error("Beim Warten auf das Schliessen aller Dialoge unterbrochen.");
+      LOGGER.error("Interrupted while waiting for gui thread to shutdown.");
     }
   }
 

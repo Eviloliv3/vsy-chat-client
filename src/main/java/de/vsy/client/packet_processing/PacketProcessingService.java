@@ -77,12 +77,12 @@ public class PacketProcessingService implements Runnable {
 
   @Override
   public void run() {
-    LOGGER.info("Service gestartet.");
+    LOGGER.info("PacketProcessingService started.");
     while (this.connectionControl.getConnectionState() && !(Thread.currentThread().isInterrupted())) {
 
       processInput();
     }
-    LOGGER.info("Service beendet.");
+    LOGGER.info("PacketProcessingService terminated.");
   }
 
   private void processInput() {
@@ -92,7 +92,7 @@ public class PacketProcessingService implements Runnable {
       input = this.inputBuffer.getPacket();
     } catch (InterruptedException ie) {
       Thread.currentThread().interrupt();
-      LOGGER.error("Beim Holen des naechsten Pakets unterbrochen.");
+      LOGGER.error("Interrupted while waiting for the next Packet.");
       input = null;
     }
 

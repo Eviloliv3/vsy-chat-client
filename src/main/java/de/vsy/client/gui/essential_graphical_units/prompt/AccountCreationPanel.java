@@ -3,7 +3,6 @@
  */
 package de.vsy.client.gui.essential_graphical_units.prompt;
 
-import static de.vsy.shared_utility.standard_value.StandardStringProvider.STANDARD_EMPTY_STRING;
 import static java.lang.Short.MAX_VALUE;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
@@ -42,7 +41,6 @@ public class AccountCreationPanel extends JPanel {
 
     JLabel newAccountUsernameLabel = new JLabel();
     JLabel newAccPasswordLabel = new JLabel();
-    newAccountUsernameLabel = new JLabel();
     this.newAccUsernameField = new JTextField();
     this.newAccPasswordField = new JPasswordField();
     JLabel newAccLastNameLabel = new JLabel();
@@ -176,15 +174,6 @@ public class AccountCreationPanel extends JPanel {
                             .addComponent(newAccountUsernameLabel))
                     .addGap(15, 15, 15)));
     getAccessibleContext().setAccessibleName("accountCreationPanel");
-  }
-
-  public void clearInput() {
-    this.newAccFirstNameField.setText(STANDARD_EMPTY_STRING);
-    this.newAccLastNameField.setText(STANDARD_EMPTY_STRING);
-    this.newAccUsernameField.setText(STANDARD_EMPTY_STRING);
-    this.newAccPasswordField.setText(STANDARD_EMPTY_STRING);
-
-
   }
 
   /**
