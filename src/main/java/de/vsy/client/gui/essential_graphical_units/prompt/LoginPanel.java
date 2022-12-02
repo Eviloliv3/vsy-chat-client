@@ -52,9 +52,9 @@ public class LoginPanel extends JPanel {
 
     loginPasswordLabel.setText("Password");
 
-    this.usernameField.setPreferredSize(new Dimension(120, 19));
+    this.usernameField.setPreferredSize(new Dimension(120, 24));
 
-    this.loginPasswordField.setPreferredSize(new Dimension(120, 19));
+    this.loginPasswordField.setPreferredSize(new Dimension(120, 24));
 
     final var loginDialogLayout = new GroupLayout(this);
     setLayout(loginDialogLayout);

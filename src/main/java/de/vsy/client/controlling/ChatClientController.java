@@ -95,6 +95,9 @@ public class ChatClientController implements StatusMessageTriggeredActions {
   }
 
   public void closeApplication() {
+    //TODO restructure -> use gui to logout no listener? -> otherwise client has to send state
+    // changes from here = client data missing,
+    //TODO messenger status change without triggering messengersetupdto ??
     this.connectionManager.closeConnection();
     this.guiController.closeController();
     stopProcessor(this.notificationProcessor);

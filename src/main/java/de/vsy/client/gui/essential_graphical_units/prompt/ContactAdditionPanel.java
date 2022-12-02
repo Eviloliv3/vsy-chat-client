@@ -40,10 +40,10 @@ class ContactAdditionPanel extends JPanel {
     addContactIdLabel.setText("Contact id:");
 
     this.newContactIdField = new JTextField();
-    this.newContactIdField.setPreferredSize(new Dimension(120, 19));
-    this.newContactIdField.setMaximumSize(new Dimension(120, 19));
-    this.newContactIdField.setMinimumSize(new Dimension(120, 19));
-    this.newContactIdField.setSize(new Dimension(120, 19));
+    this.newContactIdField.setPreferredSize(new Dimension(120, 24));
+    this.newContactIdField.setMaximumSize(new Dimension(120, 24));
+    this.newContactIdField.setMinimumSize(new Dimension(120, 24));
+    this.newContactIdField.setSize(new Dimension(120, 24));
     this.newContactIdField.setColumns(10);
     getAccessibleContext().setAccessibleName("contactAdditionPanel");
     final var groupLayout = new GroupLayout(this);
