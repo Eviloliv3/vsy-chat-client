@@ -1,73 +1,58 @@
 /*
- *
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package de.vsy.client.gui.essential_graphical_units.prompt;
 
-import static java.lang.Short.MAX_VALUE;
-import static javax.swing.GroupLayout.Alignment.LEADING;
-import static javax.swing.GroupLayout.PREFERRED_SIZE;
-import static javax.swing.LayoutStyle.ComponentPlacement.RELATED;
-
-import java.awt.Dimension;
-import java.io.Serial;
 import javax.swing.GroupLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+/**
+ *
+ * @author fredward
+ */
 public class RequestPanel extends JPanel {
 
-  @Serial
-  private static final long serialVersionUID = -3450550022346056050L;
-
   /**
-   * Create the dialog.
-   *
-   * @param request the request
+   * Creates new form LoginPanel
    */
-  public RequestPanel(final String request) {
-    initComponents(request);
+  public RequestPanel(final String message) {
+    initComponents(message);
   }
 
-  public final void initComponents(final String request) {
-    JTextArea requestMessageField = new JTextArea(request);
-    setMaximumSize(new Dimension(260, 160));
-    setMinimumSize(new Dimension(260, 160));
-    setPreferredSize(new Dimension(260, 160));
+  // <editor-fold defaultstate="collapsed" desc="Generated Code">
+  private void initComponents(final String message) {
 
-    requestMessageField.setLineWrap(true);
-    requestMessageField.setWrapStyleWord(true);
-    requestMessageField.setEditable(false);
+    JScrollPane jScrollPane1 = new JScrollPane();
+    JTextArea requestField = new JTextArea(message);
 
-    final var statusDialogLayout = new GroupLayout(this);
-    setLayout(statusDialogLayout);
-    statusDialogLayout.setHorizontalGroup(
-        statusDialogLayout
-            .createParallelGroup(LEADING)
-            .addGroup(
-                statusDialogLayout
-                    .createSequentialGroup()
-                    .addGroup(
-                        statusDialogLayout
-                            .createParallelGroup(LEADING)
-                            .addGroup(
-                                statusDialogLayout
-                                    .createSequentialGroup()
-                                    .addGap(18)
-                                    .addComponent(
-                                        requestMessageField,
-                                        PREFERRED_SIZE,
-                                        208,
-                                        PREFERRED_SIZE)))
-                    .addContainerGap(24, MAX_VALUE)));
-    statusDialogLayout.setVerticalGroup(
-        statusDialogLayout
-            .createParallelGroup(LEADING)
-            .addGroup(
-                statusDialogLayout
-                    .createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(requestMessageField, PREFERRED_SIZE, 73, PREFERRED_SIZE)
-                    .addPreferredGap(RELATED)
-                    .addGap(15)));
+    requestField.setEditable(false);
+    requestField.setColumns(20);
+    requestField.setLineWrap(true);
+    requestField.setRows(2);
+    requestField.setWrapStyleWord(true);
+    jScrollPane1.setViewportView(requestField);
+
+    GroupLayout layout = new GroupLayout(this);
+    this.setLayout(layout);
+    layout.setHorizontalGroup(
+        layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                .addContainerGap())
+    );
+    layout.setVerticalGroup(
+        layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                .addContainerGap())
+    );
+
+    getAccessibleContext().setAccessibleName("");
+    getAccessibleContext().setAccessibleDescription("");
   }
 }

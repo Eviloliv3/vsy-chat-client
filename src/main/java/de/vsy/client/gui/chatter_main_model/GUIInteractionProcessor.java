@@ -3,7 +3,7 @@
  */
 package de.vsy.client.gui.chatter_main_model;
 
-import static de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal.INITIAL;
+import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.INITIAL;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getClientEntity;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getServerEntity;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
@@ -19,7 +19,7 @@ import de.vsy.client.gui.essential_graphical_units.IntroductionActionListener;
 import de.vsy.client.gui.essential_graphical_units.prompt.AccountCreationPanel;
 import de.vsy.client.gui.essential_graphical_units.prompt.ContactAdditionPanel;
 import de.vsy.client.gui.essential_graphical_units.prompt.LoginPanel;
-import de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal;
+import de.vsy.client.gui.essential_graphical_units.NavigationGoal;
 import de.vsy.client.gui.essential_graphical_units.prompt.WelcomeDialog;
 import de.vsy.client.gui.utility.ComponentInputRemover;
 import de.vsy.client.packet_processing.RequestPacketCreator;
@@ -226,7 +226,7 @@ public class GUIInteractionProcessor
         var lastName = accountCreationPanel.getLastName();
         //var password = PasswordHasher.calculateHash(accountCreationPanel.getPassword());
         var password = String.valueOf(accountCreationPanel.getPassword());
-        var username = accountCreationPanel.getLogin();
+        var username = accountCreationPanel.getUsername();
 
         this.requester.request(new NewAccountRequestDTO(
             new AccountCreationDTO(AuthenticationDTO.valueOf(username, password),

@@ -1,139 +1,78 @@
-/*
- *
- */
 package de.vsy.client.gui.essential_graphical_units.prompt;
 
-import static java.lang.Short.MAX_VALUE;
-import static javax.swing.GroupLayout.Alignment.BASELINE;
-import static javax.swing.GroupLayout.Alignment.LEADING;
-import static javax.swing.GroupLayout.Alignment.TRAILING;
-import static javax.swing.GroupLayout.DEFAULT_SIZE;
-import static javax.swing.GroupLayout.PREFERRED_SIZE;
-import static javax.swing.LayoutStyle.ComponentPlacement.RELATED;
-import static javax.swing.LayoutStyle.ComponentPlacement.UNRELATED;
-
-import java.awt.Dimension;
-import java.awt.Point;
-import java.io.Serial;
-import javax.swing.GroupLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class LoginPanel extends JPanel {
+/**
+ *
+ * @author fredward
+ */
+public class LoginPanel extends javax.swing.JPanel {
 
-  @Serial
-  private static final long serialVersionUID = -290337388982445470L;
 
+  private JPasswordField passwordField;
   private JTextField usernameField;
-  private JPasswordField loginPasswordField;
 
-  /**
-   * Create the dialog.
-   */
   public LoginPanel() {
     initComponents();
   }
-
   private void initComponents() {
+
     JLabel usernameLabel = new JLabel();
-    JLabel loginPasswordLabel = new JLabel();
+    JLabel passwordLabel = new JLabel();
+    usernameField = new JTextField();
+    passwordField = new JPasswordField();
 
-    this.usernameField = new JTextField();
-    this.loginPasswordField = new JPasswordField();
+    usernameLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+    usernameLabel.setLabelFor(usernameField);
+    usernameLabel.setText("Username:");
+    usernameLabel.setName("usernameLabel"); // NOI18N
 
-    setLocation(new Point(75, 100));
-    setMinimumSize(new Dimension(260, 160));
-    setPreferredSize(new Dimension(260, 160));
-    setSize(new Dimension(260, 160));
+    passwordLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+    passwordLabel.setLabelFor(passwordField);
+    passwordLabel.setText("Password:");
 
-    usernameLabel.setText("Username");
+    usernameField.setColumns(15);
+    passwordField.setColumns(15);
 
-    loginPasswordLabel.setText("Password");
-
-    this.usernameField.setPreferredSize(new Dimension(120, 24));
-
-    this.loginPasswordField.setPreferredSize(new Dimension(120, 24));
-
-    final var loginDialogLayout = new GroupLayout(this);
-    setLayout(loginDialogLayout);
-    loginDialogLayout.setHorizontalGroup(
-        loginDialogLayout
-            .createParallelGroup(LEADING)
-            .addGroup(
-                loginDialogLayout
-                    .createSequentialGroup()
-                    .addGroup(
-                        loginDialogLayout
-                            .createParallelGroup(LEADING)
-                            .addGroup(
-                                loginDialogLayout
-                                    .createSequentialGroup()
-                                    .addGap(19, 19, 19)
-                                    .addGroup(
-                                        loginDialogLayout
-                                            .createParallelGroup(LEADING)
-                                            .addComponent(usernameLabel)
-                                            .addComponent(loginPasswordLabel))
-                                    .addPreferredGap(RELATED)
-                                    .addGroup(
-                                        loginDialogLayout
-                                            .createParallelGroup(LEADING)
-                                            .addComponent(
-                                                this.usernameField,
-                                                PREFERRED_SIZE,
-                                                120,
-                                                PREFERRED_SIZE)
-                                            .addComponent(
-                                                this.loginPasswordField,
-                                                PREFERRED_SIZE,
-                                                120,
-                                                PREFERRED_SIZE))))
-                    .addContainerGap(18, MAX_VALUE)));
-    loginDialogLayout.setVerticalGroup(
-        loginDialogLayout
-            .createParallelGroup(LEADING)
-            .addGroup(
-                loginDialogLayout
-                    .createSequentialGroup()
-                    .addGap(15, 15, 15)
-                    .addGroup(
-                        loginDialogLayout
-                            .createParallelGroup(BASELINE)
-                            .addComponent(usernameLabel)
-                            .addComponent(
-                                this.usernameField, PREFERRED_SIZE, DEFAULT_SIZE, PREFERRED_SIZE))
-                    .addPreferredGap(UNRELATED)
-                    .addGroup(
-                        loginDialogLayout
-                            .createParallelGroup(TRAILING)
-                            .addComponent(loginPasswordLabel)
-                            .addComponent(
-                                this.loginPasswordField,
-                                PREFERRED_SIZE,
-                                DEFAULT_SIZE,
-                                PREFERRED_SIZE)))
-            .addGap(15, 15, 15));
-
-    getAccessibleContext().setAccessibleName("loginPanel");
+    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+    this.setLayout(layout);
+    layout.setHorizontalGroup(
+        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(usernameLabel)
+                    .addComponent(passwordLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(usernameField, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                .addContainerGap())
+    );
+    layout.setVerticalGroup(
+        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(usernameLabel))
+                    .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(passwordLabel)
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+    );
   }
 
-  /**
-   * Gets the login name.
-   *
-   * @return the login name
-   */
-  public String getUsername() {
+  public String getUsername (){
     return this.usernameField.getText();
   }
 
-  /**
-   * Gets the password.
-   *
-   * @return the password
-   */
-  public char[] getPassword() {
-    return this.loginPasswordField.getPassword();
+  public char[] getPassword(){
+    return this.passwordField.getPassword();
   }
 }

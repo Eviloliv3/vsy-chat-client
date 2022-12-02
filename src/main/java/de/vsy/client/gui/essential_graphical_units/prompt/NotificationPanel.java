@@ -1,65 +1,55 @@
 /*
- *
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package de.vsy.client.gui.essential_graphical_units.prompt;
 
-import static java.lang.Short.MAX_VALUE;
-import static javax.swing.GroupLayout.Alignment.LEADING;
-import static javax.swing.GroupLayout.Alignment.TRAILING;
-import static javax.swing.GroupLayout.DEFAULT_SIZE;
-import static javax.swing.GroupLayout.PREFERRED_SIZE;
-
-import java.awt.Dimension;
-import java.io.Serial;
 import javax.swing.GroupLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public
-class NotificationPanel extends JPanel {
+/**
+ *
+ * @author fredward
+ */
+public class NotificationPanel extends JPanel {
 
-  @Serial
-  private static final long serialVersionUID = 6289227728904151492L;
-  private final String notification;
-
-
-  /**
-   * Create the dialog.
-   *
-   * @param notification the message
-   */
-  public NotificationPanel(final String notification) {
-    this.notification = notification;
-    initComponents();
+  public NotificationPanel(final String message) {
+    initComponents(message);
   }
 
-  private void initComponents() {
-    final var statusMessageField = new JTextArea(notification);
+  private void initComponents(final String message) {
 
-    setMaximumSize(new Dimension(260, 160));
-    setMinimumSize(new Dimension(260, 160));
-    setPreferredSize(new Dimension(260, 160));
+    JScrollPane jScrollPane1 = new JScrollPane();
+    JTextArea notificationField = new JTextArea(message);
 
-    statusMessageField.setLineWrap(true);
-    statusMessageField.setWrapStyleWord(true);
-    statusMessageField.setEditable(false);
+    notificationField.setEditable(false);
+    notificationField.setColumns(20);
+    notificationField.setLineWrap(true);
+    notificationField.setRows(5);
+    notificationField.setText("Friendship request was no processed. You already are friends with");
+    notificationField.setWrapStyleWord(true);
+    jScrollPane1.setViewportView(notificationField);
 
-    final var statusDialogLayout = new GroupLayout(this);
-    setLayout(statusDialogLayout);
-    statusDialogLayout.setHorizontalGroup(statusDialogLayout.createParallelGroup(LEADING)
-        .addGroup(statusDialogLayout.createSequentialGroup()
-            .addGap(18)
-            .addComponent(statusMessageField, PREFERRED_SIZE,
-                208, PREFERRED_SIZE)
-            .addContainerGap(18, MAX_VALUE))
-        .addGroup(TRAILING,
-            statusDialogLayout.createSequentialGroup()
-                .addGap(53)));
-    statusDialogLayout.setVerticalGroup(statusDialogLayout.createParallelGroup(LEADING)
-        .addGroup(statusDialogLayout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(statusMessageField, PREFERRED_SIZE,
-                73, PREFERRED_SIZE)
-            .addContainerGap(DEFAULT_SIZE, MAX_VALUE)));
+    GroupLayout layout = new GroupLayout(this);
+    this.setLayout(layout);
+    layout.setHorizontalGroup(
+        layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                .addContainerGap())
+    );
+    layout.setVerticalGroup(
+        layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                .addContainerGap())
+    );
+
+    getAccessibleContext().setAccessibleName("");
+    getAccessibleContext().setAccessibleDescription("");
   }
 }

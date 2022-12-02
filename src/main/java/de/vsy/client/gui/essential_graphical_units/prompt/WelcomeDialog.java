@@ -3,8 +3,8 @@
  */
 package de.vsy.client.gui.essential_graphical_units.prompt;
 
-import static de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal.ACCOUNT_CREATION;
-import static de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal.LOGIN;
+import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.ACCOUNT_CREATION;
+import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.LOGIN;
 import static java.lang.Short.MAX_VALUE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 import static javax.swing.GroupLayout.Alignment.TRAILING;

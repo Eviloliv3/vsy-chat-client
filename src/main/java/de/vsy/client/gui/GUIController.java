@@ -3,7 +3,7 @@
  */
 package de.vsy.client.gui;
 
-import static de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal.INITIAL;
+import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.INITIAL;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 

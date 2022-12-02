@@ -1,7 +1,7 @@
 /*
  *
  */
-package de.vsy.client.gui.essential_graphical_units.prompt;
+package de.vsy.client.gui.essential_graphical_units;
 
 /**
  * States indicating the current initialization/authentication dialog.

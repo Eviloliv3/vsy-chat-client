@@ -4,11 +4,11 @@
 package de.vsy.client.gui.essential_graphical_units;
 
 
-import static de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal.ACCOUNT_CREATION;
-import static de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal.CONTACT_ADDITION;
-import static de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal.CONTACT_REMOVAL;
-import static de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal.LOGIN;
-import static de.vsy.client.gui.essential_graphical_units.prompt.NavigationGoal.LOGOUT;
+import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.ACCOUNT_CREATION;
+import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.CONTACT_ADDITION;
+import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.CONTACT_REMOVAL;
+import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.LOGIN;
+import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.LOGOUT;
 
 import java.awt.event.ActionListener;
 import java.io.Serial;
