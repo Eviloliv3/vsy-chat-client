@@ -114,8 +114,12 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     //TODO messenger status change without triggering messengersetupdto ??
     this.clientTerminating = true;
     this.connectionManager.closeConnection();
+    LOGGER.info("Notification processing service shutdown initiated.");
     stopProcessor(this.notificationProcessor);
+    LOGGER.info("Notification processing service terminated.");
+    LOGGER.info("Packet processing service shutdown initiated.");
     stopProcessor(this.packetProcessor);
+    LOGGER.info("Packet processing service terminated.");
 
     try {
       this.guiController.closeController();
