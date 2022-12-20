@@ -22,12 +22,12 @@ public class ContentProcessingConditionProvider {
           dataModel::isClientLoggedIn,
           TRUE,
           "Request will not be processed. You already authenticated yourself.");
-        case ACTIVE_MESSENGER -> new HandlerProcessingCondition<>(
-                    dataModel::isClientLoggedIn, Boolean.TRUE,
-                    "Request will not be processed. You are registered as active messenger.");
-        case NOT_ACTIVE_MESSENGER ->new HandlerProcessingCondition<>(
-                    dataModel::isClientLoggedIn, Boolean.FALSE,
-                    "Request will not be processed. You are not registered as active messenger.");
+      case ACTIVE_MESSENGER -> new HandlerProcessingCondition<>(
+          dataModel::isClientLoggedIn, Boolean.TRUE,
+          "Request will not be processed. You are registered as active messenger.");
+      case NOT_ACTIVE_MESSENGER -> new HandlerProcessingCondition<>(
+          dataModel::isClientLoggedIn, Boolean.FALSE,
+          "Request will not be processed. You are not registered as active messenger.");
     };
   }
 }

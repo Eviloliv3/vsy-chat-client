@@ -1,7 +1,7 @@
 /*
  *
  */
-package de.vsy.client.gui.chatter_main_model.customRendering;
+package de.vsy.client.gui;
 
 import static java.lang.System.err;
 
@@ -39,7 +39,8 @@ public class ContactListRenderer extends JLabel implements ListCellRenderer<Obje
       setText(client.getDisplayLabel());
     } catch (final ClassCastException cc) {
       err.println(
-          "CommunicatorDTO could not be be painted: {} " + cc.getClass().getSimpleName() + " occurred for " + value);
+          "CommunicatorDTO could not be be painted: {} " + cc.getClass().getSimpleName()
+              + " occurred for " + value);
     }
 
     if (isSelected) {

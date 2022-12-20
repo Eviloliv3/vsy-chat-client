@@ -9,7 +9,6 @@ import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Provides methods for simple dataManagement manipulation from setup packet handlers.
@@ -24,7 +23,7 @@ public interface StatusDataModelAccess extends EssentialDataModelAccess {
    */
   void setupMessenger(
       Map<Integer, List<TextMessageDTO>> messages,
-      Map<EligibleContactEntity, Set<CommunicatorDTO>> activeContacts);
+      Map<EligibleContactEntity, List<CommunicatorDTO>> activeContacts);
 
   /**
    * Tear down messenger.

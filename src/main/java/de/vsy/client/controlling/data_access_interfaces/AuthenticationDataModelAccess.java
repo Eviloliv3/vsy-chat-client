@@ -15,7 +15,7 @@ public interface AuthenticationDataModelAccess extends EssentialDataModelAccess 
    *
    * @param clientData the client dataManagement
    */
-  void addClientData(CommunicatorDTO clientData);
+  void completeLogin(CommunicatorDTO clientData);
 
   void completeLogout();
 

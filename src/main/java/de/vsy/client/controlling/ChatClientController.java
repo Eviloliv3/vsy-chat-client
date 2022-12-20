@@ -13,27 +13,35 @@ import static java.util.Arrays.asList;
 
 import de.vsy.client.connection_handling.ClientConnectionWatcher;
 import de.vsy.client.connection_handling.ServerConnectionController;
+import de.vsy.client.controlling.data_access_interfaces.AuthenticationDataModelAccess;
+import de.vsy.client.controlling.data_access_interfaces.ChatDataModelAccess;
+import de.vsy.client.controlling.data_access_interfaces.StatusDataModelAccess;
 import de.vsy.client.data_model.ClientDataManager;
 import de.vsy.client.data_model.ClientNotificationManager;
 import de.vsy.client.data_model.ContactDataManager;
-import de.vsy.client.data_model.GUIStateManager;
-import de.vsy.client.data_model.InputController;
 import de.vsy.client.data_model.MessageManager;
 import de.vsy.client.data_model.ServerDataCache;
 import de.vsy.client.data_model.notification.SimpleInformation;
+import de.vsy.client.gui.ClientChatGUI;
 import de.vsy.client.gui.GUIController;
-import de.vsy.client.gui.chatter_main_model.ClientChatGUI;
-import de.vsy.client.gui.chatter_main_model.GUIInteractionProcessor;
+import de.vsy.client.gui.GUIInteractionProcessor;
 import de.vsy.client.packet_processing.PacketManagementUtilityProvider;
 import de.vsy.client.packet_processing.PacketProcessingService;
 import de.vsy.client.packet_processing.RequestPacketCreator;
+import de.vsy.shared_module.data_element_validation.IdCheck;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferLabel;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
+import de.vsy.shared_transmission.packet.content.HumanInteractionRequest;
+import de.vsy.shared_transmission.packet.content.Translatable;
 import de.vsy.shared_transmission.packet.content.authentication.ReconnectRequestDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
+import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
+import de.vsy.shared_utility.id_manipulation.IdComparator;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -46,14 +54,14 @@ import org.apache.logging.log4j.Logger;
  * Base controller for all client actions. Handles basic procedures like the sequence in which the
  * initializing Packet are sent.
  */
-public class ChatClientController implements StatusMessageTriggeredActions {
-
+public class ChatClientController implements AuthenticationDataModelAccess, ChatDataModelAccess,
+    StatusDataModelAccess {
+//TODO Klienten starten und testen
+// andere TODOs beachten
+  private static final Logger LOGGER = LogManager.getLogger();
   private final ServerConnectionController connectionManager;
-  private final InputController dataController;
   private final PacketManagementUtilityProvider packetManagement;
   private final GUIController guiController;
-  private final GUIStateManager guiDataModel;
-  private final Logger LOGGER = LogManager.getLogger();
   private final RequestPacketCreator requester;
   private final ServerDataCache serverDataModel;
   private ExecutorService notificationProcessor;
@@ -74,11 +82,10 @@ public class ChatClientController implements StatusMessageTriggeredActions {
         this.packetBuffers);
     this.serverDataModel = new ServerDataCache(new ClientDataManager(), new ContactDataManager(),
         new MessageManager(), new ClientNotificationManager());
-    this.guiDataModel = new GUIStateManager();
     this.packetManagement = new PacketManagementUtilityProvider();
-    this.requester = new RequestPacketCreator(this.packetBuffers.getPacketBuffer(HANDLER_BOUND), this.packetManagement.getPacketTransmissionCache(),
-            this.packetManagement.getResultingPacketContentHandler());
-    this.dataController = new InputController(this.serverDataModel, this);
+    this.requester = new RequestPacketCreator(this.packetBuffers.getPacketBuffer(HANDLER_BOUND),
+        this.packetManagement.getPacketTransmissionCache(),
+        this.packetManagement.getResultingPacketContentHandler());
     this.guiController = setupGUIController();
   }
 
@@ -88,10 +95,11 @@ public class ChatClientController implements StatusMessageTriggeredActions {
     this.packetBuffers.registerPacketBuffer(ThreadPacketBufferLabel.OUTSIDE_BOUND);
   }
 
-  private GUIController setupGUIController(){
+  private GUIController setupGUIController() {
     ClientChatGUI gui = new ClientChatGUI();
-    GUIInteractionProcessor guiInteractions = new GUIInteractionProcessor(gui, this.serverDataModel, this.guiDataModel, this.requester);
-    return new GUIController(gui, this.serverDataModel, this.guiDataModel, guiInteractions);
+    GUIInteractionProcessor guiInteractions = new GUIInteractionProcessor(gui, gui,
+        this.serverDataModel, this.requester);
+    return new GUIController(gui, this.serverDataModel, guiInteractions);
   }
 
   public void closeApplication() {
@@ -102,59 +110,116 @@ public class ChatClientController implements StatusMessageTriggeredActions {
     this.guiController.closeController();
     stopProcessor(this.notificationProcessor);
     stopProcessor(this.packetProcessor);
-    removeAllData();
+    reset();
+  }
+
+
+  /**
+   * Adds the contact dataManagement.
+   *
+   * @param contactData the contact dataManagement
+   * @param oldMessages the old messages
+   */
+  @Override
+  public void addContactData(
+      final EligibleContactEntity contactType,
+      final CommunicatorDTO contactData,
+      final List<TextMessageDTO> oldMessages) {
+    int contactIndex = this.serverDataModel.addContact(contactType, contactData, oldMessages);
+    this.guiController.contactStatusChange(contactIndex, contactData);
   }
 
   @Override
-  public void changeContactStatus(final CommunicatorDTO contact, final boolean status) {
-    this.guiController.contactStatusChange(contact, status);
+  public void removeContactData(
+      final EligibleContactEntity contactType, final CommunicatorDTO contactData) {
+    this.serverDataModel.removeContact(contactType, contactData);
+    this.guiController.contactStatusChange(-1, contactData);
   }
 
   @Override
-  public void completeLogin() {
-    this.guiController.processClientData();
-    this.guiController.addContactsToGui();
-    sendMessengerStatus();
+  public void completeLogin(final CommunicatorDTO clientData) {
+    if (clientData != null) {
+      this.serverDataModel.setCommunicatorDTO(clientData);
+      this.guiController.addClientTitle(clientData);
+      sendMessengerStatus();
+    } else {
+      this.authenticationFailed();
+    }
   }
 
   @Override
   public void completeLogout() {
     this.guiController.resetGUIData();
+    this.serverDataModel.resetAllData();
   }
 
   @Override
-  public void messageReceived(final TextMessageDTO message) {
-    final var contactId = this.guiDataModel.getActiveChatContact().getCommunicatorId();
+  public int getClientId() {
+    return this.serverDataModel.getClientId();
+  }
 
-    if (contactId == message.getOriginatorId() || contactId == message.getRecipientId()) {
-      this.guiDataModel.addMessage(message);
+  @Override
+  public boolean isClientLoggedIn() {
+    final var clientId = getClientId();
+    return IdCheck.checkData(clientId).isEmpty() && clientId > 0;
+  }
+
+  @Override
+  public void addMessage(final TextMessageDTO message) {
+    var contactId = IdComparator.determineContactId(this.serverDataModel.getClientId(),
+        message.getOriginatorId(), message.getRecipientId());
+    var contact = this.serverDataModel.getContactData(contactId);
+
+    this.serverDataModel.addMessage(message);
+    this.guiController.addMessage(contact, message);
+  }
+
+  @Override
+  public void setupMessenger(
+      final Map<Integer, List<TextMessageDTO>> messages,
+      final Map<EligibleContactEntity, List<CommunicatorDTO>> activeContacts) {
+    this.serverDataModel.initialMessengerSetup(messages, activeContacts);
+    this.guiController.addContactsToGui();
+  }
+
+  @Override
+  public void tearDownMessenger() {
+    this.serverDataModel.resetAllData();
+    this.guiController.resetGUIData();
+  }
+
+  @Override
+  public void completeReconnect(final boolean reconnectionSuccess) {
+
+    if (!reconnectionSuccess) {
+      this.authenticationFailed();
+    } else {
+      LOGGER.info("Reconnection attempt successful.");
     }
   }
 
-  @Override
-  public void completeMessengerSetup() {
-    this.guiController.addContactsToGui();
-  }
-
-  @Override
-  public void completeMessengerTearDown() {
-    this.guiController.addContactsToGui();
-    this.guiDataModel.clearActiveChat();
-  }
-
-  @Override
-  public void reconnectFailed() {
+  public void authenticationFailed() {
     this.serverDataModel.addNotification(
         new SimpleInformation("Authentication failed. Please reenter your credentials."));
-    removeAllData();
+    reset();
+  }
+
+  @Override
+  public void addNotification(final Translatable notification) {
+    this.serverDataModel.addNotification(notification);
+  }
+
+  @Override
+  public void addRequest(final HumanInteractionRequest request) {
+    this.serverDataModel.addNotification(request);
   }
 
   /**
    * Removes the all dataManagement.
    */
-  private void removeAllData() {
+  private void reset() {
     this.serverDataModel.resetAllData();
-    this.guiDataModel.resetAllData();
+    this.guiController.resetGUIData();
   }
 
   /**
@@ -166,23 +231,25 @@ public class ChatClientController implements StatusMessageTriggeredActions {
         getClientEntity(STANDARD_CLIENT_BROADCAST_ID));
   }
 
-  private void startNewNotificationProcessor(){
+  private void startNewNotificationProcessor() {
     stopProcessor(this.notificationProcessor);
-    final var notificationProcessingService = new NotificationProcessingService(this.serverDataModel, this.requester);
+    final var notificationProcessingService = new NotificationProcessingService(
+        this.serverDataModel, this.requester);
     this.notificationProcessor = Executors.newSingleThreadExecutor();
     this.notificationProcessor.execute(notificationProcessingService);
   }
 
-  private void startNewPacketProcessor(){
+  private void startNewPacketProcessor() {
     stopProcessor(this.packetProcessor);
-    final var packetProcessingService = new PacketProcessingService(this.packetManagement, this.dataController, this.serverDataModel,
-        this.packetBuffers,  this.connectionManager);
+    final var packetProcessingService = new PacketProcessingService(this.packetManagement, this,
+        this.serverDataModel,
+        this.packetBuffers, this.connectionManager);
     this.packetProcessor = Executors.newSingleThreadExecutor();
     this.packetProcessor.execute(packetProcessingService);
   }
 
-  private void stopProcessor(ExecutorService serviceToStop){
-    if(serviceToStop != null) {
+  private void stopProcessor(ExecutorService serviceToStop) {
+    if (serviceToStop != null) {
       try {
         final var threadList = serviceToStop.shutdownNow();
         var serviceStopped = serviceToStop.awaitTermination(1000, TimeUnit.MILLISECONDS);
@@ -227,7 +294,7 @@ public class ChatClientController implements StatusMessageTriggeredActions {
       }
 
       if (!this.guiController.guiNotTerminated()) {
-        initiateGUI();
+        this.guiController.startGUI();
         LOGGER.info("GUI initiated.");
       } else {
         LOGGER.trace("GUI is still active.");
@@ -265,24 +332,20 @@ public class ChatClientController implements StatusMessageTriggeredActions {
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
-      removeAllData();
+      reset();
     }
     return connectionEstablished;
   }
 
-  private void setupConnectionWatcher(){
-    if(this.connectionWatcher != null) {
+  private void setupConnectionWatcher() {
+    if (this.connectionWatcher != null) {
       this.connectionWatcher.cancel();
     }
     this.connectionWatcher = new Timer("ClientConnectionWatcher");
     this.connectionWaiter = new CountDownLatch(1);
-    var connectionWatcherTask = new ClientConnectionWatcher(this.connectionManager, this.connectionWaiter);
+    var connectionWatcherTask = new ClientConnectionWatcher(this.connectionManager,
+        this.connectionWaiter);
     this.connectionWatcher.scheduleAtFixedRate(connectionWatcherTask, 50, 1000);
-  }
-
-  private void initiateGUI() {
-    this.guiController.initGUIControlling();
-    this.guiController.startGUI();
   }
 
   /**

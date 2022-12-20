@@ -1,8 +1,8 @@
 package de.vsy.client.controlling;
 
 import de.vsy.client.data_model.ServerDataCache;
-import de.vsy.client.gui.essential_graphical_units.prompt.NotificationPanel;
-import de.vsy.client.gui.essential_graphical_units.prompt.RequestPanel;
+import de.vsy.client.gui.essential_graphical_unit.prompt.NotificationPanel;
+import de.vsy.client.gui.essential_graphical_unit.prompt.RequestPanel;
 import de.vsy.client.packet_processing.ClientNotificationTranslator;
 import de.vsy.client.packet_processing.RequestPacketCreator;
 import de.vsy.shared_transmission.packet.content.HumanInteractionRequest;
@@ -55,7 +55,8 @@ public class NotificationProcessingService implements Runnable {
 
     if (message != null) {
       final var notificationPanel = new NotificationPanel(message);
-      JOptionPane.showMessageDialog(null, notificationPanel, "Information", JOptionPane.INFORMATION_MESSAGE);
+      JOptionPane.showMessageDialog(null, notificationPanel, "Information",
+          JOptionPane.INFORMATION_MESSAGE);
     } else {
       LOGGER.warn("Empty notification:\n{}", notification);
     }

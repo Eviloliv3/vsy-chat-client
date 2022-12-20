@@ -19,8 +19,8 @@ import org.apache.logging.log4j.Logger;
 public class ChatClient {
 
   private static final String SERVER_ADDRESS = "127.0.0.1";
+  private static final Logger LOGGER = LogManager.getLogger();
   private final ChatClientController clientController;
-  private final Logger LOGGER = LogManager.getLogger();
 
   public ChatClient() {
     int[] serverPorts = {7370, 7371};

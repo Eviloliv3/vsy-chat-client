@@ -1,6 +1,6 @@
 package de.vsy.client.packet_processing.processor_provisioning;
 
-import de.vsy.client.data_model.InputController;
+import de.vsy.client.controlling.ChatClientController;
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.shared_module.packet_processing.processor_provision.ContentBasedProcessorFactory;
 import de.vsy.shared_transmission.packet.property.packet_category.PacketCategory;
@@ -9,7 +9,7 @@ public class StandardProcessorFactoryProvider implements CategoryProcessorFactor
 
   @Override
   public ContentBasedProcessorFactory getCategoryHandlerFactory(
-      final PacketCategory category, final InputController dataModel,
+      final PacketCategory category, final ChatClientController dataModel,
       final ResultingContentHandlingProvider handlerProvider) {
     ContentBasedProcessorFactory categoryFactory = null;
 

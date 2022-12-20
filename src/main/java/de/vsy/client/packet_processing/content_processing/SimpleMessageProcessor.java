@@ -42,7 +42,7 @@ public class SimpleMessageProcessor implements ContentProcessor<TextMessageDTO> 
     if (!iAmInitiator || messageReceived) {
       this.dataModel.addMessage(toProcess);
     }
-    if(iAmInitiator && !messageReceived) {
+    if (iAmInitiator && !messageReceived) {
       this.contentHandler.addRequest(toProcess);
     }
   }

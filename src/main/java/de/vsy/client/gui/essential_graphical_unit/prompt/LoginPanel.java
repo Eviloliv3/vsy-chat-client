@@ -1,11 +1,10 @@
-package de.vsy.client.gui.essential_graphical_units.prompt;
+package de.vsy.client.gui.essential_graphical_unit.prompt;
 
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- *
  * @author fredward
  */
 public class LoginPanel extends javax.swing.JPanel {
@@ -17,6 +16,7 @@ public class LoginPanel extends javax.swing.JPanel {
   public LoginPanel() {
     initComponents();
   }
+
   private void initComponents() {
 
     JLabel usernameLabel = new JLabel();
@@ -27,7 +27,7 @@ public class LoginPanel extends javax.swing.JPanel {
     usernameLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
     usernameLabel.setLabelFor(usernameField);
     usernameLabel.setText("Username:");
-    usernameLabel.setName("usernameLabel"); // NOI18N
+    usernameLabel.setName("usernameLabel");
 
     passwordLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
     passwordLabel.setLabelFor(passwordField);
@@ -42,13 +42,16 @@ public class LoginPanel extends javax.swing.JPanel {
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(usernameLabel)
-                    .addComponent(passwordLabel))
+                .addGroup(
+                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(usernameLabel)
+                        .addComponent(passwordLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(usernameField, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                    .addComponent(usernameField, javax.swing.GroupLayout.DEFAULT_SIZE, 102,
+                        Short.MAX_VALUE)
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 1,
+                        Short.MAX_VALUE))
                 .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -59,20 +62,24 @@ public class LoginPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(usernameLabel))
-                    .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordLabel)
-                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE,
+                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                        javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
     );
   }
 
-  public String getUsername (){
+  public String getUsername() {
     return this.usernameField.getText();
   }
 
-  public char[] getPassword(){
+  public char[] getPassword() {
     return this.passwordField.getPassword();
   }
 }

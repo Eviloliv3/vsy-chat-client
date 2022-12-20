@@ -7,20 +7,26 @@ import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.Translatable;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
+import de.vsy.shared_utility.id_manipulation.IdComparator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
  * Manages all dataManagement that originated from server response Packet.
  */
+//TODO ServerDataCache does not notify anyone, but is a dead container
+// ChatClientController decides whether information should be saved in model and/or published
+// to GUI Message for Client without active chat window.
+// ServerDataCache stores data. GUIStateManager only stores temporarily shown data, that might be
+// invalidated/exchanged for other data.
+// Can store contact data for the purpose of resolving contact names from contact ids or vice versa.
 public class ServerDataCache implements ClientDataProvider {
 
-  private final Logger LOGGER = LogManager.getLogger();
+  private static final Logger LOGGER = LogManager.getLogger();
   private final ContactDataManager activeContactController;
   private final MessageManager messageController;
   private final ClientNotificationManager notificationManager;
@@ -41,7 +47,7 @@ public class ServerDataCache implements ClientDataProvider {
    * @param activeContacts the active contacts
    */
   public void addActiveContacts(
-      final Map<EligibleContactEntity, Set<CommunicatorDTO>> activeContacts) {
+      final Map<EligibleContactEntity, List<CommunicatorDTO>> activeContacts) {
     this.activeContactController.setNewClientList(activeContacts);
   }
 
@@ -51,16 +57,22 @@ public class ServerDataCache implements ClientDataProvider {
    * @param newClient the new client
    * @param messages  the messages
    */
-  public void addContact(
+  public int addContact(
       final EligibleContactEntity contactType,
       final CommunicatorDTO newClient,
       final List<TextMessageDTO> messages) {
+    int contactIndex = -1;
     final var messageHistory = messages != null ? messages : new ArrayList<TextMessageDTO>();
 
     if (newClient != null) {
-      this.activeContactController.addContact(contactType, newClient);
+      contactIndex = this.activeContactController.addContact(contactType, newClient);
       this.messageController.addMessagesForClient(newClient.getCommunicatorId(), messageHistory);
     }
+    return contactIndex;
+  }
+
+  public CommunicatorDTO getContactData(final int contactId) {
+    return this.activeContactController.getContactData(contactId);
   }
 
   /**
@@ -87,8 +99,8 @@ public class ServerDataCache implements ClientDataProvider {
    */
   public void addMessage(final TextMessageDTO msg) {
     final var clientId = this.clientData.getCommunicatorDTO().getCommunicatorId();
-    final var contactId =
-        msg.getRecipientId() == clientId ? msg.getOriginatorId() : msg.getRecipientId();
+    final var contactId = IdComparator.determineContactId(clientId, msg.getOriginatorId(),
+        msg.getRecipientId());
     this.messageController.addMessage(contactId, msg);
   }
 
@@ -131,7 +143,7 @@ public class ServerDataCache implements ClientDataProvider {
    *
    * @return the contact list
    */
-  public Set<CommunicatorDTO> getContactList() {
+  public List<CommunicatorDTO> getContactList() {
     return this.activeContactController.getActiveContactList();
   }
 
@@ -153,7 +165,7 @@ public class ServerDataCache implements ClientDataProvider {
    */
   public void initialMessengerSetup(
       final Map<Integer, List<TextMessageDTO>> newMsgMap,
-      final Map<EligibleContactEntity, Set<CommunicatorDTO>> activeContacts) {
+      final Map<EligibleContactEntity, List<CommunicatorDTO>> activeContacts) {
     this.activeContactController.setNewClientList(activeContacts);
     this.messageController.setNewMessageMap(newMsgMap);
   }
@@ -167,7 +179,7 @@ public class ServerDataCache implements ClientDataProvider {
   public void removeContact(
       final EligibleContactEntity contactType, final CommunicatorDTO contactData) {
     this.activeContactController.removeContact(contactType, contactData);
-        this.messageController.removeMessagesForClient(contactData.getCommunicatorId());
+    this.messageController.removeMessagesForClient(contactData.getCommunicatorId());
   }
 
   public void resetAllData() {

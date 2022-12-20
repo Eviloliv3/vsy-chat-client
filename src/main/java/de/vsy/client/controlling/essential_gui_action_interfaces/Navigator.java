@@ -3,12 +3,12 @@
  */
 package de.vsy.client.controlling.essential_gui_action_interfaces;
 
-import de.vsy.client.gui.essential_graphical_units.NavigationGoal;
+import de.vsy.client.gui.essential_graphical_unit.NavigationGoal;
 
 /**
  * Provides GUI elements with limited navigation options.
  */
-public interface DialogInitNavigation {
+public interface Navigator {
 
   void closeApplication();
 

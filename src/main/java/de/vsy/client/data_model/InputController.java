@@ -17,7 +17,6 @@ import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -41,7 +40,7 @@ public class InputController
   }
 
   @Override
-  public void addClientData(final CommunicatorDTO clientData) {
+  public void completeLogin(final CommunicatorDTO clientData) {
 
     if (clientData != null) {
       this.serverDataModel.setCommunicatorDTO(clientData);
@@ -96,7 +95,7 @@ public class InputController
   @Override
   public void setupMessenger(
       final Map<Integer, List<TextMessageDTO>> messages,
-      final Map<EligibleContactEntity, Set<CommunicatorDTO>> activeContacts) {
+      final Map<EligibleContactEntity, List<CommunicatorDTO>> activeContacts) {
     this.serverDataModel.initialMessengerSetup(messages, activeContacts);
     this.dataTrigger.completeMessengerSetup();
   }
@@ -118,7 +117,7 @@ public class InputController
       final EligibleContactEntity contactType,
       final CommunicatorDTO contactData,
       final List<TextMessageDTO> oldMessages) {
-    this.serverDataModel.addContact(contactType, contactData, oldMessages);
+    int contactIndex = this.serverDataModel.addContact(contactType, contactData, oldMessages);
     this.dataTrigger.changeContactStatus(contactData, true);
   }
 

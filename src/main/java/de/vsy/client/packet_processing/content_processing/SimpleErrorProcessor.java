@@ -32,9 +32,10 @@ public class SimpleErrorProcessor implements ContentProcessor<ErrorDTO> {
 
   @Override
   public void processContent(ErrorDTO toProcess) {
-    if(toProcess.getOriginPacket().getPacketProperties().getSender().getEntityId() == this.dataModel.getClientId()) {
+    if (toProcess.getOriginPacket().getPacketProperties().getSender().getEntityId()
+        == this.dataModel.getClientId()) {
       this.dataModel.addNotification(toProcess);
-    }else {
+    } else {
       this.contentHandler.addRequest(toProcess);
     }
   }

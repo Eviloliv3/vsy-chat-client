@@ -1,7 +1,7 @@
 /*
  *
  */
-package de.vsy.client.gui.essential_graphical_units;
+package de.vsy.client.gui.essential_graphical_unit;
 
 /**
  * States indicating the current initialization/authentication dialog.
@@ -12,5 +12,6 @@ public enum NavigationGoal {
   ACCOUNT_CREATION,
   LOGOUT,
   CONTACT_ADDITION,
-  CONTACT_REMOVAL
+  CONTACT_REMOVAL,
+  CLOSE_APPLICATION
 }

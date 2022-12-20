@@ -1,10 +1,11 @@
 /*
  *
  */
-package de.vsy.client.gui.essential_graphical_units.prompt;
+package de.vsy.client.gui.essential_graphical_unit.prompt;
 
-import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.ACCOUNT_CREATION;
-import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.LOGIN;
+import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.ACCOUNT_CREATION;
+import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CLOSE_APPLICATION;
+import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.LOGIN;
 import static java.lang.Short.MAX_VALUE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 import static javax.swing.GroupLayout.Alignment.TRAILING;
@@ -31,22 +32,22 @@ public class WelcomeDialog extends JDialog {
   /**
    * Instantiates a new welcome dialog.
    *
-   * @param ac the action listener
+   * @param listener the action listener
    */
-  public WelcomeDialog(final ActionListener ac) {
-    initComponents(ac);
+  public WelcomeDialog(final ActionListener listener) {
+    initComponents(listener);
   }
 
-  private void initComponents(final ActionListener ac) {
+  private void initComponents(final ActionListener listener) {
     JButton welcomeLoginButton = new JButton();
     JButton welcomeNewAccButton = new JButton();
     JButton closeApplicationButton = new JButton();
     var closeDialog = new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            WelcomeDialog.this.setVisible(false);
-          }
-        };
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        WelcomeDialog.this.setVisible(false);
+      }
+    };
 
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     setTitle("Welcome");
@@ -62,26 +63,27 @@ public class WelcomeDialog extends JDialog {
     welcomeLoginButton.setMinimumSize(new Dimension(138, 25));
     welcomeLoginButton.setPreferredSize(new Dimension(138, 25));
     welcomeLoginButton.setActionCommand(String.valueOf(LOGIN));
-    welcomeLoginButton.addActionListener(ac);
+    welcomeLoginButton.addActionListener(listener);
     welcomeLoginButton.addActionListener(closeDialog);
 
     welcomeNewAccButton.setText("New Account");
     welcomeNewAccButton.setPreferredSize(new Dimension(138, 25));
     welcomeNewAccButton.setActionCommand(String.valueOf(ACCOUNT_CREATION));
-    welcomeNewAccButton.addActionListener(ac);
+    welcomeNewAccButton.addActionListener(listener);
     welcomeNewAccButton.addActionListener(closeDialog);
 
     closeApplicationButton.setText("Close Application");
     closeApplicationButton.setMaximumSize(new Dimension(138, 25));
     closeApplicationButton.setMinimumSize(new Dimension(138, 25));
     closeApplicationButton.setPreferredSize(new Dimension(138, 25));
-    closeApplicationButton.setActionCommand("CLOSE_APPLICATION");
-    closeApplicationButton.addActionListener(ac);
+    closeApplicationButton.setActionCommand(String.valueOf(CLOSE_APPLICATION));
+    closeApplicationButton.addActionListener(listener);
     closeApplicationButton.addActionListener(closeDialog);
     this.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {
-        ac.actionPerformed(new ActionEvent(this, e.getID(), "CLOSE_APPLICATION"));
+        listener.actionPerformed(
+            new ActionEvent(this, e.getID(), String.valueOf(CLOSE_APPLICATION)));
         dispose();
       }
     });

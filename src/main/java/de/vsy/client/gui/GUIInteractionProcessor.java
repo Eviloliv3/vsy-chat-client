@@ -1,29 +1,30 @@
 /*
  *
  */
-package de.vsy.client.gui.chatter_main_model;
+package de.vsy.client.gui;
 
-import static de.vsy.client.gui.essential_graphical_units.NavigationGoal.INITIAL;
+import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.INITIAL;
+import static de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity.CLIENT;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getClientEntity;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getServerEntity;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
 
-import de.vsy.client.controlling.essential_gui_action_interfaces.DialogInitNavigation;
+import de.vsy.client.controlling.essential_gui_action_interfaces.Navigator;
 import de.vsy.client.controlling.essential_gui_action_interfaces.guiActionInterfaces.GUIChatActions;
-import de.vsy.client.controlling.essential_gui_action_interfaces.guiActionInterfaces.GUIEssentialActions;
-import de.vsy.client.data_model.GUIStateManager;
 import de.vsy.client.data_model.ServerDataCache;
 import de.vsy.client.data_model.notification.SimpleInformation;
-import de.vsy.client.gui.essential_graphical_units.IntroductionActionListener;
-import de.vsy.client.gui.essential_graphical_units.prompt.AccountCreationPanel;
-import de.vsy.client.gui.essential_graphical_units.prompt.ContactAdditionPanel;
-import de.vsy.client.gui.essential_graphical_units.prompt.LoginPanel;
-import de.vsy.client.gui.essential_graphical_units.NavigationGoal;
-import de.vsy.client.gui.essential_graphical_units.prompt.WelcomeDialog;
+import de.vsy.client.gui.ChatTabManager;
+import de.vsy.client.gui.ClientInputProvider;
+import de.vsy.client.gui.essential_graphical_unit.MenuActionListener;
+import de.vsy.client.gui.essential_graphical_unit.MessageHistory;
+import de.vsy.client.gui.essential_graphical_unit.NavigationGoal;
+import de.vsy.client.gui.essential_graphical_unit.prompt.AccountCreationPanel;
+import de.vsy.client.gui.essential_graphical_unit.prompt.ContactAdditionPanel;
+import de.vsy.client.gui.essential_graphical_unit.prompt.LoginPanel;
+import de.vsy.client.gui.essential_graphical_unit.prompt.WelcomeDialog;
 import de.vsy.client.gui.utility.ComponentInputRemover;
 import de.vsy.client.packet_processing.RequestPacketCreator;
-import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.dto.authentication.AccountCreationDTO;
 import de.vsy.shared_transmission.dto.authentication.AuthenticationDTO;
 import de.vsy.shared_transmission.dto.authentication.PersonalData;
@@ -32,18 +33,14 @@ import de.vsy.shared_transmission.packet.content.authentication.LogoutRequestDTO
 import de.vsy.shared_transmission.packet.content.authentication.NewAccountRequestDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.ContactRelationRequestDTO;
-import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import javax.swing.JOptionPane;
 
-public class GUIInteractionProcessor
-    implements GUIChatActions, GUIEssentialActions,
-    DialogInitNavigation {
+public class GUIInteractionProcessor implements GUIChatActions, Navigator {
 
-  private final GUIStateManager guiDataModel;
-  private final GUILogicRelevantDataProvider guiLiveData;
+  private final ChatTabManager chatManager;
+  private final ClientInputProvider guiLiveData;
   private final RequestPacketCreator requester;
   private final ServerDataCache serverDataModel;
 
@@ -52,18 +49,17 @@ public class GUIInteractionProcessor
    *
    * @param guiDataProvider the gui dataManagement provider
    * @param serverData      the server dataManagement
-   * @param guiData         the gui dataManagement
    * @param requester       the requester
    */
   public GUIInteractionProcessor(
-      final GUILogicRelevantDataProvider guiDataProvider,
+      final ClientInputProvider guiDataProvider,
+      final ChatTabManager chatManager,
       final ServerDataCache serverData,
-      final GUIStateManager guiData,
       final RequestPacketCreator requester) {
     this.guiLiveData = guiDataProvider;
     this.serverDataModel = serverData;
-    this.guiDataModel = guiData;
     this.requester = requester;
+    this.chatManager = chatManager;
   }
 
   public void handleContactRemoval() {
@@ -73,7 +69,7 @@ public class GUIInteractionProcessor
       final var contactId = contactData.getCommunicatorId();
       this.requester.request(
           new ContactRelationRequestDTO(
-              EligibleContactEntity.CLIENT,
+              CLIENT,
               this.serverDataModel.getClientId(),
               contactId, this.serverDataModel.getCommunicatorData(),
               false),
@@ -93,26 +89,39 @@ public class GUIInteractionProcessor
   public void chooseContact(final MouseEvent evt) {
 
     if (evt.getClickCount() == 2) {
-      CommunicatorDTO contact;
-      List<TextMessageDTO> messages;
+      final var contact = this.guiLiveData.getSelectedContact();
+      final var messages = this.serverDataModel.getMessageList(contact.getCommunicatorId());
+      final var preBuiltHistory = new MessageHistory();
+      final var contactId = contact.getCommunicatorId();
 
-      contact = this.guiLiveData.getSelectedContact();
-      messages = this.serverDataModel.getMessageList(contact.getCommunicatorId());
+      for (var message : messages) {
+        final var text = message.getMessage();
 
-      this.guiDataModel.setNewActiveChat(contact, messages);
+        if (message.getOriginatorId() == contactId) {
+
+          if (message.getContactType().equals(CLIENT)) {
+            preBuiltHistory.addContactMessage(text);
+          } else {
+            preBuiltHistory.addContactMessage(text, contact.getDisplayLabel());
+          }
+        } else {
+          preBuiltHistory.addClientMessage(text);
+        }
+      }
+
+      this.chatManager.addActiveChat(contact, preBuiltHistory);
     }
   }
 
   @Override
   public void sendMessage() {
+    final var input = this.guiLiveData.getInput();
+    final var message = input.getClientMessage();
 
-    final var message = this.guiLiveData.getMessage();
-    final var activeChat = this.guiDataModel.getActiveChatContact();
-
-    if (message != null && !message.isBlank()) {
-      final var contactId = activeChat.getCommunicatorId();
+    if (!(message.isBlank())) {
+      final var contactId = input.getContactId();
       this.requester.request(
-          new TextMessageDTO(this.serverDataModel.getClientId(), EligibleContactEntity.CLIENT,
+          new TextMessageDTO(this.serverDataModel.getClientId(), CLIENT,
               contactId, message),
           getClientEntity(contactId));
     }
@@ -122,7 +131,7 @@ public class GUIInteractionProcessor
    * Show dialog.
    */
   private void showWelcomeDialog() {
-    IntroductionActionListener ac = new IntroductionActionListener(this);
+    MenuActionListener ac = new MenuActionListener(this);
     final var welcomeDialog = new WelcomeDialog(ac);
     welcomeDialog.setLocationRelativeTo(null);
     welcomeDialog.setVisible(true);
@@ -133,7 +142,7 @@ public class GUIInteractionProcessor
     if (this.serverDataModel.getClientId() != STANDARD_CLIENT_ID) {
       this.requester.request(
           new ContactMessengerStatusDTO(
-              EligibleContactEntity.CLIENT,
+              CLIENT,
               false,
               this.serverDataModel.getCommunicatorData(),
               null),
@@ -142,11 +151,6 @@ public class GUIInteractionProcessor
           new LogoutRequestDTO(this.serverDataModel.getCommunicatorData()),
           getServerEntity(STANDARD_SERVER_ID));
     }
-  }
-
-  @Override
-  public void endProgram() {
-    closeApplication();
   }
 
   @Override
@@ -198,14 +202,16 @@ public class GUIInteractionProcessor
           handleLogin();
         } else {
           //var hashedPassword = PasswordHasher.calculateHash(passwordChars);
-          this.requester.request(new LoginRequestDTO(username, String.valueOf(passwordChars)), getServerEntity(STANDARD_SERVER_ID));
+          this.requester.request(new LoginRequestDTO(username, String.valueOf(passwordChars)),
+              getServerEntity(STANDARD_SERVER_ID));
         }
       } else {
         ComponentInputRemover.clearInput(loginPanel);
         navigate(INITIAL);
       }
     } else {
-      final var notification = new SimpleInformation("You cannot do this right now. Please logout before retrying.");
+      final var notification = new SimpleInformation(
+          "You cannot do this right now. Please logout before retrying.");
       this.serverDataModel.addNotification(notification);
     }
   }
@@ -236,7 +242,8 @@ public class GUIInteractionProcessor
         this.navigate(INITIAL);
       }
     } else {
-      final var notification = new SimpleInformation("You cannot do this right now. Please logout before retrying.");
+      final var notification = new SimpleInformation(
+          "You cannot do this right now. Please logout before retrying.");
       this.serverDataModel.addNotification(notification);
     }
   }
@@ -264,7 +271,7 @@ public class GUIInteractionProcessor
       if (contactId < 0) {
         this.serverDataModel.addNotification(new SimpleInformation("Negative ids do not exist."));
       } else {
-        this.requester.request(new ContactRelationRequestDTO(EligibleContactEntity.CLIENT,
+        this.requester.request(new ContactRelationRequestDTO(CLIENT,
             STANDARD_CLIENT_ID, contactId, this.serverDataModel.getClientAccountData()
             .getCommunicatorDTO(), true), getClientEntity(contactId));
       }

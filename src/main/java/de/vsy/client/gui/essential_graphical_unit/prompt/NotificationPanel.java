@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package de.vsy.client.gui.essential_graphical_units.prompt;
+package de.vsy.client.gui.essential_graphical_unit.prompt;
 
 import javax.swing.GroupLayout;
 import javax.swing.JPanel;
@@ -10,7 +10,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 /**
- *
  * @author fredward
  */
 public class NotificationPanel extends JPanel {
@@ -28,7 +27,6 @@ public class NotificationPanel extends JPanel {
     notificationField.setColumns(20);
     notificationField.setLineWrap(true);
     notificationField.setRows(5);
-    notificationField.setText("Friendship request was no processed. You already are friends with");
     notificationField.setWrapStyleWord(true);
     jScrollPane1.setViewportView(notificationField);
 

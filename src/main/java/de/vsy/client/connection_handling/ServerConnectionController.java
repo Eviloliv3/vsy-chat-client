@@ -19,12 +19,12 @@ import org.apache.logging.log4j.Logger;
 public class ServerConnectionController {
 
   private static final ThreadLocalRandom RANDOM_NUMBER_GENERATOR;
+  private static final Logger LOGGER = LogManager.getLogger();
 
   static {
     RANDOM_NUMBER_GENERATOR = ThreadLocalRandom.current();
   }
 
-  private final Logger LOGGER = LogManager.getLogger();
   private final ThreadPacketBufferManager packetBuffers;
   private final String serverAddress;
   private final int[] serverPorts;

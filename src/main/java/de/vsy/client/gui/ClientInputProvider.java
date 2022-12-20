@@ -1,18 +1,19 @@
 /*
  *
  */
-package de.vsy.client.gui.chatter_main_model;
+package de.vsy.client.gui;
 
+import de.vsy.client.data_model.ClientInput;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 
-public interface GUILogicRelevantDataProvider {
+public interface ClientInputProvider {
 
   /**
    * Gets the message.
    *
    * @return the message
    */
-  String getMessage();
+  ClientInput<String> getInput();
 
   /**
    * Gets the selected contact.

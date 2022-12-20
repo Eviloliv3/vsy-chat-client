@@ -12,13 +12,15 @@ public class RequestPacketCreator {
   private final PacketTransmissionCache packetsToSend;
   private final ResultingPacketContentHandler contentHandler;
 
-  public RequestPacketCreator(final PacketBuffer outputBuffer, final PacketTransmissionCache packetCache, final ResultingPacketContentHandler contentHandler){
+  public RequestPacketCreator(final PacketBuffer outputBuffer,
+      final PacketTransmissionCache packetCache,
+      final ResultingPacketContentHandler contentHandler) {
     this.dispatcher = outputBuffer::appendPacket;
     this.packetsToSend = packetCache;
     this.contentHandler = contentHandler;
   }
 
-  public void request(PacketContent content, CommunicationEndpoint recipient){
+  public void request(PacketContent content, CommunicationEndpoint recipient) {
     this.contentHandler.addRequest(content, recipient);
     this.packetsToSend.transmitPackets(this.dispatcher);
   }

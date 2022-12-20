@@ -6,7 +6,7 @@ package de.vsy.client.packet_processing;
 import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.OUTSIDE_BOUND;
 
 import de.vsy.client.connection_handling.ServerConnectionController;
-import de.vsy.client.data_model.InputController;
+import de.vsy.client.controlling.ChatClientController;
 import de.vsy.client.packet_processing.processor_provisioning.PacketProcessorManager;
 import de.vsy.client.packet_processing.processor_provisioning.StandardProcessorFactoryProvider;
 import de.vsy.shared_module.packet_exception.PacketHandlingException;
@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class PacketProcessingService implements Runnable {
 
-  private final Logger LOGGER = LogManager.getLogger();
+  private static final Logger LOGGER = LogManager.getLogger();
   private final ServerConnectionController connectionControl;
   private final PacketBuffer inputBuffer;
   private final ResultingPacketCreator packetCreator;
@@ -49,7 +49,7 @@ public class PacketProcessingService implements Runnable {
    * @param connectionControl the connection control
    */
   public PacketProcessingService(final PacketManagementUtilityProvider packetManagement, final
-  InputController dataController, final ClientDataProvider clientData,
+  ChatClientController dataController, final ClientDataProvider clientData,
       final ThreadPacketBufferManager packetBuffers,
       final ServerConnectionController connectionControl) {
 
@@ -58,11 +58,12 @@ public class PacketProcessingService implements Runnable {
     this.contentHandler = packetManagement.getResultingPacketContentHandler();
     this.connectionControl = connectionControl;
     this.inputBuffer = packetBuffers.getPacketBuffer(ThreadPacketBufferLabel.HANDLER_BOUND);
-    this.dispatcher = new ClientPacketDispatcher(clientData, inputBuffer, packetBuffers.getPacketBuffer(OUTSIDE_BOUND));
+    this.dispatcher = new ClientPacketDispatcher(clientData, inputBuffer,
+        packetBuffers.getPacketBuffer(OUTSIDE_BOUND));
     this.processor = createProcessor(dataController, packetManagement);
   }
 
-  private PacketProcessor createProcessor(final InputController dataController,
+  private PacketProcessor createProcessor(final ChatClientController dataController,
       final PacketManagementUtilityProvider packetManagement) {
     final var processorManager = new PacketProcessorManager(dataController,
         new StandardProcessorFactoryProvider(), packetManagement);
@@ -78,7 +79,8 @@ public class PacketProcessingService implements Runnable {
   @Override
   public void run() {
     LOGGER.info("PacketProcessingService started.");
-    while (this.connectionControl.getConnectionState() && !(Thread.currentThread().isInterrupted())) {
+    while (this.connectionControl.getConnectionState() && !(Thread.currentThread()
+        .isInterrupted())) {
 
       processInput();
     }

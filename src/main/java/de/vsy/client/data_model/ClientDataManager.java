@@ -75,7 +75,7 @@ public class ClientDataManager {
         () -> CommunicatorDTO.valueOf(STANDARD_CLIENT_ID, STANDARD_EMPTY_STRING));
   }
 
-  public boolean clientNotLoggedIn(){
+  public boolean clientNotLoggedIn() {
     return this.personalData.getCommunicatorId() == STANDARD_CLIENT_ID;
   }
 }

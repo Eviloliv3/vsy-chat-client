@@ -1,4 +1,4 @@
-package de.vsy.client.gui.essential_graphical_units.prompt;
+package de.vsy.client.gui.essential_graphical_unit.prompt;
 
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
@@ -9,10 +9,10 @@ import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
 
 /**
- *
  * @author fredward
  */
 public class AccountCreationPanel extends JPanel {
+
   private JTextField firstNameField;
   private JTextField lastNameField;
   private JPasswordField passwordField;
@@ -36,7 +36,7 @@ public class AccountCreationPanel extends JPanel {
     firstNameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
     firstNameLabel.setLabelFor(this.firstNameField);
     firstNameLabel.setText("First name:");
-    firstNameLabel.setName("firstNameLabel"); // NOI18N
+    firstNameLabel.setName("firstNameLabel");
 
     this.passwordField.setColumns(15);
     this.firstNameField.setColumns(15);
@@ -46,17 +46,17 @@ public class AccountCreationPanel extends JPanel {
     lastNameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
     lastNameLabel.setLabelFor(this.firstNameField);
     lastNameLabel.setText("Last name:");
-    lastNameLabel.setName("firstNameLabel"); // NOI18N
+    lastNameLabel.setName("firstNameLabel");
 
     lastNameLabel1.setHorizontalAlignment(SwingConstants.TRAILING);
     lastNameLabel1.setLabelFor(this.firstNameField);
     lastNameLabel1.setText("Username:");
-    lastNameLabel1.setName("firstNameLabel"); // NOI18N
+    lastNameLabel1.setName("firstNameLabel");
 
     lastNameLabel2.setHorizontalAlignment(SwingConstants.TRAILING);
     lastNameLabel2.setLabelFor(this.firstNameField);
     lastNameLabel2.setText("Password:");
-    lastNameLabel2.setName("firstNameLabel"); // NOI18N
+    lastNameLabel2.setName("firstNameLabel");
 
     GroupLayout layout = new GroupLayout(this);
     this.setLayout(layout);
@@ -65,16 +65,24 @@ public class AccountCreationPanel extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(firstNameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lastNameLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lastNameLabel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lastNameLabel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(firstNameLabel, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lastNameLabel, GroupLayout.Alignment.LEADING,
+                        GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lastNameLabel1, GroupLayout.Alignment.LEADING,
+                        GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lastNameLabel2, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(this.lastNameField, GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                    .addComponent(this.firstNameField, GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                    .addComponent(this.usernameField, GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                    .addComponent(this.passwordField, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                    .addComponent(this.lastNameField, GroupLayout.PREFERRED_SIZE, 1,
+                        Short.MAX_VALUE)
+                    .addComponent(this.firstNameField, GroupLayout.DEFAULT_SIZE, 108,
+                        Short.MAX_VALUE)
+                    .addComponent(this.usernameField, GroupLayout.PREFERRED_SIZE, 1,
+                        Short.MAX_VALUE)
+                    .addComponent(this.passwordField, GroupLayout.Alignment.TRAILING,
+                        GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
                 .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -83,36 +91,40 @@ public class AccountCreationPanel extends JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(firstNameLabel)
-                    .addComponent(this.firstNameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(this.firstNameField, GroupLayout.PREFERRED_SIZE,
+                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(this.lastNameField, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(this.lastNameField, GroupLayout.PREFERRED_SIZE, 25,
+                        GroupLayout.PREFERRED_SIZE)
                     .addComponent(lastNameLabel))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(this.usernameField, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(this.usernameField, GroupLayout.PREFERRED_SIZE, 25,
+                        GroupLayout.PREFERRED_SIZE)
                     .addComponent(lastNameLabel1))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(this.passwordField, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(this.passwordField, GroupLayout.PREFERRED_SIZE, 25,
+                        GroupLayout.PREFERRED_SIZE)
                     .addComponent(lastNameLabel2))
                 .addContainerGap())
     );
   }
 
-  public String getFirstName(){
+  public String getFirstName() {
     return this.firstNameField.getText();
   }
 
-  public String getLastName(){
+  public String getLastName() {
     return this.lastNameField.getText();
   }
 
-  public String getUsername(){
+  public String getUsername() {
     return this.usernameField.getText();
   }
 
-  public char[] getPassword(){
+  public char[] getPassword() {
     return this.passwordField.getPassword();
   }
 }

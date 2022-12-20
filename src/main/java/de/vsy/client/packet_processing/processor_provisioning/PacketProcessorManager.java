@@ -3,7 +3,7 @@
  */
 package de.vsy.client.packet_processing.processor_provisioning;
 
-import de.vsy.client.data_model.InputController;
+import de.vsy.client.controlling.ChatClientController;
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.shared_module.packet_processing.PacketProcessor;
 import de.vsy.shared_module.packet_processing.processor_provision.ContentBasedPacketProcessorProvider;
@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 public class PacketProcessorManager {
 
-  private final InputController dataModel;
+  private final ChatClientController dataModel;
   private final PacketProcessorProvider contentHandlerProvider;
   private final CategoryProcessorFactoryProvider processorFactoryProvider;
   private final ResultingContentHandlingProvider handlerProvider;
@@ -30,7 +30,7 @@ public class PacketProcessorManager {
    * @param dataModel the dataManagement model
    */
   public PacketProcessorManager(
-      final InputController dataModel,
+      final ChatClientController dataModel,
       final CategoryProcessorFactoryProvider processorFactoryProvider,
       final ResultingContentHandlingProvider handlerProvider) {
     this.contentHandlerProvider = new PacketProcessorProvider();

@@ -10,14 +10,16 @@ public class ClientPacketDispatcher extends BasicClientPacketDispatcher {
 
   private final ClientDataProvider clientData;
 
-  public ClientPacketDispatcher(final ClientDataProvider clientData, final PacketBuffer clientBoundBuffer, final
-      PacketBuffer serverBoundBuffer){
+  public ClientPacketDispatcher(final ClientDataProvider clientData,
+      final PacketBuffer clientBoundBuffer, final
+  PacketBuffer serverBoundBuffer) {
     super(clientBoundBuffer, serverBoundBuffer);
     this.clientData = clientData;
   }
+
   @Override
   protected boolean isClientBound(int recipientId) {
-      final int clientId = this.clientData.getClientId();
-      return recipientId == clientId || recipientId == STANDARD_CLIENT_ID;
+    final int clientId = this.clientData.getClientId();
+    return recipientId == clientId || recipientId == STANDARD_CLIENT_ID;
   }
 }

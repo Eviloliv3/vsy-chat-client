@@ -19,6 +19,6 @@ public class LoginResponseProcessor implements ContentProcessor<LoginResponseDTO
 
   @Override
   public void processContent(LoginResponseDTO toProcess) {
-    this.dataModel.addClientData(toProcess.getClientData());
+    this.dataModel.completeLogin(toProcess.getClientData());
   }
 }

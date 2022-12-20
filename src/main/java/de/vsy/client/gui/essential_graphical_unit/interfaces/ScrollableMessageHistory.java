@@ -1,7 +1,7 @@
 /*
  *
  */
-package de.vsy.client.gui.essential_graphical_units.interfaces;
+package de.vsy.client.gui.essential_graphical_unit.interfaces;
 
 /**
  * Provides methods for the manipulation of currently outlined messageHistory manipulation.
