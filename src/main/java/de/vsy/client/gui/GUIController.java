@@ -12,8 +12,13 @@ import de.vsy.client.gui.essential_graphical_unit.MenuActionListener;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_utility.id_manipulation.IdComparator;
+import java.awt.Window;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.SwingUtilities;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.logging.log4j.LogManager;
@@ -42,26 +47,25 @@ public class GUIController {
       final ServerDataCache serverData,
       final GUIInteractionProcessor guiInteractions) {
 
-    this.guiExecutor = newSingleThreadExecutor();
     this.gui = gui;
     this.serverDataModel = serverData;
     this.guiInteractions = guiInteractions;
+    this.guiExecutor = newSingleThreadExecutor();
   }
 
-  public void closeController() {
-    this.guiExecutor.shutdownNow();
-    try {
-      var guiTerminated = this.guiExecutor.awaitTermination(5000, TimeUnit.MILLISECONDS);
+  public void closeController() throws InterruptedException {
+    boolean guiShutdown;
 
-      if (guiTerminated) {
-        LOGGER.trace("GUI successfully shutdown.");
-      } else {
-        LOGGER.error("GUI shutdown unexpectedly took more than 5 second and may be deadlocked.");
-      }
-    } catch (final InterruptedException e) {
-      Thread.currentThread().interrupt();
-      LOGGER.error("Interrupted while waiting for gui thread to shutdown.");
+    guiExecutor.shutdownNow();
+    guiShutdown = guiExecutor.awaitTermination(5000, TimeUnit.SECONDS);
+
+    if(guiShutdown){
+      LOGGER.trace("GUI execution thread shutdown successfully.");
+    }else{
+      LOGGER.error("GUI execution thread not shutdown within 5 Seconds.");
     }
+    this.gui.setVisible(false);
+    this.gui.dispose();
   }
 
   /**
@@ -85,7 +89,7 @@ public class GUIController {
 
     if (clientId != STANDARD_CLIENT_ID) {
       final var clientUsername = clientData.getDisplayLabel();
-      titleLabel = String.format("You are %s#%d)", clientUsername, clientId);
+      titleLabel = String.format("You are %s#%d", clientUsername, clientId);
     } else {
       titleLabel = "Not authenticated";
     }
@@ -128,17 +132,15 @@ public class GUIController {
     this.guiInteractions.navigate(INITIAL);
   }
 
-  public void startGUI() {
+  public void startGUI() throws InvocationTargetException, InterruptedException {
     prepareGUI();
+    this.gui.setVisible(true);
+  }
 
-    SwingUtilities.invokeLater(() -> {
-      var currentGUI = GUIController.this.gui;
-      currentGUI.validate();
-      currentGUI.pack();
-      currentGUI.setLocationRelativeTo(null);
-      currentGUI.setVisible(true);
-      guiInteractions.navigate(INITIAL);
-    });
+  public void startInteracting(){
+    SwingUtilities.invokeLater(()->
+      guiInteractions.navigate(INITIAL)
+    );
   }
 
   private void prepareGUI() {
@@ -156,5 +158,8 @@ public class GUIController {
       java.util.logging.Logger.getLogger(ClientChatGUI.class.getName())
           .log(java.util.logging.Level.SEVERE, null, ex);
     }
+    this.gui.validate();
+    this.gui.pack();
+    this.gui.setLocationRelativeTo(null);
   }
 }

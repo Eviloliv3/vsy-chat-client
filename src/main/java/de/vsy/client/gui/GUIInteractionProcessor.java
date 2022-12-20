@@ -39,7 +39,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 
 public class GUIInteractionProcessor implements GUIChatActions, Navigator {
-
+//TODO OptionPane/Dialog Kontrolle -> schon einer/der gleiche live?
   private final ClientTerminator terminator;
   private final ChatTabManager chatManager;
   private final ClientInputProvider guiLiveData;

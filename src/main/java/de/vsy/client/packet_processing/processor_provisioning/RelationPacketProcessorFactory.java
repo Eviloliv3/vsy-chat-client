@@ -40,7 +40,7 @@ public class RelationPacketProcessorFactory implements ContentBasedProcessorFact
       case ContactRelationRequestDTO:
         return new ClientPacketProcessor<>(
             ContentProcessingConditionProvider.getContentProcessingCondition(
-                ProcessingConditionType.NOT_AUTHENTICATED, this.dataManager),
+                ProcessingConditionType.AUTHENTICATED, this.dataManager),
             new ContactRelationRequestValidator(),
             new ContactRelationRequestProcessor(this.dataManager, this.handlerProvider));
       case ContactRelationResponseDTO:

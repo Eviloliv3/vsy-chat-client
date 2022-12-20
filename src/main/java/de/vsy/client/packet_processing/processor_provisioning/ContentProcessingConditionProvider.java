@@ -21,7 +21,7 @@ public class ContentProcessingConditionProvider {
       case AUTHENTICATED -> new HandlerProcessingCondition<>(
           dataModel::isClientLoggedIn,
           TRUE,
-          "Request will not be processed. You already authenticated yourself.");
+          "Request will not be processed. You have not authenticated yourself.");
       case ACTIVE_MESSENGER -> new HandlerProcessingCondition<>(
           dataModel::isClientLoggedIn, Boolean.TRUE,
           "Request will not be processed. You are registered as active messenger.");

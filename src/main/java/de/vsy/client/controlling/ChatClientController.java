@@ -28,6 +28,7 @@ import de.vsy.client.gui.GUIInteractionProcessor;
 import de.vsy.client.packet_processing.PacketManagementUtilityProvider;
 import de.vsy.client.packet_processing.PacketProcessingService;
 import de.vsy.client.packet_processing.RequestPacketCreator;
+import de.vsy.client.packet_processing.content_processing.SimpleErrorProcessor;
 import de.vsy.shared_module.data_element_validation.IdCheck;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferLabel;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
@@ -39,6 +40,7 @@ import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
 import de.vsy.shared_utility.id_manipulation.IdComparator;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +66,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
   private final GUIController guiController;
   private final RequestPacketCreator requester;
   private final ServerDataCache serverDataModel;
+  private volatile boolean clientTerminating;
   private ExecutorService notificationProcessor;
   private ExecutorService packetProcessor;
   private Timer connectionWatcher;
@@ -87,6 +90,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
         this.packetManagement.getPacketTransmissionCache(),
         this.packetManagement.getResultingPacketContentHandler());
     this.guiController = setupGUIController();
+    this.clientTerminating = false;
   }
 
   private void setupPacketBuffers() {
@@ -108,11 +112,16 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     //TODO restructure -> use gui to logout no listener? -> otherwise client has to send state
     // changes from here = client data missing,
     //TODO messenger status change without triggering messengersetupdto ??
+    this.clientTerminating = true;
     this.connectionManager.closeConnection();
-    this.guiController.closeController();
     stopProcessor(this.notificationProcessor);
     stopProcessor(this.packetProcessor);
-    reset();
+
+    try {
+      this.guiController.closeController();
+    } catch (InterruptedException e) {
+      LOGGER.error("Interrupted while waiting for GUI components to be removed.");
+    }
   }
 
 
@@ -151,8 +160,8 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
 
   @Override
   public void completeLogout() {
-    this.guiController.resetGUIData();
     this.serverDataModel.resetAllData();
+    this.guiController.resetGUIData();
   }
 
   @Override
@@ -255,6 +264,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
       try {
         final var threadList = serviceToStop.shutdownNow();
         var serviceStopped = serviceToStop.awaitTermination(1000, TimeUnit.MILLISECONDS);
+
         if (serviceStopped) {
           for (final var currentThread : threadList) {
             LOGGER.info("{} instance stopped.", currentThread.getClass().getSimpleName());
@@ -296,7 +306,12 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
       }
 
       if (!this.guiController.guiNotTerminated()) {
-        this.guiController.startGUI();
+        try {
+          this.guiController.startGUI();
+          this.guiController.startInteracting();
+        }catch (InvocationTargetException e) {
+          addNotification(new SimpleInformation("GUI could not be started. Application will now be shutdown."));
+        }
         LOGGER.info("GUI initiated.");
       } else {
         LOGGER.trace("GUI is still active.");
@@ -362,7 +377,9 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
       this.connectionWatcher.cancel();
       this.connectionWatcher.purge();
       this.connectionManager.closeConnection();
-      startController();
+
+      if(!(this.clientTerminating))
+        startController();
     }
     closeApplication();
   }
