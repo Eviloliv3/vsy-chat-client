@@ -55,7 +55,7 @@ import org.apache.logging.log4j.Logger;
  * initializing Packet are sent.
  */
 public class ChatClientController implements AuthenticationDataModelAccess, ChatDataModelAccess,
-    StatusDataModelAccess {
+    StatusDataModelAccess, ClientTerminator {
 //TODO Klienten starten und testen
 // andere TODOs beachten
   private static final Logger LOGGER = LogManager.getLogger();
@@ -97,11 +97,13 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
 
   private GUIController setupGUIController() {
     ClientChatGUI gui = new ClientChatGUI();
-    GUIInteractionProcessor guiInteractions = new GUIInteractionProcessor(gui, gui,
+    GUIInteractionProcessor guiInteractions = new GUIInteractionProcessor(gui, gui, this,
         this.serverDataModel, this.requester);
     return new GUIController(gui, this.serverDataModel, guiInteractions);
   }
 
+
+  @Override
   public void closeApplication() {
     //TODO restructure -> use gui to logout no listener? -> otherwise client has to send state
     // changes from here = client data missing,

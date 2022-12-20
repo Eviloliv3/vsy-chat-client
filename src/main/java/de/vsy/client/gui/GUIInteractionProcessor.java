@@ -10,6 +10,7 @@ import static de.vsy.shared_transmission.packet.property.communicator.Communicat
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
 
+import de.vsy.client.controlling.ClientTerminator;
 import de.vsy.client.controlling.essential_gui_action_interfaces.Navigator;
 import de.vsy.client.controlling.essential_gui_action_interfaces.guiActionInterfaces.GUIChatActions;
 import de.vsy.client.data_model.ServerDataCache;
@@ -39,6 +40,7 @@ import javax.swing.JOptionPane;
 
 public class GUIInteractionProcessor implements GUIChatActions, Navigator {
 
+  private final ClientTerminator terminator;
   private final ChatTabManager chatManager;
   private final ClientInputProvider guiLiveData;
   private final RequestPacketCreator requester;
@@ -54,12 +56,14 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
   public GUIInteractionProcessor(
       final ClientInputProvider guiDataProvider,
       final ChatTabManager chatManager,
+      final ClientTerminator terminator,
       final ServerDataCache serverData,
       final RequestPacketCreator requester) {
     this.guiLiveData = guiDataProvider;
+    this.chatManager = chatManager;
+    this.terminator = terminator;
     this.serverDataModel = serverData;
     this.requester = requester;
-    this.chatManager = chatManager;
   }
 
   public void handleContactRemoval() {
@@ -156,6 +160,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
   @Override
   public void closeApplication() {
     handleLogout();
+    this.terminator.closeApplication();
   }
 
   /**
@@ -172,6 +177,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
       case LOGOUT -> handleLogout();
       case CONTACT_REMOVAL -> handleContactRemoval();
       case CONTACT_ADDITION -> handleContactAddition();
+      case CLOSE_APPLICATION -> closeApplication();
     }
   }
 
