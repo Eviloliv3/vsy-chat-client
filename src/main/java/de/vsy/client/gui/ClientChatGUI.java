@@ -13,9 +13,13 @@ import de.vsy.client.gui.essential_graphical_unit.interfaces.ScrollableMessageHi
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.nio.channels.ClosedByInterruptException;
 import java.util.LinkedHashMap;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -230,7 +234,13 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     signOffItem.addActionListener(menuListener);
     closeApplicationItem.addActionListener(menuListener);
-
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        menuListener.actionPerformed(new ActionEvent(e.getSource(), e.getID(), String.valueOf(CLOSE_APPLICATION)));
+        dispose();
+      }
+    });
     contactListScrollPane.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
