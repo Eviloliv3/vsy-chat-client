@@ -6,7 +6,6 @@ package de.vsy.client.gui.essential_graphical_unit.prompt;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.ACCOUNT_CREATION;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CLOSE_APPLICATION;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.LOGIN;
-import static java.awt.event.WindowEvent.WINDOW_CLOSING;
 import static java.lang.Short.MAX_VALUE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 import static javax.swing.GroupLayout.Alignment.TRAILING;

@@ -30,12 +30,12 @@ public class NotificationProcessingService implements Runnable {
     final var notificationProvider = dataProvider.getClientNotificationManager();
     Translatable currentNotification;
 
-    do{
+    do {
       currentNotification = notificationProvider.getNextNotification();
 
       if (currentNotification instanceof HumanInteractionRequest request) {
         handleContactRequest(request);
-      } else if(currentNotification != null){
+      } else if (currentNotification != null) {
         handleNotification(currentNotification);
       } else {
         LOGGER.error("No Translatable object.");

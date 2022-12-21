@@ -14,7 +14,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.JOptionPane;
@@ -32,41 +31,40 @@ public class DialogTesting {
   ExecutorService singleThread;
 
   @BeforeEach
-  void createSingleThreadExecutor(){
+  void createSingleThreadExecutor() {
     singleThread = Executors.newSingleThreadExecutor();
   }
 
   @AfterEach
-  void stopSingleThreadExecutor() throws InterruptedException{
+  void stopSingleThreadExecutor() throws InterruptedException {
     singleThread.shutdownNow();
     var threadShutdown = singleThread.awaitTermination(5, TimeUnit.SECONDS);
 
-    if(!threadShutdown){
+    if (!threadShutdown) {
       throw new RuntimeException("Single thread executor unable to terminate within 5 seconds.");
     }
   }
 
   @Test
-  public
-  void testNotificationDialog(){
+  public void testNotificationDialog() {
     final var notification = "This is a notification message";
     final var notificationPanel = new NotificationPanel(notification);
-    final var notificationDialog = new JOptionPane(notificationPanel, JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION, null);
+    final var notificationDialog = new JOptionPane(notificationPanel,
+        JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION, null);
     Assertions.assertDoesNotThrow(() ->
-    JOptionPane.showMessageDialog(null, notificationPanel, "Information",
-        JOptionPane.INFORMATION_MESSAGE));
+        JOptionPane.showMessageDialog(null, notificationPanel, "Information",
+            JOptionPane.INFORMATION_MESSAGE));
   }
 
   @Test
-  public
-  void testWelcomeDialogLogin(){
+  public void testWelcomeDialogLogin() {
     LOGGER.info("Test: WelcomeDialog Login started.");
     LOGGER.trace("Command expected: {}", LOGIN);
 
     Callable<Boolean> runnable = () -> {
-      CountDownLatch resultLatch= new CountDownLatch(1);
+      CountDownLatch resultLatch = new CountDownLatch(1);
       final var result = new AtomicReference<Boolean>();
-      final var ac = new ActionListener(){
+      final var ac = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
           var commandString = e.getActionCommand().trim().toUpperCase();
@@ -83,7 +81,7 @@ public class DialogTesting {
     };
     final var futureResult = Executors.newSingleThreadExecutor().submit(runnable);
 
-    try{
+    try {
       final var correctAction = futureResult.get();
       Assertions.assertTrue(correctAction, "Possibly wrong command set for action. See trace log.");
     } catch (ExecutionException e) {
@@ -95,15 +93,14 @@ public class DialogTesting {
   }
 
   @Test
-  public
-  void testWelcomeDialogCloseApplication(){
+  public void testWelcomeDialogCloseApplication() {
     LOGGER.info("Test: WelcomeDialog Close_Application started.");
     LOGGER.trace("Command expected: {}", CLOSE_APPLICATION);
 
     Callable<Boolean> runnable = () -> {
-      CountDownLatch resultLatch= new CountDownLatch(1);
+      CountDownLatch resultLatch = new CountDownLatch(1);
       final var result = new AtomicReference<Boolean>();
-      final var ac = new ActionListener(){
+      final var ac = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
           var commandString = e.getActionCommand().trim().toUpperCase();
@@ -120,7 +117,7 @@ public class DialogTesting {
     };
     final var futureResult = Executors.newSingleThreadExecutor().submit(runnable);
 
-    try{
+    try {
       final var correctAction = futureResult.get();
       Assertions.assertTrue(correctAction, "Possibly wrong command set for action. See trace log.");
     } catch (ExecutionException e) {
@@ -132,15 +129,14 @@ public class DialogTesting {
   }
 
   @Test
-  public
-  void testWelcomeDialogAccountCreation(){
+  public void testWelcomeDialogAccountCreation() {
     LOGGER.info("Test: WelcomeDialog Account_Creation started.");
     LOGGER.trace("Command expected: {}", ACCOUNT_CREATION);
 
     Callable<Boolean> runnable = () -> {
-      CountDownLatch resultLatch= new CountDownLatch(1);
+      CountDownLatch resultLatch = new CountDownLatch(1);
       final var result = new AtomicReference<Boolean>();
-      final var ac = new ActionListener(){
+      final var ac = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
           var commandString = e.getActionCommand().trim().toUpperCase();
@@ -157,7 +153,7 @@ public class DialogTesting {
     };
     final var futureResult = Executors.newSingleThreadExecutor().submit(runnable);
 
-    try{
+    try {
       final var correctAction = futureResult.get();
       Assertions.assertTrue(correctAction, "Possibly wrong command set for action. See trace log.");
     } catch (ExecutionException e) {
@@ -169,21 +165,21 @@ public class DialogTesting {
   }
 
   @Test
-  public
-  void testAccountCreationDialog(){
+  public void testAccountCreationDialog() {
     var accountCreationPanel = new AccountCreationPanel();
     String[] options = {"Create", "Cancel"};
-    Assertions.assertInstanceOf(Integer.class, JOptionPane.showOptionDialog(null, accountCreationPanel,
-        "Account Creation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-        options, options[0]));
+    Assertions.assertInstanceOf(Integer.class,
+        JOptionPane.showOptionDialog(null, accountCreationPanel,
+            "Account Creation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+            options, options[0]));
   }
 
   @Test
-  public
-  void testLoginDialog(){
+  public void testLoginDialog() {
     var loginPanel = new LoginPanel();
     final String[] options = {"Login", "Cancel"};
-    Assertions.assertInstanceOf(Integer.class, JOptionPane.showOptionDialog(null, loginPanel, "Enter credentials",
-        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]));
+    Assertions.assertInstanceOf(Integer.class,
+        JOptionPane.showOptionDialog(null, loginPanel, "Enter credentials",
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]));
   }
 }

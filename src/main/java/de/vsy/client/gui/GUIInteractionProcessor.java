@@ -15,8 +15,6 @@ import de.vsy.client.controlling.essential_gui_action_interfaces.Navigator;
 import de.vsy.client.controlling.essential_gui_action_interfaces.guiActionInterfaces.GUIChatActions;
 import de.vsy.client.data_model.ServerDataCache;
 import de.vsy.client.data_model.notification.SimpleInformation;
-import de.vsy.client.gui.ChatTabManager;
-import de.vsy.client.gui.ClientInputProvider;
 import de.vsy.client.gui.essential_graphical_unit.MenuActionListener;
 import de.vsy.client.gui.essential_graphical_unit.MessageHistory;
 import de.vsy.client.gui.essential_graphical_unit.NavigationGoal;
@@ -39,6 +37,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 
 public class GUIInteractionProcessor implements GUIChatActions, Navigator {
+
   private final ClientTerminator terminator;
   private final ChatTabManager chatManager;
   private final ClientInputProvider guiLiveData;

@@ -19,7 +19,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.nio.channels.ClosedByInterruptException;
 import java.util.LinkedHashMap;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -58,7 +57,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   private JMenuItem signOffItem;
   private JMenuItem closeApplicationItem;
 
-//TODO initGUIControl aus originalem ClientChatGUI uebertragen
+  //TODO initGUIControl aus originalem ClientChatGUI uebertragen
 // JTabbedPane bzw ActionListener fuer DoppelClick = Tab schliessen
 // - Klient nicht eingeloggt? -> Welcome/Login/Creation/Close Hoelle >)
   public ClientChatGUI() {
@@ -233,7 +232,8 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {
-        menuListener.actionPerformed(new ActionEvent(e.getSource(), e.getID(), String.valueOf(CLOSE_APPLICATION)));
+        menuListener.actionPerformed(
+            new ActionEvent(e.getSource(), e.getID(), String.valueOf(CLOSE_APPLICATION)));
         dispose();
       }
     });

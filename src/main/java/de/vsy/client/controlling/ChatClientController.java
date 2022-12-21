@@ -28,7 +28,6 @@ import de.vsy.client.gui.GUIInteractionProcessor;
 import de.vsy.client.packet_processing.PacketManagementUtilityProvider;
 import de.vsy.client.packet_processing.PacketProcessingService;
 import de.vsy.client.packet_processing.RequestPacketCreator;
-import de.vsy.client.packet_processing.content_processing.SimpleErrorProcessor;
 import de.vsy.shared_module.data_element_validation.IdCheck;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferLabel;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
@@ -58,6 +57,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class ChatClientController implements AuthenticationDataModelAccess, ChatDataModelAccess,
     StatusDataModelAccess, ClientTerminator {
+
   private static final Logger LOGGER = LogManager.getLogger();
   private final ServerConnectionController connectionManager;
   private final PacketManagementUtilityProvider packetManagement;
@@ -107,20 +107,20 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
 
   @Override
   public void closeApplication() {
-      this.clientTerminating = true;
-      this.connectionManager.closeConnection();
-      LOGGER.info("Notification processing service shutdown initiated.");
-      stopProcessor(this.notificationProcessor);
-      LOGGER.info("Notification processing service terminated.");
-      LOGGER.info("Packet processing service shutdown initiated.");
-      stopProcessor(this.packetProcessor);
-      LOGGER.info("Packet processing service terminated.");
+    this.clientTerminating = true;
+    this.connectionManager.closeConnection();
+    LOGGER.info("Notification processing service shutdown initiated.");
+    stopProcessor(this.notificationProcessor);
+    LOGGER.info("Notification processing service terminated.");
+    LOGGER.info("Packet processing service shutdown initiated.");
+    stopProcessor(this.packetProcessor);
+    LOGGER.info("Packet processing service terminated.");
 
-      try {
-        this.guiController.closeController();
-      } catch (InterruptedException e) {
-        LOGGER.error("Interrupted while waiting for GUI components to be removed.");
-      }
+    try {
+      this.guiController.closeController();
+    } catch (InterruptedException e) {
+      LOGGER.error("Interrupted while waiting for GUI components to be removed.");
+    }
   }
 
 
@@ -308,8 +308,9 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
         try {
           this.guiController.startGUI();
           this.guiController.startInteracting();
-        }catch (InvocationTargetException e) {
-          addNotification(new SimpleInformation("GUI could not be started. Application will now be shutdown."));
+        } catch (InvocationTargetException e) {
+          addNotification(
+              new SimpleInformation("GUI could not be started. Application will now be shutdown."));
         }
         LOGGER.info("GUI initiated.");
       } else {
@@ -363,6 +364,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
   }
 
   //TODO in ChatClient ? META & UNSCHOEN
+
   /**
    * Tries to reconnect to server, until the GUI is closed.
    *
@@ -376,9 +378,9 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
       this.connectionWatcher.purge();
       this.connectionManager.closeConnection();
 
-      if(!(this.clientTerminating)) {
+      if (!(this.clientTerminating)) {
         startController();
-      }else{
+      } else {
         return;
       }
     }

@@ -12,13 +12,9 @@ import de.vsy.client.gui.essential_graphical_unit.MenuActionListener;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_utility.id_manipulation.IdComparator;
-import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.SwingUtilities;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.logging.log4j.LogManager;
@@ -59,9 +55,9 @@ public class GUIController {
     guiExecutor.shutdownNow();
     guiShutdown = guiExecutor.awaitTermination(5000, TimeUnit.SECONDS);
 
-    if(guiShutdown){
+    if (guiShutdown) {
       LOGGER.trace("GUI execution thread shutdown successfully.");
-    }else{
+    } else {
       LOGGER.error("GUI execution thread not shutdown within 5 Seconds.");
     }
     this.gui.setVisible(false);
@@ -137,9 +133,9 @@ public class GUIController {
     this.gui.setVisible(true);
   }
 
-  public void startInteracting(){
-    SwingUtilities.invokeLater(()->
-      guiInteractions.navigate(INITIAL)
+  public void startInteracting() {
+    SwingUtilities.invokeLater(() ->
+        guiInteractions.navigate(INITIAL)
     );
   }
 
