@@ -58,11 +58,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   private JMenuItem signOffItem;
   private JMenuItem closeApplicationItem;
 
-  //TODO initGUIControl aus originalem ClientChatGUI uebertragen
-// - Programmbeendung sauberer ausarbeiten
-// - SwingUtilities.invoke*() Methoden nach GUI StateController verschieben.
-// - GUI initialisierung pruefen -> am besten als erstes, damit alle Fehlernachrichten und
-//    Folgen kommuniziert werden koennen
+//TODO initGUIControl aus originalem ClientChatGUI uebertragen
 // JTabbedPane bzw ActionListener fuer DoppelClick = Tab schliessen
 // - Klient nicht eingeloggt? -> Welcome/Login/Creation/Close Hoelle >)
   public ClientChatGUI() {

@@ -39,7 +39,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 
 public class GUIInteractionProcessor implements GUIChatActions, Navigator {
-//TODO OptionPane/Dialog Kontrolle -> schon einer/der gleiche live?
   private final ClientTerminator terminator;
   private final ChatTabManager chatManager;
   private final ClientInputProvider guiLiveData;
@@ -181,7 +180,6 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
     }
   }
 
-  //TODO account creation: layout wrong for username label
   private void handleLogin() {
     final var notLoggedIn = this.serverDataModel.getClientAccountData().clientNotLoggedIn();
 

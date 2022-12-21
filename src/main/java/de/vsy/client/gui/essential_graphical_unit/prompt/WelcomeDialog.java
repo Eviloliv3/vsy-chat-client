@@ -6,6 +6,7 @@ package de.vsy.client.gui.essential_graphical_unit.prompt;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.ACCOUNT_CREATION;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CLOSE_APPLICATION;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.LOGIN;
+import static java.awt.event.WindowEvent.WINDOW_CLOSING;
 import static java.lang.Short.MAX_VALUE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 import static javax.swing.GroupLayout.Alignment.TRAILING;
@@ -45,7 +46,7 @@ public class WelcomeDialog extends JDialog {
     var closeDialog = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        WelcomeDialog.this.setVisible(false);
+        setVisible(false);
       }
     };
 
@@ -63,22 +64,28 @@ public class WelcomeDialog extends JDialog {
     welcomeLoginButton.setMinimumSize(new Dimension(138, 25));
     welcomeLoginButton.setPreferredSize(new Dimension(138, 25));
     welcomeLoginButton.setActionCommand(String.valueOf(LOGIN));
-    welcomeLoginButton.addActionListener(listener);
-    welcomeLoginButton.addActionListener(closeDialog);
+    welcomeLoginButton.addActionListener(e -> {
+      listener.actionPerformed(e);
+      WelcomeDialog.this.dispose();
+    });
 
     welcomeNewAccButton.setText("New Account");
     welcomeNewAccButton.setPreferredSize(new Dimension(138, 25));
     welcomeNewAccButton.setActionCommand(String.valueOf(ACCOUNT_CREATION));
-    welcomeNewAccButton.addActionListener(listener);
-    welcomeNewAccButton.addActionListener(closeDialog);
+    welcomeNewAccButton.addActionListener(e -> {
+      listener.actionPerformed(e);
+      WelcomeDialog.this.dispose();
+    });
 
     closeApplicationButton.setText("Close Application");
     closeApplicationButton.setMaximumSize(new Dimension(138, 25));
     closeApplicationButton.setMinimumSize(new Dimension(138, 25));
     closeApplicationButton.setPreferredSize(new Dimension(138, 25));
     closeApplicationButton.setActionCommand(String.valueOf(CLOSE_APPLICATION));
-    closeApplicationButton.addActionListener(listener);
-    closeApplicationButton.addActionListener(closeDialog);
+    closeApplicationButton.addActionListener(e -> {
+      listener.actionPerformed(e);
+      WelcomeDialog.this.dispose();
+    });
     this.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {

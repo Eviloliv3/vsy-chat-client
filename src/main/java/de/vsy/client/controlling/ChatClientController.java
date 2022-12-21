@@ -58,8 +58,6 @@ import org.apache.logging.log4j.Logger;
  */
 public class ChatClientController implements AuthenticationDataModelAccess, ChatDataModelAccess,
     StatusDataModelAccess, ClientTerminator {
-//TODO Klienten starten und testen
-// andere TODOs beachten
   private static final Logger LOGGER = LogManager.getLogger();
   private final ServerConnectionController connectionManager;
   private final PacketManagementUtilityProvider packetManagement;
@@ -109,23 +107,20 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
 
   @Override
   public void closeApplication() {
-    //TODO restructure -> use gui to logout no listener? -> otherwise client has to send state
-    // changes from here = client data missing,
-    //TODO messenger status change without triggering messengersetupdto ??
-    this.clientTerminating = true;
-    this.connectionManager.closeConnection();
-    LOGGER.info("Notification processing service shutdown initiated.");
-    stopProcessor(this.notificationProcessor);
-    LOGGER.info("Notification processing service terminated.");
-    LOGGER.info("Packet processing service shutdown initiated.");
-    stopProcessor(this.packetProcessor);
-    LOGGER.info("Packet processing service terminated.");
+      this.clientTerminating = true;
+      this.connectionManager.closeConnection();
+      LOGGER.info("Notification processing service shutdown initiated.");
+      stopProcessor(this.notificationProcessor);
+      LOGGER.info("Notification processing service terminated.");
+      LOGGER.info("Packet processing service shutdown initiated.");
+      stopProcessor(this.packetProcessor);
+      LOGGER.info("Packet processing service terminated.");
 
-    try {
-      this.guiController.closeController();
-    } catch (InterruptedException e) {
-      LOGGER.error("Interrupted while waiting for GUI components to be removed.");
-    }
+      try {
+        this.guiController.closeController();
+      } catch (InterruptedException e) {
+        LOGGER.error("Interrupted while waiting for GUI components to be removed.");
+      }
   }
 
 
@@ -346,8 +341,6 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
       final var errorCause = "No connection could be initiated. If you do not want to attempt another reconnection try close the application within 10 seconds.";
       final var notification = new SimpleInformation(errorCause);
       this.serverDataModel.addNotification(notification);
-      //TODO should the application shutdown automatically at this point?
-      //this.closeApplication();
       try {
         Thread.sleep(10000);
       } catch (InterruptedException e) {
@@ -369,6 +362,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     this.connectionWatcher.scheduleAtFixedRate(connectionWatcherTask, 50, 1000);
   }
 
+  //TODO in ChatClient ? META & UNSCHOEN
   /**
    * Tries to reconnect to server, until the GUI is closed.
    *
@@ -382,10 +376,12 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
       this.connectionWatcher.purge();
       this.connectionManager.closeConnection();
 
-      if(!(this.clientTerminating))
+      if(!(this.clientTerminating)) {
         startController();
+      }else{
+        return;
+      }
     }
-    closeApplication();
   }
 
   private void tryReconnection() {
