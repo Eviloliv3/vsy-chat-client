@@ -5,6 +5,7 @@ package de.vsy.client.gui;
 
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.INITIAL;
 import static de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity.CLIENT;
+import static de.vsy.shared_transmission.packet.content.status.ClientService.MESSENGER;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getClientEntity;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getServerEntity;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
@@ -32,6 +33,8 @@ import de.vsy.shared_transmission.packet.content.authentication.LogoutRequestDTO
 import de.vsy.shared_transmission.packet.content.authentication.NewAccountRequestDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.ContactRelationRequestDTO;
+import de.vsy.shared_transmission.packet.content.status.ClientService;
+import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
 import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
 import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
@@ -143,11 +146,9 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
 
     if (this.serverDataModel.getClientId() != STANDARD_CLIENT_ID) {
       this.requester.request(
-          new ContactMessengerStatusDTO(
-              CLIENT,
-              false,
-              this.serverDataModel.getCommunicatorData(),
-              null),
+          new ClientStatusChangeDTO(
+              MESSENGER, false,
+              this.serverDataModel.getCommunicatorData()),
           getServerEntity(STANDARD_SERVER_ID));
       this.requester.request(
           new LogoutRequestDTO(this.serverDataModel.getCommunicatorData()),
