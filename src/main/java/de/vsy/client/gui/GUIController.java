@@ -11,7 +11,6 @@ import de.vsy.client.data_model.ServerDataCache;
 import de.vsy.client.gui.essential_graphical_unit.MenuActionListener;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
-import de.vsy.shared_utility.id_manipulation.IdComparator;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -100,8 +99,7 @@ public class GUIController {
   public void addMessage(final CommunicatorDTO contact, final TextMessageDTO message) {
     final var contactName = contact.getDisplayLabel();
     final var clientId = this.serverDataModel.getClientId();
-    final var clientBoundMessage = IdComparator.determineIfOriginator(clientId,
-        message.getOriginatorId());
+    final var clientBoundMessage = clientId == message.getOriginatorId();
 
     this.gui.addMessage(contactName, clientBoundMessage, message);
   }

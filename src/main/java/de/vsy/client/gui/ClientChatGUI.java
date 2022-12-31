@@ -1,6 +1,9 @@
 package de.vsy.client.gui;
 
+import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.ACCOUNT_DELETION;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CLOSE_APPLICATION;
+import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CONTACT_ADDITION;
+import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CONTACT_REMOVAL;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.LOGOUT;
 import static de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity.CLIENT;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
@@ -55,7 +58,10 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   private JButton messageInputSendButton;
   private JTextArea messageInputField;
   private JMenuItem signOffItem;
+  private JMenuItem accountDeletionItem;
   private JMenuItem closeApplicationItem;
+  private JMenuItem contactAdditionItem;
+  private JMenuItem contactRemovalItem;
 
   //TODO initGUIControl aus originalem ClientChatGUI uebertragen
 // JTabbedPane bzw ActionListener fuer DoppelClick = Tab schliessen
@@ -73,7 +79,10 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     this.contactListScrollPane = new JScrollPane();
     this.messageInputSendButton = new JButton();
     this.signOffItem = new JMenuItem();
+    this.accountDeletionItem = new JMenuItem();
     this.closeApplicationItem = new JMenuItem();
+    this.contactAdditionItem = new JMenuItem();
+    this.contactRemovalItem = new JMenuItem();
     JPanel chatterLabelPanel = new JPanel();
     JPanel messageInputInteraction = new JPanel();
     JPanel messagePanel = new JPanel();
@@ -81,12 +90,10 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     JMenuBar chatterMenuBar = new JMenuBar();
     JMenu settingsMenu = new JMenu();
     JMenu contactManipulationMenu = new JMenu();
-    JMenuItem contactAdditionItem = new JMenuItem();
-    JMenuItem contactRemovalItem = new JMenuItem();
-    JPopupMenu.Separator jSeparator4 = new JPopupMenu.Separator();
+    JPopupMenu.Separator jSeparator1 = new JPopupMenu.Separator();
+    JPopupMenu.Separator jSeparator2 = new JPopupMenu.Separator();
     JPopupMenu.Separator jSeparator3 = new JPopupMenu.Separator();
     JLabel chatterLabel = new JLabel();
-    JButton messageInputSendButton = new JButton();
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     chatterLabelPanel.setPreferredSize(new java.awt.Dimension(176, 25));
@@ -110,7 +117,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     this.contactList.setModel(this.contactListModel);
     this.contactList.setCellRenderer(new ContactListRenderer());
     this.contactList.setSelectionMode(SINGLE_SELECTION);
-    contactListScrollPane.setViewportView(this.contactList);
+    this.contactListScrollPane.setViewportView(this.contactList);
 
     this.messageInputField.setColumns(20);
     this.messageInputField.setRows(5);
@@ -118,8 +125,8 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     this.messageInputField.setWrapStyleWord(true);
     messageInputScrollPane.setViewportView(this.messageInputField);
 
-    messageInputSendButton.setFont(new java.awt.Font("Noto Sans", Font.BOLD, 14));
-    messageInputSendButton.setText("Send");
+    this.messageInputSendButton.setFont(new java.awt.Font("Noto Sans", Font.BOLD, 14));
+    this.messageInputSendButton.setText("Send");
 
     GroupLayout messageInputInteractionLayout = new GroupLayout(messageInputInteraction);
     messageInputInteraction.setLayout(messageInputInteractionLayout);
@@ -127,7 +134,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
         messageInputInteractionLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(messageInputInteractionLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(messageInputSendButton)
+                .addComponent(this.messageInputSendButton)
                 .addContainerGap())
     );
     messageInputInteractionLayout.setVerticalGroup(
@@ -135,7 +142,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
             .addGroup(GroupLayout.Alignment.TRAILING,
                 messageInputInteractionLayout.createSequentialGroup()
                     .addGap(16, 16, 16)
-                    .addComponent(messageInputSendButton, GroupLayout.PREFERRED_SIZE, 35,
+                    .addComponent(this.messageInputSendButton, GroupLayout.PREFERRED_SIZE, 35,
                         GroupLayout.PREFERRED_SIZE)
                     .addGap(15, 15, 15))
     );
@@ -162,25 +169,29 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
 
     settingsMenu.setText("Settings");
 
-    signOffItem.setText("Sign off");
-    signOffItem.setActionCommand(String.valueOf(LOGOUT));
-    settingsMenu.add(signOffItem);
-    settingsMenu.add(jSeparator4);
-
-    closeApplicationItem.setText("Close Chatter");
-    closeApplicationItem.setActionCommand(String.valueOf(CLOSE_APPLICATION));
-    settingsMenu.add(closeApplicationItem);
+    this.signOffItem.setText("Sign Off");
+    this.signOffItem.setActionCommand(String.valueOf(LOGOUT));
+    this.accountDeletionItem.setText("Delete Account");
+    this.accountDeletionItem.setActionCommand(String.valueOf(ACCOUNT_DELETION));
+    this.closeApplicationItem.setText("Close Chatter");
+    this.closeApplicationItem.setActionCommand(String.valueOf(CLOSE_APPLICATION));
+    settingsMenu.add(this.signOffItem);
+    settingsMenu.add(jSeparator1);
+    settingsMenu.add(this.accountDeletionItem);
+    settingsMenu.add(jSeparator2);
+    settingsMenu.add(this.closeApplicationItem);
 
     chatterMenuBar.add(settingsMenu);
 
     contactManipulationMenu.setText("Contacts");
 
-    contactAdditionItem.setText("Add contact");
-    contactManipulationMenu.add(contactAdditionItem);
+    this.contactAdditionItem.setText("Add Contact");
+    this.contactAdditionItem.setActionCommand(String.valueOf(CONTACT_ADDITION));
+    this.contactRemovalItem.setText("Remove Contact");
+    this.contactRemovalItem.setActionCommand(String.valueOf(CONTACT_REMOVAL));
+    contactManipulationMenu.add(this.contactAdditionItem);
     contactManipulationMenu.add(jSeparator3);
-
-    contactRemovalItem.setText("Remove contact");
-    contactManipulationMenu.add(contactRemovalItem);
+    contactManipulationMenu.add(this.contactRemovalItem);
 
     chatterMenuBar.add(contactManipulationMenu);
 
@@ -195,7 +206,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(chatterLabelPanel, GroupLayout.DEFAULT_SIZE,
                         GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(contactListScrollPane, GroupLayout.PREFERRED_SIZE, 0,
+                    .addComponent(this.contactListScrollPane, GroupLayout.PREFERRED_SIZE, 0,
                         Short.MAX_VALUE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -218,7 +229,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
                         .addComponent(chatterLabelPanel, GroupLayout.PREFERRED_SIZE,
                             GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(contactListScrollPane, GroupLayout.DEFAULT_SIZE, 482,
+                        .addComponent(this.contactListScrollPane, GroupLayout.DEFAULT_SIZE, 482,
                             Short.MAX_VALUE)))
                 .addContainerGap())
     );
@@ -227,8 +238,12 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   public void addInteractionLogic(final GUIChatActions chatActions,
       final ActionListener menuListener) {
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    signOffItem.addActionListener(menuListener);
-    closeApplicationItem.addActionListener(menuListener);
+
+    this.signOffItem.addActionListener(menuListener);
+    this.closeApplicationItem.addActionListener(menuListener);
+    this.accountDeletionItem.addActionListener(menuListener);
+    this.contactRemovalItem.addActionListener(menuListener);
+    this.contactAdditionItem.addActionListener(menuListener);
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {
@@ -237,14 +252,14 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
         dispose();
       }
     });
-    contactListScrollPane.addMouseListener(new MouseAdapter() {
+    this.contactListScrollPane.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         chatActions.chooseContact(e);
       }
     });
 
-    messageInputSendButton.addMouseListener(new MouseAdapter() {
+    this.messageInputSendButton.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         chatActions.sendMessage();

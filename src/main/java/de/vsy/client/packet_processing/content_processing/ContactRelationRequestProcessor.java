@@ -5,7 +5,6 @@ import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.ResultingPacketContentHandler;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
 import de.vsy.shared_transmission.packet.content.relation.ContactRelationRequestDTO;
-import de.vsy.shared_utility.id_manipulation.IdComparator;
 
 public class ContactRelationRequestProcessor
     implements ContentProcessor<ContactRelationRequestDTO> {
@@ -22,8 +21,8 @@ public class ContactRelationRequestProcessor
   @Override
   public void processContent(ContactRelationRequestDTO validatedContent) {
     final var clientId = this.dataModel.getClientId();
-    final var iAmOriginator =
-        IdComparator.determineIfOriginator(clientId, validatedContent.getOriginatorId());
+    final var iAmOriginator = clientId == validatedContent.getOriginatorId();
+
     if (!iAmOriginator) {
       this.dataModel.removeContactData(
           validatedContent.getContactType(), validatedContent.getRequestingClient());

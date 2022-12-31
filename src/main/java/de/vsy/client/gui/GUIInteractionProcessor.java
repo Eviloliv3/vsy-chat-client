@@ -28,14 +28,13 @@ import de.vsy.client.packet_processing.RequestPacketCreator;
 import de.vsy.shared_transmission.dto.authentication.AccountCreationDTO;
 import de.vsy.shared_transmission.dto.authentication.AuthenticationDTO;
 import de.vsy.shared_transmission.dto.authentication.PersonalData;
+import de.vsy.shared_transmission.packet.content.authentication.AccountCreationRequestDTO;
+import de.vsy.shared_transmission.packet.content.authentication.AccountDeletionRequestDTO;
 import de.vsy.shared_transmission.packet.content.authentication.LoginRequestDTO;
 import de.vsy.shared_transmission.packet.content.authentication.LogoutRequestDTO;
-import de.vsy.shared_transmission.packet.content.authentication.NewAccountRequestDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.ContactRelationRequestDTO;
-import de.vsy.shared_transmission.packet.content.status.ClientService;
 import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
-import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
 import java.awt.event.MouseEvent;
 import javax.swing.JOptionPane;
 
@@ -173,6 +172,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
       case INITIAL -> showWelcomeDialog();
       case LOGIN -> handleLogin();
       case ACCOUNT_CREATION -> handleAccountCreation();
+      case ACCOUNT_DELETION -> handleAccountDeletion();
       case LOGOUT -> handleLogout();
       case CONTACT_REMOVAL -> handleContactRemoval();
       case CONTACT_ADDITION -> handleContactAddition();
@@ -220,6 +220,18 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
     }
   }
 
+  private void handleAccountDeletion() {
+    final var decision = JOptionPane.showConfirmDialog(null,
+        "Do you want to delete your account?", "Account deletion confirmation",
+        JOptionPane.YES_NO_OPTION);
+
+    if (decision == 0) {
+      final var deletionRequest = new AccountDeletionRequestDTO();
+      this.requester.request(deletionRequest, getServerEntity(STANDARD_SERVER_ID));
+      this.serverDataModel.addNotification(new SimpleInformation("Account deletion initiated."));
+    }
+  }
+
   private void handleAccountCreation() {
     final var noLoggedIn = this.serverDataModel.getClientAccountData().clientNotLoggedIn();
 
@@ -238,7 +250,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
         var password = String.valueOf(accountCreationPanel.getPassword());
         var username = accountCreationPanel.getUsername();
 
-        this.requester.request(new NewAccountRequestDTO(
+        this.requester.request(new AccountCreationRequestDTO(
             new AccountCreationDTO(AuthenticationDTO.valueOf(username, password),
                 PersonalData.valueOf(firstName, lastName))), getServerEntity(STANDARD_SERVER_ID));
       } else {

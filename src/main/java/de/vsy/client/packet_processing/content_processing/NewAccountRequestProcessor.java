@@ -9,14 +9,14 @@ import de.vsy.client.controlling.data_access_interfaces.AuthenticationDataModelA
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.ResultingPacketContentHandler;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
-import de.vsy.shared_transmission.packet.content.authentication.NewAccountRequestDTO;
+import de.vsy.shared_transmission.packet.content.authentication.AccountCreationRequestDTO;
 
 /**
  * PacketProcessor for account creation requests.
  *
  * <p>Frederic Heath
  */
-public class NewAccountRequestProcessor implements ContentProcessor<NewAccountRequestDTO> {
+public class NewAccountRequestProcessor implements ContentProcessor<AccountCreationRequestDTO> {
 
   private final ResultingPacketContentHandler contentHandler;
 
@@ -31,7 +31,7 @@ public class NewAccountRequestProcessor implements ContentProcessor<NewAccountRe
   }
 
   @Override
-  public void processContent(NewAccountRequestDTO toProcess) {
+  public void processContent(AccountCreationRequestDTO toProcess) {
     this.contentHandler.addRequest(toProcess);
   }
 }
