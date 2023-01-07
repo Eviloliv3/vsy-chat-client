@@ -7,14 +7,14 @@ import de.vsy.client.controlling.data_access_interfaces.StatusDataModelAccess;
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.ResultingPacketContentHandler;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
-import de.vsy.shared_transmission.packet.content.status.ContactMessengerStatusDTO;
+import de.vsy.shared_transmission.packet.content.status.ContactStatusChangeDTO;
 
 /**
  * PacketProcessor for client status type Packet.
  *
  * <p>Frederic Heath
  */
-public class ContactStatusChangeProcessor implements ContentProcessor<ContactMessengerStatusDTO> {
+public class ContactStatusChangeProcessor implements ContentProcessor<ContactStatusChangeDTO> {
 
   private final StatusDataModelAccess dataModel;
 
@@ -30,7 +30,7 @@ public class ContactStatusChangeProcessor implements ContentProcessor<ContactMes
   }
 
   @Override
-  public void processContent(ContactMessengerStatusDTO toProcess) {
+  public void processContent(ContactStatusChangeDTO toProcess) {
 
     if (toProcess.getOnlineStatus()) {
       this.dataModel.addContactData(

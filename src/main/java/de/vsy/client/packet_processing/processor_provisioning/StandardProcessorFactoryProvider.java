@@ -20,7 +20,8 @@ public class StandardProcessorFactoryProvider implements CategoryProcessorFactor
       case RELATION ->
           categoryFactory = new RelationPacketProcessorFactory(dataModel, handlerProvider);
       case CHAT -> categoryFactory = new ChatPacketProcessorFactory(dataModel, handlerProvider);
-      case ERROR -> categoryFactory = new ErrorPacketProcessorFactory(dataModel, handlerProvider);
+      case NOTIFICATION ->
+          categoryFactory = new ErrorPacketProcessorFactory(dataModel, handlerProvider);
     }
     return categoryFactory;
   }

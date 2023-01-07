@@ -47,7 +47,7 @@ public class StatusPacketProcessorFactory implements ContentBasedProcessorFactor
                 ProcessingConditionType.AUTHENTICATED, this.dataManager),
             new ClientStatusValidator(),
             new ClientStatusProcessor(this.dataManager, this.handlerProvider));
-      case ContactMessengerStatusDTO:
+      case ContactStatusChangeDTO:
         return new ClientPacketProcessor<>(
             ContentProcessingConditionProvider.getContentProcessingCondition(
                 ProcessingConditionType.AUTHENTICATED, this.dataManager),

@@ -18,12 +18,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Manages all dataManagement that originated from server response Packet.
  */
-//TODO ServerDataCache does not notify anyone, but is a dead container
-// ChatClientController decides whether information should be saved in model and/or published
-// to GUI Message for Client without active chat window.
-// ServerDataCache stores data. GUIStateManager only stores temporarily shown data, that might be
-// invalidated/exchanged for other data.
-// Can store contact data for the purpose of resolving contact names from contact ids or vice versa.
+//TODO Can store contact data for the purpose of resolving contact names from contact ids or vice versa.
 public class ServerDataCache implements ClientDataProvider {
 
   private static final Logger LOGGER = LogManager.getLogger();
@@ -62,12 +57,14 @@ public class ServerDataCache implements ClientDataProvider {
       final CommunicatorDTO newClient,
       final List<TextMessageDTO> messages) {
     int contactIndex = -1;
-    final var messageHistory = messages != null ? messages : new ArrayList<TextMessageDTO>();
 
-    if (newClient != null) {
-      contactIndex = this.activeContactController.addContact(contactType, newClient);
-      this.messageController.addMessagesForClient(newClient.getCommunicatorId(), messageHistory);
+    if (contactType == null || newClient == null) {
+      LOGGER.error("Contact type ({}) or contact data ({}) invalid.", contactType, newClient);
+      return contactIndex;
     }
+    final var messageHistory = messages != null ? messages : new ArrayList<TextMessageDTO>();
+    contactIndex = this.activeContactController.addContact(contactType, newClient);
+    this.messageController.addMessagesForClient(newClient.getCommunicatorId(), messageHistory);
     return contactIndex;
   }
 

@@ -63,9 +63,6 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   private JMenuItem contactAdditionItem;
   private JMenuItem contactRemovalItem;
 
-  //TODO initGUIControl aus originalem ClientChatGUI uebertragen
-// JTabbedPane bzw ActionListener fuer DoppelClick = Tab schliessen
-// - Klient nicht eingeloggt? -> Welcome/Login/Creation/Close Hoelle >)
   public ClientChatGUI() {
     this.activeChatTabs = new LinkedHashMap<>();
     this.contactListModel = new DefaultListModel<>();
@@ -282,7 +279,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   public void resetData() {
     SwingUtilities.invokeLater(() -> {
       this.setClientTitle(EMPTY_TITLE);
-      this.contactListModel.clear();
+      this.contactListModel.removeAllElements();
       this.chatHistoryTabPane.removeAll();
     });
     this.activeChatTabs.clear();
@@ -299,7 +296,11 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
 
   public void removeContact(final CommunicatorDTO contact) {
     SwingUtilities.invokeLater(() -> {
-      this.contactListModel.removeElement(contact);
+      if (this.contactListModel.removeElement(contact)) {
+        LOGGER.error("contactListModel removed {}", contact);
+      } else {
+        LOGGER.error("contactListModel failed to remove {}", contact);
+      }
       this.removeActiveChat(contact);
     });
   }

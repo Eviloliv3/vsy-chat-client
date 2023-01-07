@@ -112,7 +112,6 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
           preBuiltHistory.addClientMessage(text);
         }
       }
-
       this.chatManager.addActiveChat(contact, preBuiltHistory);
     }
   }
