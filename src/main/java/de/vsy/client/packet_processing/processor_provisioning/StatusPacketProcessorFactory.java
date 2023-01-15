@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.packet_processing.processor_provisioning;
 
 import de.vsy.client.controlling.data_access_interfaces.StatusDataModelAccess;
@@ -40,34 +38,27 @@ public class StatusPacketProcessorFactory implements ContentBasedProcessorFactor
   public PacketProcessor createTypeProcessor(Class<? extends PacketContent> contentType) {
     final var statusType = StatusContent.valueOf(contentType.getSimpleName());
 
-    switch (statusType) {
-      case ClientStatusChangeDTO:
-        return new ClientPacketProcessor<>(
-            ContentProcessingConditionProvider.getContentProcessingCondition(
-                ProcessingConditionType.AUTHENTICATED, this.dataManager),
-            new ClientStatusValidator(),
-            new ClientStatusProcessor(this.dataManager, this.handlerProvider));
-      case ContactStatusChangeDTO:
-        return new ClientPacketProcessor<>(
-            ContentProcessingConditionProvider.getContentProcessingCondition(
-                ProcessingConditionType.AUTHENTICATED, this.dataManager),
-            new ContactStatusValidator(),
-            new ContactStatusChangeProcessor(this.dataManager, this.handlerProvider));
-      case MessengerSetupDTO:
-        return new ClientPacketProcessor<>(
-            ContentProcessingConditionProvider.getContentProcessingCondition(
-                ProcessingConditionType.AUTHENTICATED, this.dataManager),
-            new MessengerSetupValidator(),
-            new MessengerSetupProcessor(this.dataManager));
-      case MessengerTearDownDTO:
-        return new ClientPacketProcessor<>(
-            ContentProcessingConditionProvider.getContentProcessingCondition(
-                ProcessingConditionType.AUTHENTICATED, this.dataManager),
-            new MessengerTearDownValidator(),
-            new MessengerTearDownProcessor(this.dataManager));
-      default:
-        break;
-    }
-    return null;
+    return switch (statusType) {
+      case ClientStatusChangeDTO -> new ClientPacketProcessor<>(
+          ContentProcessingConditionProvider.getContentProcessingCondition(
+              ProcessingConditionType.AUTHENTICATED, this.dataManager),
+          new ClientStatusValidator(),
+          new ClientStatusProcessor(this.handlerProvider));
+      case ContactStatusChangeDTO -> new ClientPacketProcessor<>(
+          ContentProcessingConditionProvider.getContentProcessingCondition(
+              ProcessingConditionType.AUTHENTICATED, this.dataManager),
+          new ContactStatusValidator(),
+          new ContactStatusChangeProcessor(this.dataManager, this.handlerProvider));
+      case MessengerSetupDTO -> new ClientPacketProcessor<>(
+          ContentProcessingConditionProvider.getContentProcessingCondition(
+              ProcessingConditionType.AUTHENTICATED, this.dataManager),
+          new MessengerSetupValidator(),
+          new MessengerSetupProcessor(this.dataManager));
+      case MessengerTearDownDTO -> new ClientPacketProcessor<>(
+          ContentProcessingConditionProvider.getContentProcessingCondition(
+              ProcessingConditionType.AUTHENTICATED, this.dataManager),
+          new MessengerTearDownValidator(),
+          new MessengerTearDownProcessor(this.dataManager));
+    };
   }
 }

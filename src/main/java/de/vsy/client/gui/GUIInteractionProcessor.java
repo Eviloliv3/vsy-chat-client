@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.gui;
 
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.INITIAL;
@@ -292,7 +290,6 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
       }
     } else {
       ComponentInputRemover.clearInput(contactAdd);
-      this.navigate(INITIAL);
     }
   }
 }

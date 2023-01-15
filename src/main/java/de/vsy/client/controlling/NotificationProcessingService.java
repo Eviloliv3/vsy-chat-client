@@ -39,7 +39,6 @@ public class NotificationProcessingService implements Runnable {
         handleNotification(currentNotification);
       } else {
         LOGGER.error("No Translatable object.");
-        break;
       }
     } while (!Thread.interrupted() || currentNotification != null);
     LOGGER.info("NotificationProcessingService terminated.");

@@ -12,12 +12,15 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 import de.vsy.client.controlling.essential_gui_action_interfaces.guiActionInterfaces.GUIChatActions;
 import de.vsy.client.data_model.ClientInput;
+import de.vsy.client.gui.essential_graphical_unit.MessageHistory;
 import de.vsy.client.gui.essential_graphical_unit.interfaces.ScrollableMessageHistory;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -167,11 +170,11 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     settingsMenu.setText("Settings");
 
     this.signOffItem.setText("Sign Off");
-    this.signOffItem.setActionCommand(String.valueOf(LOGOUT));
+    this.signOffItem.setActionCommand(LOGOUT.toString());
     this.accountDeletionItem.setText("Delete Account");
-    this.accountDeletionItem.setActionCommand(String.valueOf(ACCOUNT_DELETION));
+    this.accountDeletionItem.setActionCommand(ACCOUNT_DELETION.toString());
     this.closeApplicationItem.setText("Close Chatter");
-    this.closeApplicationItem.setActionCommand(String.valueOf(CLOSE_APPLICATION));
+    this.closeApplicationItem.setActionCommand(CLOSE_APPLICATION.toString());
     settingsMenu.add(this.signOffItem);
     settingsMenu.add(jSeparator1);
     settingsMenu.add(this.accountDeletionItem);
@@ -183,9 +186,9 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     contactManipulationMenu.setText("Contacts");
 
     this.contactAdditionItem.setText("Add Contact");
-    this.contactAdditionItem.setActionCommand(String.valueOf(CONTACT_ADDITION));
+    this.contactAdditionItem.setActionCommand(CONTACT_ADDITION.toString());
     this.contactRemovalItem.setText("Remove Contact");
-    this.contactRemovalItem.setActionCommand(String.valueOf(CONTACT_REMOVAL));
+    this.contactRemovalItem.setActionCommand(CONTACT_REMOVAL.toString());
     contactManipulationMenu.add(this.contactAdditionItem);
     contactManipulationMenu.add(jSeparator3);
     contactManipulationMenu.add(this.contactRemovalItem);
@@ -245,11 +248,11 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
       @Override
       public void windowClosing(WindowEvent e) {
         menuListener.actionPerformed(
-            new ActionEvent(e.getSource(), e.getID(), String.valueOf(CLOSE_APPLICATION)));
+            new ActionEvent(e.getSource(), e.getID(), CLOSE_APPLICATION.toString()));
         dispose();
       }
     });
-    this.contactListScrollPane.addMouseListener(new MouseAdapter() {
+    this.contactList.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
         chatActions.chooseContact(e);
@@ -267,13 +270,14 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   @Override
   public ClientInput<String> getInput() {
     final var activeChatContacts = this.activeChatTabs.keySet();
-    final var activeChatArray = activeChatContacts.toArray(
-        new CommunicatorDTO[activeChatContacts.size()]);
+    var activeChatArray = new CommunicatorDTO[activeChatContacts.size()];
+    activeChatContacts.toArray(activeChatArray);
     final var currentTabIndex = this.chatHistoryTabPane.getSelectedIndex();
 
     final var contact = activeChatArray[currentTabIndex];
     final var content = this.messageInputField.getText();
-    return new ClientInput<String>(content, contact.getCommunicatorId());
+    this.messageInputField.setText("");
+    return new ClientInput<>(content, contact.getCommunicatorId());
   }
 
   public void resetData() {
@@ -296,24 +300,29 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
 
   public void removeContact(final CommunicatorDTO contact) {
     SwingUtilities.invokeLater(() -> {
-      if (this.contactListModel.removeElement(contact)) {
-        LOGGER.error("contactListModel removed {}", contact);
-      } else {
-        LOGGER.error("contactListModel failed to remove {}", contact);
-      }
+      this.contactListModel.removeElement(contact);
       this.removeActiveChat(contact);
     });
   }
 
   @Override
-  public void addActiveChat(final CommunicatorDTO contact, ScrollableMessageHistory chatHistory) {
-    JScrollPane chatHistoryScrollPane = new JScrollPane(VERTICAL_SCROLLBAR_AS_NEEDED,
-        HORIZONTAL_SCROLLBAR_NEVER);
-    chatHistoryScrollPane.setAutoscrolls(true);
-    this.activeChatTabs.put(contact, chatHistory);
-    chatHistoryScrollPane.setViewportView(new Box(BoxLayout.Y_AXIS));
-    SwingUtilities.invokeLater(
-        () -> this.chatHistoryTabPane.addTab(contact.getDisplayLabel(), chatHistoryScrollPane));
+  public void addActiveChat(final CommunicatorDTO contact, MessageHistory chatHistory) {
+    if(!(this.activeChatTabs.containsKey(contact))){
+      JScrollPane chatHistoryScrollPane = new JScrollPane(VERTICAL_SCROLLBAR_AS_NEEDED,
+          HORIZONTAL_SCROLLBAR_NEVER);
+      chatHistoryScrollPane.setAutoscrolls(true);
+      chatHistoryScrollPane.setViewportView(chatHistory);
+      this.activeChatTabs.put(contact, chatHistory);
+      SwingUtilities.invokeLater(
+          () -> this.chatHistoryTabPane.addTab(contact.getDisplayLabel(), chatHistoryScrollPane));
+    } else {
+      SwingUtilities.invokeLater(
+          () -> {
+            final var contactChatIndex = this.chatHistoryTabPane.indexOfTab(contact.getDisplayLabel());
+            final var contactChatTab = this.chatHistoryTabPane.getTabComponentAt(contactChatIndex);
+            contactChatTab.requestFocusInWindow();
+          });
+    }
   }
 
   @Override
@@ -333,7 +342,13 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
 
   public void addMessage(final String contactName, final boolean clientBound,
       final TextMessageDTO message) {
-    var messageHistory = this.activeChatTabs.get(contactName);
+    ScrollableMessageHistory messageHistory = null;
+
+    for (var messageTab : this.activeChatTabs.entrySet()) {
+      if (contactName.equals(messageTab.getKey().getDisplayLabel())) {
+        messageHistory = messageTab.getValue();
+      }
+    }
 
     if (messageHistory != null) {
       var messageContent = message.getMessage();

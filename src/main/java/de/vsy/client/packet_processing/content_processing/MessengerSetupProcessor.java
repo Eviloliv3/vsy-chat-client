@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MessengerSetupProcessor implements ContentProcessor<MessengerSetupDTO> {
 
@@ -27,10 +28,14 @@ public class MessengerSetupProcessor implements ContentProcessor<MessengerSetupD
   public void processContent(MessengerSetupDTO toProcess) {
     Map<EligibleContactEntity, List<CommunicatorDTO>> contacts = new HashMap<>();
 
-    for (var contactMapping : toProcess.getActiveContacts().entrySet()) {
-      var contactsInList = new ArrayList();
-      contactsInList.addAll(contactMapping.getValue().stream().toList());
-      contacts.put(contactMapping.getKey(), contactsInList);
+    for (final var contactMapping : toProcess.getActiveContacts().entrySet()) {
+      final var listedContacts = new ArrayList<CommunicatorDTO>();
+      Set<CommunicatorDTO> receivedContacts = contactMapping.getValue();
+
+      if (receivedContacts != null) {
+        listedContacts.addAll(receivedContacts);
+      }
+      contacts.put(contactMapping.getKey(), listedContacts);
     }
     this.dataModel.setupMessenger(toProcess.getOldMessages(), contacts);
   }

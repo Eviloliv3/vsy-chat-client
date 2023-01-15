@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.data_model;
 
 import de.vsy.shared_module.data_element_validation.IdCheck;

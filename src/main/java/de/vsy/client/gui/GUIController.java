@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.gui;
 
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.INITIAL;
@@ -11,7 +9,6 @@ import de.vsy.client.data_model.ServerDataCache;
 import de.vsy.client.gui.essential_graphical_unit.MenuActionListener;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.swing.SwingUtilities;
@@ -126,7 +123,7 @@ public class GUIController {
     this.guiInteractions.navigate(INITIAL);
   }
 
-  public void startGUI() throws InvocationTargetException, InterruptedException {
+  public void startGUI() {
     prepareGUI();
     this.gui.setVisible(true);
   }

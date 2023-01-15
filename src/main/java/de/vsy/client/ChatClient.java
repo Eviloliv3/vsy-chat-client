@@ -1,7 +1,5 @@
-/*
- *
- */
-package de.vsy.client.chat_client;
+
+package de.vsy.client;
 
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 

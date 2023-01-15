@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.packet_processing.processor_provisioning;
 
 import static de.vsy.shared_module.packet_processing.ProcessingConditionType.AUTHENTICATED;
@@ -79,12 +77,12 @@ public class AuthenticationPacketProcessorFactory implements ContentBasedProcess
           ContentProcessingConditionProvider.getContentProcessingCondition(
               ProcessingConditionType.NOT_AUTHENTICATED, this.dataManager),
           new NewAccountRequestValidator(),
-          new NewAccountRequestProcessor(this.dataManager, this.handlerProvider));
+          new NewAccountRequestProcessor(this.handlerProvider));
       case ReconnectRequestDTO -> new ClientPacketProcessor<>(
           ContentProcessingConditionProvider.getContentProcessingCondition(
               AUTHENTICATED, this.dataManager),
           new ReconnectRequestValidator(),
-          new ReconnectRequestProcessor(this.dataManager, this.handlerProvider));
+          new ReconnectRequestProcessor(this.handlerProvider));
       case ReconnectResponseDTO -> new ClientPacketProcessor<>(
           ContentProcessingConditionProvider.getContentProcessingCondition(
               AUTHENTICATED, this.dataManager),

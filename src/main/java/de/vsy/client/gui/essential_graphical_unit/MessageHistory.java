@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.gui.essential_graphical_unit;
 
 import static javax.swing.BoxLayout.Y_AXIS;
@@ -9,7 +7,6 @@ import de.vsy.client.gui.ChatBubbleCreator;
 import de.vsy.client.gui.essential_graphical_unit.interfaces.ScrollableMessageHistory;
 import java.io.Serial;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -26,7 +23,6 @@ public class MessageHistory extends Box implements ScrollableMessageHistory {
   public MessageHistory() {
     super(Y_AXIS);
     this.messageCounter = 0;
-    setLayout(new BoxLayout(this, Y_AXIS));
     setSize(523, 308);
     setAutoscrolls(true);
   }
@@ -63,11 +59,6 @@ public class MessageHistory extends Box implements ScrollableMessageHistory {
 
       addMessage(newContactMessageContainer);
     }
-  }
-
-  @Override
-  public void clearMessageHistory() {
-    super.removeAll();
   }
 
   /**

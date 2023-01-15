@@ -2,7 +2,6 @@ package de.vsy.client.gui;
 
 import static javax.swing.BoxLayout.Y_AXIS;
 
-import java.awt.Color;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,9 +19,8 @@ public class ChatBubbleCreator {
 
     newMessageBubble.setLayout(new BoxLayout(newMessageBubble, Y_AXIS));
 
-    messageArea.setBackground(new Color(0.5f, 0.5f, 1f));
     messageArea.setOpaque(true);
-    messageArea.setBorder(new EmptyBorder(10, 10, 10, 10));
+    newMessageBubble.setBorder(new EmptyBorder(10, 10, 10, 10));
 
     newMessageBubble.add(messageArea);
     return newMessageBubble;

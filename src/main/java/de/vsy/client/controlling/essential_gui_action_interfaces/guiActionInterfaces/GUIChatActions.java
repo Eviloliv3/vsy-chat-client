@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.controlling.essential_gui_action_interfaces.guiActionInterfaces;
 
 import java.awt.event.MouseEvent;

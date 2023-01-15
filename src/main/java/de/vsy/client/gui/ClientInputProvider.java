@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.gui;
 
 import de.vsy.client.data_model.ClientInput;

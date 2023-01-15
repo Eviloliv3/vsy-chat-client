@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.packet_processing.processor_provisioning;
 
 import de.vsy.client.controlling.data_access_interfaces.StatusDataModelAccess;
@@ -36,22 +34,17 @@ public class RelationPacketProcessorFactory implements ContentBasedProcessorFact
   public PacketProcessor createTypeProcessor(Class<? extends PacketContent> contentType) {
     final var relationType = RelationContent.valueOf(contentType.getSimpleName());
 
-    switch (relationType) {
-      case ContactRelationRequestDTO:
-        return new ClientPacketProcessor<>(
-            ContentProcessingConditionProvider.getContentProcessingCondition(
-                ProcessingConditionType.AUTHENTICATED, this.dataManager),
-            new ContactRelationRequestValidator(),
-            new ContactRelationRequestProcessor(this.dataManager, this.handlerProvider));
-      case ContactRelationResponseDTO:
-        return new ClientPacketProcessor<>(
-            ContentProcessingConditionProvider.getContentProcessingCondition(
-                ProcessingConditionType.AUTHENTICATED, this.dataManager),
-            new ContactRelationResponseValidator(),
-            new ContactRelationResponseProcessor(this.dataManager, this.handlerProvider));
-      default:
-        break;
-    }
-    return null;
+    return switch (relationType) {
+      case ContactRelationRequestDTO -> new ClientPacketProcessor<>(
+          ContentProcessingConditionProvider.getContentProcessingCondition(
+              ProcessingConditionType.AUTHENTICATED, this.dataManager),
+          new ContactRelationRequestValidator(),
+          new ContactRelationRequestProcessor(this.dataManager, this.handlerProvider));
+      case ContactRelationResponseDTO -> new ClientPacketProcessor<>(
+          ContentProcessingConditionProvider.getContentProcessingCondition(
+              ProcessingConditionType.AUTHENTICATED, this.dataManager),
+          new ContactRelationResponseValidator(),
+          new ContactRelationResponseProcessor(this.dataManager, this.handlerProvider));
+    };
   }
 }

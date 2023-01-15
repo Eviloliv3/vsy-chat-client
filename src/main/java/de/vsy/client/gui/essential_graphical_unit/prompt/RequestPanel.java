@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package de.vsy.client.gui.essential_graphical_unit.prompt;
 
 import javax.swing.GroupLayout;
@@ -21,7 +17,6 @@ public class RequestPanel extends JPanel {
     initComponents(message);
   }
 
-  // <editor-fold defaultstate="collapsed" desc="Generated Code">
   private void initComponents(final String message) {
 
     JScrollPane jScrollPane1 = new JScrollPane();

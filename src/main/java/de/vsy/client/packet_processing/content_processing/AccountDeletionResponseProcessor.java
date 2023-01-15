@@ -4,7 +4,6 @@ import de.vsy.client.controlling.data_access_interfaces.AuthenticationDataModelA
 import de.vsy.client.data_model.notification.SimpleInformation;
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.ResultingPacketContentHandler;
-import de.vsy.shared_module.packet_exception.PacketProcessingException;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
 import de.vsy.shared_transmission.packet.content.authentication.AccountDeletionResponseDTO;
 
@@ -22,8 +21,7 @@ public class AccountDeletionResponseProcessor implements
   }
 
   @Override
-  public void processContent(AccountDeletionResponseDTO toProcess)
-      throws PacketProcessingException {
+  public void processContent(AccountDeletionResponseDTO toProcess) {
     if (toProcess.getAccountDeleted()) {
       this.dataModel.addNotification(new SimpleInformation("Account deleted successfully."));
       this.dataModel.completeLogout();

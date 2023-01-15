@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.controlling;
 
 import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.HANDLER_BOUND;
@@ -15,6 +13,7 @@ import de.vsy.client.connection_handling.ClientConnectionWatcher;
 import de.vsy.client.connection_handling.ServerConnectionController;
 import de.vsy.client.controlling.data_access_interfaces.AuthenticationDataModelAccess;
 import de.vsy.client.controlling.data_access_interfaces.ChatDataModelAccess;
+import de.vsy.client.controlling.data_access_interfaces.NotificationDataModelAccess;
 import de.vsy.client.controlling.data_access_interfaces.StatusDataModelAccess;
 import de.vsy.client.data_model.ClientDataManager;
 import de.vsy.client.data_model.ClientNotificationManager;
@@ -39,7 +38,6 @@ import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
 import de.vsy.shared_utility.id_manipulation.IdComparator;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +54,7 @@ import org.apache.logging.log4j.Logger;
  * initializing Packet are sent.
  */
 public class ChatClientController implements AuthenticationDataModelAccess, ChatDataModelAccess,
-    StatusDataModelAccess, ClientTerminator {
+    StatusDataModelAccess, NotificationDataModelAccess, ClientTerminator {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final ServerConnectionController connectionManager;
@@ -305,13 +303,8 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
       }
 
       if (!this.guiController.guiNotTerminated()) {
-        try {
-          this.guiController.startGUI();
-          this.guiController.startInteracting();
-        } catch (InvocationTargetException e) {
-          addNotification(
-              new SimpleInformation("GUI could not be started. Application will now be shutdown."));
-        }
+        this.guiController.startGUI();
+        this.guiController.startInteracting();
         LOGGER.info("GUI initiated.");
       } else {
         LOGGER.trace("GUI is still active.");
@@ -363,7 +356,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     this.connectionWatcher.scheduleAtFixedRate(connectionWatcherTask, 50, 1000);
   }
 
-  //TODO in ChatClient ? META & UNSCHOEN
+  //TODO in ChatClient ? META & not nice
 
   /**
    * Tries to reconnect to server, until the GUI is closed.
@@ -400,5 +393,10 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     } else {
       LOGGER.info("Cache does not contain client data (null).");
     }
+  }
+
+  @Override
+  public void resetClient() {
+    this.guiController.resetGUIData();
   }
 }

@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.data_model;
 
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
@@ -22,7 +20,7 @@ public class ContactDataManager {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final Map<EligibleContactEntity, List<CommunicatorDTO>> activeContactMap;
-  private final List<CommunicatorDTO> indexList;
+  private List<CommunicatorDTO> indexList;
 
   public ContactDataManager() {
     this(new HashMap<>(10));
@@ -42,7 +40,7 @@ public class ContactDataManager {
     }
     this.activeContactMap = activeContactMap;
     this.indexList = new LinkedList<>();
-    activeContactMap.values().forEach((contactList) -> contactList.forEach(this.indexList::add));
+    activeContactMap.values().forEach(this.indexList::addAll);
   }
 
   /**
@@ -55,12 +53,12 @@ public class ContactDataManager {
     int contactIndex = -1;
     var contactList = this.activeContactMap.getOrDefault(contactType, new LinkedList<>());
 
-    if (!(indexList.contains(contact))) {
+    if (!(this.indexList.contains(contact))) {
       contactList.add(contact);
       this.activeContactMap.put(contactType, contactList);
 
-      indexList.add(contact);
-      CommunicatorDataSorter.sortByFirstLastName(indexList);
+      this.indexList.add(contact);
+      this.indexList = CommunicatorDataSorter.sortByFirstLastName(this.indexList);
       contactIndex = indexList.indexOf(contact);
     } else {
       LOGGER.warn("Contact not added - already contained.");
@@ -85,7 +83,6 @@ public class ContactDataManager {
    */
   public void removeContact(
       final EligibleContactEntity contactType, final CommunicatorDTO contact) {
-    var contactRemoved = false;
     final var contactList = this.activeContactMap.getOrDefault(contactType, new LinkedList<>());
 
     contactList.remove(contact);
@@ -104,7 +101,7 @@ public class ContactDataManager {
     if (!activeContactMap.isEmpty()) {
       resetContactList();
       this.activeContactMap.putAll(activeContactMap);
-      activeContactMap.values().forEach((contactList) -> contactList.forEach(this.indexList::add));
+      activeContactMap.values().forEach(this.indexList::addAll);
     }
   }
 

@@ -1,6 +1,5 @@
 package de.vsy.client.packet_processing.content_processing;
 
-import de.vsy.client.controlling.data_access_interfaces.StatusDataModelAccess;
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.ResultingPacketContentHandler;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
@@ -11,8 +10,7 @@ public class ClientStatusProcessor implements ContentProcessor<ClientStatusChang
   private final ResultingPacketContentHandler contentHandler;
 
 
-  public ClientStatusProcessor(StatusDataModelAccess dataModel,
-      ResultingContentHandlingProvider handlerProvider) {
+  public ClientStatusProcessor(ResultingContentHandlingProvider handlerProvider) {
     this.contentHandler = handlerProvider.getResultingPacketContentHandler();
   }
 

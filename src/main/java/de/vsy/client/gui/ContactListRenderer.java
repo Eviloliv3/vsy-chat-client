@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.gui;
 
 import static java.lang.System.err;

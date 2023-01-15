@@ -1,9 +1,8 @@
-/*
- *
- */
+
 package de.vsy.client.packet_processing.processor_provisioning;
 
 import de.vsy.client.controlling.data_access_interfaces.EssentialDataModelAccess;
+import de.vsy.client.controlling.data_access_interfaces.NotificationDataModelAccess;
 import de.vsy.client.packet_processing.ClientPacketProcessor;
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.content_processing.SimpleErrorProcessor;
@@ -16,7 +15,7 @@ import de.vsy.shared_transmission.packet.content.error.ErrorContent;
 
 public class ErrorPacketProcessorFactory implements ContentBasedProcessorFactory {
 
-  private final EssentialDataModelAccess dataManager;
+  private final NotificationDataModelAccess dataManager;
   private final ResultingContentHandlingProvider handlerProvider;
 
   /**
@@ -24,7 +23,7 @@ public class ErrorPacketProcessorFactory implements ContentBasedProcessorFactory
    *
    * @param dataManager the dataManagement manager
    */
-  public ErrorPacketProcessorFactory(final EssentialDataModelAccess dataManager,
+  public ErrorPacketProcessorFactory(final NotificationDataModelAccess dataManager,
       final ResultingContentHandlingProvider handlerProvider) {
     this.dataManager = dataManager;
     this.handlerProvider = handlerProvider;

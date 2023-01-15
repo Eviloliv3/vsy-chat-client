@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DialogTesting {
+public class TestDialog {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
@@ -57,7 +57,7 @@ public class DialogTesting {
   }
 
   @Test
-  public void testWelcomeDialogLogin() {
+  public void testWelcomeDialogLogin() throws InterruptedException {
     LOGGER.info("Test: WelcomeDialog Login started.");
     LOGGER.trace("Command expected: {}", LOGIN);
 
@@ -83,17 +83,17 @@ public class DialogTesting {
 
     try {
       final var correctAction = futureResult.get();
+      Assertions.assertNotNull(correctAction,
+          "Possibly wrong command set for action. See trace log.");
       Assertions.assertTrue(correctAction, "Possibly wrong command set for action. See trace log.");
     } catch (ExecutionException e) {
-      Assertions.fail(e);
-    } catch (InterruptedException e) {
       Assertions.fail(e);
     }
     LOGGER.info("Test: WelcomeDialog Login terminated.");
   }
 
   @Test
-  public void testWelcomeDialogCloseApplication() {
+  public void testWelcomeDialogCloseApplication() throws InterruptedException {
     LOGGER.info("Test: WelcomeDialog Close_Application started.");
     LOGGER.trace("Command expected: {}", CLOSE_APPLICATION);
 
@@ -122,14 +122,12 @@ public class DialogTesting {
       Assertions.assertTrue(correctAction, "Possibly wrong command set for action. See trace log.");
     } catch (ExecutionException e) {
       Assertions.fail(e);
-    } catch (InterruptedException e) {
-      Assertions.fail(e);
     }
     LOGGER.info("Test: WelcomeDialog Close_Application terminated.");
   }
 
   @Test
-  public void testWelcomeDialogAccountCreation() {
+  public void testWelcomeDialogAccountCreation() throws InterruptedException {
     LOGGER.info("Test: WelcomeDialog Account_Creation started.");
     LOGGER.trace("Command expected: {}", ACCOUNT_CREATION);
 
@@ -155,10 +153,10 @@ public class DialogTesting {
 
     try {
       final var correctAction = futureResult.get();
+      Assertions.assertNotNull(correctAction,
+          "Possibly wrong command set for action. See trace log.");
       Assertions.assertTrue(correctAction, "Possibly wrong command set for action. See trace log.");
     } catch (ExecutionException e) {
-      Assertions.fail(e);
-    } catch (InterruptedException e) {
       Assertions.fail(e);
     }
     LOGGER.info("Test: WelcomeDialog Account_Creation terminated.");

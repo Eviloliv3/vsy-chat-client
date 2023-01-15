@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.packet_processing;
 
 import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.OUTSIDE_BOUND;

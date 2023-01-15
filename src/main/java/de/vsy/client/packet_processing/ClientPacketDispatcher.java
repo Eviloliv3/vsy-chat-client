@@ -5,6 +5,7 @@ import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_C
 import de.vsy.shared_module.packet_management.BasicClientPacketDispatcher;
 import de.vsy.shared_module.packet_management.ClientDataProvider;
 import de.vsy.shared_module.packet_management.PacketBuffer;
+import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
 
 public class ClientPacketDispatcher extends BasicClientPacketDispatcher {
 
@@ -18,8 +19,10 @@ public class ClientPacketDispatcher extends BasicClientPacketDispatcher {
   }
 
   @Override
-  protected boolean isClientBound(int recipientId) {
+  protected boolean clientIsRecipient(CommunicationEndpoint sender,
+      CommunicationEndpoint recipient) {
     final int clientId = this.clientData.getClientId();
+    final var recipientId = recipient.getEntityId();
     return recipientId == clientId || recipientId == STANDARD_CLIENT_ID;
   }
 }

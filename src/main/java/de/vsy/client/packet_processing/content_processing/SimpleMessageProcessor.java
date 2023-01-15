@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.packet_processing.content_processing;
 
 import de.vsy.client.controlling.data_access_interfaces.ChatDataModelAccess;

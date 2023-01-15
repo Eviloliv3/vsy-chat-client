@@ -1,6 +1,4 @@
-/*
- *
- */
+
 package de.vsy.client.controlling.data_access_interfaces;
 
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
