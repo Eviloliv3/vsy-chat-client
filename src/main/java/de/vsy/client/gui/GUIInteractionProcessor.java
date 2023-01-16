@@ -34,6 +34,7 @@ import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.ContactRelationRequestDTO;
 import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
 import java.awt.event.MouseEvent;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 public class GUIInteractionProcessor implements GUIChatActions, Navigator {
@@ -111,6 +112,10 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
         }
       }
       this.chatManager.addActiveChat(contact, preBuiltHistory);
+
+      if(evt.getComponent().getParent() instanceof final JList<?> contactList){
+        contactList.clearSelection();
+      }
     }
   }
 

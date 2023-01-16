@@ -7,7 +7,7 @@ import de.vsy.shared_transmission.dto.CommunicatorDTO;
 public interface ClientInputProvider {
 
   /**
-   * Gets the message.
+   * Returns the ClientInput containing a String message.
    *
    * @return the message
    */

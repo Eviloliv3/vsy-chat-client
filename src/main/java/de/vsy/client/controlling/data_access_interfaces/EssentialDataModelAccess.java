@@ -4,7 +4,7 @@ package de.vsy.client.controlling.data_access_interfaces;
 import de.vsy.shared_transmission.packet.content.Translatable;
 
 /**
- * Provides methods for simple dataManagement access and manipulation from all packet handlers.
+ * Provides basic data access appropriate for all Packet handlers.
  */
 public interface EssentialDataModelAccess {
 
@@ -17,16 +17,16 @@ public interface EssentialDataModelAccess {
   void addNotification(final Translatable notification);
 
   /**
-   * Gets the client id.
+   * Returns the client's id.
    *
    * @return the client id
    */
   int getClientId();
 
   /**
-   * Checks whether client is logged in
+   * Returns boolean value indicating client's authentication state.
    *
-   * @return is client logged in
+   * @return true if client data set is complete, false otherwise
    */
   boolean isClientLoggedIn();
 }

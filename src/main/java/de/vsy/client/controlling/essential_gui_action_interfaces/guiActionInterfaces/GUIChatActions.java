@@ -9,11 +9,14 @@ import java.awt.event.MouseEvent;
 public interface GUIChatActions {
 
   /**
-   * Choose contact.
+   * Uses Mouseevent to determine chosen contact.
    *
-   * @param evt the evt
+   * @param evt the triggering MouseEvent
    */
   void chooseContact(MouseEvent evt);
 
+  /**
+   * Triggers input message processing.
+   */
   void sendMessage();
 }

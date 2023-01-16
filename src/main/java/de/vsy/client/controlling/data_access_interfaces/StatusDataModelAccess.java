@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Provides methods for simple dataManagement manipulation from setup packet handlers.
+ * Provides STATUS related Packet handlers with appropriate data access.
  */
 public interface StatusDataModelAccess extends EssentialDataModelAccess {
 

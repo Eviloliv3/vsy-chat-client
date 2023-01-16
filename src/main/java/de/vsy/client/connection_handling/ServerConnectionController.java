@@ -78,7 +78,7 @@ public class ServerConnectionController {
 
     var reconnectTries = 3;
 
-    if (!getConnectionState()) {
+      if (!(getConnectionState())) {
 
       while (reconnectTries > 0) {
 
@@ -122,7 +122,7 @@ public class ServerConnectionController {
         do {
           LOGGER.info("Waiting for connection thread initiation.");
           Thread.yield();
-        } while (!this.connectionControl.connectionIsLive() && Thread.currentThread()
+        } while (!(this.connectionControl.connectionIsLive()) && Thread.currentThread()
             .isInterrupted());
         return connected;
       }

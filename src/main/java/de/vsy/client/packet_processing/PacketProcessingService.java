@@ -63,8 +63,7 @@ public class PacketProcessingService implements Runnable {
 
   private PacketProcessor createProcessor(final ChatClientController dataController,
       final PacketManagementUtilityProvider packetManagement) {
-    final var processorManager = new PacketProcessorManager(dataController,
-        new StandardProcessorFactoryProvider(), packetManagement);
+    final var processorManager = new PacketProcessorManager(new StandardProcessorFactoryProvider(dataController, packetManagement));
     final var processorLink = new ClientPacketProcessorLink(processorManager);
     return new PacketSyntaxCheckLink(processorLink, new SimplePacketChecker(setupValidator()));
 

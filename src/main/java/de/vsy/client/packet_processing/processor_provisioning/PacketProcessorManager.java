@@ -17,24 +17,12 @@ import java.util.Optional;
  */
 public class PacketProcessorManager {
 
-  private final ChatClientController dataModel;
   private final PacketProcessorProvider contentHandlerProvider;
   private final CategoryProcessorFactoryProvider processorFactoryProvider;
-  private final ResultingContentHandlingProvider handlerProvider;
 
-  /**
-   * Instantiates a new PacketHandler factory.
-   *
-   * @param dataModel the dataManagement model
-   */
-  public PacketProcessorManager(
-      final ChatClientController dataModel,
-      final CategoryProcessorFactoryProvider processorFactoryProvider,
-      final ResultingContentHandlingProvider handlerProvider) {
+  public PacketProcessorManager(final CategoryProcessorFactoryProvider processorFactoryProvider) {
     this.contentHandlerProvider = new PacketProcessorProvider();
-    this.dataModel = dataModel;
     this.processorFactoryProvider = processorFactoryProvider;
-    this.handlerProvider = handlerProvider;
   }
 
   public Optional<PacketProcessor> getProcessor(
@@ -45,8 +33,7 @@ public class PacketProcessorManager {
     if (categoryProcessing.isEmpty()) {
       var factory =
           new ContentBasedPacketProcessorProvider(
-              this.processorFactoryProvider.getCategoryHandlerFactory(
-                  identifier.getPacketCategory(), this.dataModel, this.handlerProvider));
+              this.processorFactoryProvider.getCategoryHandlerFactory(identifier.getPacketCategory()));
       this.contentHandlerProvider.registerTypeProcessingProvider(
           identifier.getPacketCategory(), factory);
       categoryProcessing = factory.getProcessor(contentType);

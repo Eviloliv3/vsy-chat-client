@@ -120,7 +120,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     this.contactListScrollPane.setViewportView(this.contactList);
 
     this.messageInputField.setColumns(20);
-    this.messageInputField.setRows(5);
+    this.messageInputField.setRows(3);
     this.messageInputField.setLineWrap(true);
     this.messageInputField.setWrapStyleWord(true);
     messageInputScrollPane.setViewportView(this.messageInputField);
@@ -314,7 +314,10 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
       chatHistoryScrollPane.setViewportView(chatHistory);
       this.activeChatTabs.put(contact, chatHistory);
       SwingUtilities.invokeLater(
-          () -> this.chatHistoryTabPane.addTab(contact.getDisplayLabel(), chatHistoryScrollPane));
+          () -> {
+            this.chatHistoryTabPane.addTab(contact.getDisplayLabel(), chatHistoryScrollPane);
+            chatHistory.requestFocusInWindow();
+          });
     } else {
       SwingUtilities.invokeLater(
           () -> {

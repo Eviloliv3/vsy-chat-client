@@ -7,7 +7,12 @@ import de.vsy.shared_transmission.packet.property.packet_category.PacketCategory
 
 public interface CategoryProcessorFactoryProvider {
 
-  ContentBasedProcessorFactory getCategoryHandlerFactory(
-      PacketCategory category, final ChatClientController dataModel,
-      final ResultingContentHandlingProvider handlerProvider);
+  /**
+   * Returns a factory providing PacketProcessors capable of processing Packets of the specified
+   * PacketCategory.
+   * @param category        the PacketCategory
+   * @return a ContentBasedProcessorFactory, or null if no factory can be provided for the
+   * specified PacketCategory
+   */
+  ContentBasedProcessorFactory getCategoryHandlerFactory(PacketCategory category);
 }

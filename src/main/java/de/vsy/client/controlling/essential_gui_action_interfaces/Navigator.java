@@ -8,12 +8,15 @@ import de.vsy.client.gui.essential_graphical_unit.NavigationGoal;
  */
 public interface Navigator {
 
+  /**
+   * Initiates the ChatClient shutdown.
+   */
   void closeApplication();
 
   /**
-   * Navigate.
+   * Uses specified NavigationGoal which actions to take next.
    *
-   * @param status the status
+   * @param status the NavigationGoal
    */
   void navigate(NavigationGoal status);
 }
