@@ -6,6 +6,7 @@ import static de.vsy.shared_transmission.packet.content.status.ClientService.MES
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getClientEntity;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getServerEntity;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_BROADCAST_ID;
+import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
 import static java.util.Arrays.asList;
 
@@ -28,6 +29,7 @@ import de.vsy.client.packet_processing.PacketManagementUtilityProvider;
 import de.vsy.client.packet_processing.PacketProcessingService;
 import de.vsy.client.packet_processing.RequestPacketCreator;
 import de.vsy.shared_module.data_element_validation.IdCheck;
+import de.vsy.shared_module.packet_creation.PacketCompiler;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferLabel;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
@@ -149,6 +151,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     if (clientData != null) {
       this.serverDataModel.setCommunicatorDTO(clientData);
       this.guiController.addClientTitle(clientData);
+      PacketCompiler.addOriginatorEntityProvider(() -> getClientEntity(clientData.getCommunicatorId()));
       sendMessengerStatus();
     } else {
       this.authenticationFailed();
@@ -157,8 +160,8 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
 
   @Override
   public void completeLogout() {
-    this.serverDataModel.resetAllData();
-    this.guiController.resetGUIData();
+    reset();
+    PacketCompiler.addOriginatorEntityProvider(() -> getClientEntity(STANDARD_CLIENT_ID));
   }
 
   @Override
@@ -192,8 +195,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
 
   @Override
   public void tearDownMessenger() {
-    this.serverDataModel.resetAllData();
-    this.guiController.resetGUIData();
+    reset();
   }
 
   @Override
@@ -385,10 +387,12 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     if (clientData != null) {
       final var clientId = clientData.getCommunicatorId();
 
-      if (clientId != STANDARD_SERVER_ID) {
+      if (clientId != STANDARD_CLIENT_ID) {
         final var reconnectRequest = new ReconnectRequestDTO(clientData);
         this.requester.request(reconnectRequest, getServerEntity(STANDARD_SERVER_ID));
         LOGGER.info("ReconnectRequest sent.");
+      } else {
+        LOGGER.error("No Client data found.");
       }
     } else {
       LOGGER.info("Cache does not contain client data (null).");
