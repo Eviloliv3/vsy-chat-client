@@ -1,4 +1,3 @@
-
 package de.vsy.client.controlling;
 
 import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.HANDLER_BOUND;
@@ -56,7 +55,7 @@ import org.apache.logging.log4j.Logger;
  * initializing Packet are sent.
  */
 public class ChatClientController implements AuthenticationDataModelAccess, ChatDataModelAccess,
-    StatusDataModelAccess, NotificationDataModelAccess, ClientTerminator {
+    StatusDataModelAccess, NotificationDataModelAccess, ClientTerminator, Runnable {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final ServerConnectionController connectionManager;
@@ -64,7 +63,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
   private final GUIController guiController;
   private final RequestPacketCreator requester;
   private final ServerDataCache serverDataModel;
-  private volatile boolean clientTerminating;
+  private volatile boolean clientTerminated;
   private ExecutorService notificationProcessor;
   private ExecutorService packetProcessor;
   private Timer connectionWatcher;
@@ -88,7 +87,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
         this.packetManagement.getPacketTransmissionCache(),
         this.packetManagement.getResultingPacketContentHandler());
     this.guiController = setupGUIController();
-    this.clientTerminating = false;
+    this.clientTerminated = false;
   }
 
   private void setupPacketBuffers() {
@@ -107,7 +106,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
 
   @Override
   public void closeApplication() {
-    this.clientTerminating = true;
+    this.clientTerminated = true;
     this.connectionManager.closeConnection();
     LOGGER.info("Notification processing service shutdown initiated.");
     stopProcessor(this.notificationProcessor);
@@ -151,7 +150,8 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     if (clientData != null) {
       this.serverDataModel.setCommunicatorDTO(clientData);
       this.guiController.addClientTitle(clientData);
-      PacketCompiler.addOriginatorEntityProvider(() -> getClientEntity(clientData.getCommunicatorId()));
+      PacketCompiler.addOriginatorEntityProvider(
+          () -> getClientEntity(clientData.getCommunicatorId()));
       sendMessengerStatus();
     } else {
       this.authenticationFailed();
@@ -280,41 +280,59 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     }
   }
 
-  /**
-   * Start controller.
-   *
-   * @throws InterruptedException the interrupted exception
-   */
-  public void startController() throws InterruptedException {
-
-    if (connect()) {
-      LOGGER.info("Connection initiated.");
-
-      if (this.packetProcessor == null || this.packetProcessor.isShutdown()) {
-        startNewPacketProcessor();
-        LOGGER.info("PacketProcessingService started.");
+  @Override
+  public void run() {
+    try {
+      if (connect()) {
+        LOGGER.info("Connection initiated.");
+        initiateServices();
+        initiateGUI();
+        this.connectionWaiter.await();
+        resetConnection();
       } else {
-        LOGGER.trace("PacketProcessingService is still working.");
+        resetClient();
+        LOGGER.error("No connection could be established.");
       }
-
-      if (this.notificationProcessor == null || this.notificationProcessor.isShutdown()) {
-        startNewNotificationProcessor();
-        LOGGER.info("NotificationProcessor started.");
-      } else {
-        LOGGER.trace("NotificationProcessor is still working.");
-      }
-
-      if (!this.guiController.guiNotTerminated()) {
-        this.guiController.startGUI();
-        this.guiController.startInteracting();
-        LOGGER.info("GUI initiated.");
-      } else {
-        LOGGER.trace("GUI is still active.");
-      }
-      keepClientAlive();
-    } else {
-      LOGGER.error("No connection could be established.");
+    } catch (InterruptedException ie) {
+      LOGGER.error("Interrupted while: {}", Arrays.asList(ie.getStackTrace()));
+      closeApplication();
     }
+  }
+
+  private void initiateServices() {
+    if (this.packetProcessor == null || this.packetProcessor.isShutdown()) {
+      startNewPacketProcessor();
+      LOGGER.info("PacketProcessingService started.");
+    } else {
+      LOGGER.trace("PacketProcessingService is still working.");
+    }
+
+    if (this.notificationProcessor == null || this.notificationProcessor.isShutdown()) {
+      startNewNotificationProcessor();
+      LOGGER.info("NotificationProcessor started.");
+    } else {
+      LOGGER.trace("NotificationProcessor is still working.");
+    }
+  }
+
+  private void initiateGUI() {
+    if (!this.guiController.guiNotTerminated()) {
+      this.guiController.startGUI();
+      this.guiController.startInteracting();
+      LOGGER.info("GUI initiated.");
+    } else {
+      LOGGER.trace("GUI is still active.");
+    }
+  }
+
+  private void resetConnection() {
+    this.connectionWatcher.cancel();
+    this.connectionWatcher.purge();
+    this.connectionManager.closeConnection();
+  }
+
+  public boolean clientNotTerminated() {
+    return !(this.clientTerminated);
   }
 
   /**
@@ -322,7 +340,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
    *
    * @return true, if successful
    */
-  private boolean connect() {
+  private boolean connect() throws InterruptedException {
     final var connectionEstablished = this.connectionManager.initiateConnection();
 
     if (connectionEstablished) {
@@ -337,12 +355,8 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
       final var errorCause = "No connection could be initiated. If you do not want to attempt another reconnection try close the application within 10 seconds.";
       final var notification = new SimpleInformation(errorCause);
       this.serverDataModel.addNotification(notification);
-      try {
-        Thread.sleep(10000);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
       reset();
+      Thread.sleep(10000);
     }
     return connectionEstablished;
   }
@@ -358,36 +372,14 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     this.connectionWatcher.scheduleAtFixedRate(connectionWatcherTask, 50, 1000);
   }
 
-  //TODO in ChatClient ? META & not nice
-
-  /**
-   * Tries to reconnect to server, until the GUI is closed.
-   *
-   * @throws InterruptedException the interrupted exception
-   */
-  private void keepClientAlive() throws InterruptedException {
-
-    while (this.guiController.guiNotTerminated()) {
-      this.connectionWaiter.await();
-      this.connectionWatcher.cancel();
-      this.connectionWatcher.purge();
-      this.connectionManager.closeConnection();
-
-      if (!(this.clientTerminating)) {
-        startController();
-      } else {
-        return;
-      }
-    }
-  }
-
-  private void tryReconnection() {
+  private void tryReconnection() throws InterruptedException {
     CommunicatorDTO clientData = this.serverDataModel.getCommunicatorData();
 
     if (clientData != null) {
       final var clientId = clientData.getCommunicatorId();
 
       if (clientId != STANDARD_CLIENT_ID) {
+        Thread.sleep(300);
         final var reconnectRequest = new ReconnectRequestDTO(clientData);
         this.requester.request(reconnectRequest, getServerEntity(STANDARD_SERVER_ID));
         LOGGER.info("ReconnectRequest sent.");
@@ -401,6 +393,6 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
 
   @Override
   public void resetClient() {
-    this.guiController.resetGUIData();
+    reset();
   }
 }
