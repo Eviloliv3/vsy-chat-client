@@ -1,4 +1,3 @@
-
 package de.vsy.client.gui.essential_graphical_unit.interfaces;
 
 /**
@@ -21,7 +20,8 @@ public interface ScrollableMessageHistory {
   void addContactMessage(String text);
 
   /**
-   * Adds text message with contact as originator and contact display name for distinction purposes.
+   * Adds text message with contact as originator and contact display name for distinction
+   * purposes.
    *
    * @param text        the text
    * @param contactName the contact name

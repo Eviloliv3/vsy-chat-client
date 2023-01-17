@@ -1,6 +1,7 @@
 package de.vsy.client.controlling;
 
 import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.HANDLER_BOUND;
+import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.OUTSIDE_BOUND;
 import static de.vsy.shared_transmission.packet.content.status.ClientService.MESSENGER;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getClientEntity;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getServerEntity;
@@ -29,7 +30,6 @@ import de.vsy.client.packet_processing.PacketProcessingService;
 import de.vsy.client.packet_processing.RequestPacketCreator;
 import de.vsy.shared_module.data_element_validation.IdCheck;
 import de.vsy.shared_module.packet_creation.PacketCompiler;
-import de.vsy.shared_module.packet_management.ThreadPacketBufferLabel;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.HumanInteractionRequest;
@@ -60,9 +60,9 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
   private static final Logger LOGGER = LogManager.getLogger();
   private final ServerConnectionController connectionManager;
   private final PacketManagementUtilityProvider packetManagement;
-  private final GUIController guiController;
   private final RequestPacketCreator requester;
   private final ServerDataCache serverDataModel;
+  private final GUIController guiController;
   private volatile boolean clientTerminated;
   private ExecutorService notificationProcessor;
   private ExecutorService packetProcessor;
@@ -86,14 +86,8 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     this.requester = new RequestPacketCreator(this.packetBuffers.getPacketBuffer(HANDLER_BOUND),
         this.packetManagement.getPacketTransmissionCache(),
         this.packetManagement.getResultingPacketContentHandler());
-    this.guiController = setupGUIController();
     this.clientTerminated = false;
-  }
-
-  private void setupPacketBuffers() {
-    this.packetBuffers = new ThreadPacketBufferManager();
-    this.packetBuffers.registerPacketBuffer(HANDLER_BOUND);
-    this.packetBuffers.registerPacketBuffer(ThreadPacketBufferLabel.OUTSIDE_BOUND);
+    this.guiController = setupGUIController();
   }
 
   private GUIController setupGUIController() {
@@ -101,6 +95,12 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     GUIInteractionProcessor guiInteractions = new GUIInteractionProcessor(gui, gui, this,
         this.serverDataModel, this.requester);
     return new GUIController(gui, this.serverDataModel, guiInteractions);
+  }
+
+  private void setupPacketBuffers() {
+    this.packetBuffers = new ThreadPacketBufferManager();
+    this.packetBuffers.registerPacketBuffer(HANDLER_BOUND);
+    this.packetBuffers.registerPacketBuffer(OUTSIDE_BOUND);
   }
 
 
@@ -346,7 +346,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     if (connectionEstablished) {
       setupConnectionWatcher();
 
-      if (this.guiController.guiNotTerminated()) {
+      if (this.serverDataModel.getClientId() != STANDARD_CLIENT_ID) {
         tryReconnection();
       } else {
         LOGGER.trace("Reconnection not attempted, GUI not ready.");

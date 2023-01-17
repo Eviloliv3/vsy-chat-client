@@ -19,15 +19,11 @@ import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedHashMap;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -307,7 +303,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
 
   @Override
   public void addActiveChat(final CommunicatorDTO contact, MessageHistory chatHistory) {
-    if(!(this.activeChatTabs.containsKey(contact))){
+    if (!(this.activeChatTabs.containsKey(contact))) {
       JScrollPane chatHistoryScrollPane = new JScrollPane(VERTICAL_SCROLLBAR_AS_NEEDED,
           HORIZONTAL_SCROLLBAR_NEVER);
       chatHistoryScrollPane.setAutoscrolls(true);
@@ -321,7 +317,8 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     } else {
       SwingUtilities.invokeLater(
           () -> {
-            final var contactChatIndex = this.chatHistoryTabPane.indexOfTab(contact.getDisplayLabel());
+            final var contactChatIndex = this.chatHistoryTabPane.indexOfTab(
+                contact.getDisplayLabel());
             final var contactChatTab = this.chatHistoryTabPane.getTabComponentAt(contactChatIndex);
             contactChatTab.requestFocusInWindow();
           });

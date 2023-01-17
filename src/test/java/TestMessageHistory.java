@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 public class TestMessageHistory {
+
   final JFrame mainFrame = new JFrame("TestFrame");
   final JPanel mainPanel = new JPanel();
 
@@ -18,11 +19,11 @@ public class TestMessageHistory {
     mainFrame.add(mainPanel);
   }
 
-  public static void main(String... args){
+  public static void main(String... args) {
     new TestMessageHistory().createMessageHistoryList();
   }
 
-  void createMessageHistoryList(){
+  void createMessageHistoryList() {
     var list = new JList<TextMessageDTO>();
     JScrollPane scroller = new JScrollPane(list);
     mainPanel.add(scroller);
@@ -30,10 +31,12 @@ public class TestMessageHistory {
     list.setModel(messages);
     list.setCellRenderer(new MessageListRenderer());
 
-    var message1_1 = new TextMessageDTO(15000, CLIENT, 15001, "Textnachricht.Textnachricht.Textnachricht.Textnachricht.Textnachricht.Textnachricht.Textnachricht.");
+    var message1_1 = new TextMessageDTO(15000, CLIENT, 15001,
+        "Textnachricht.Textnachricht.Textnachricht.Textnachricht.Textnachricht.Textnachricht.Textnachricht.");
     var message1_2 = new TextMessageDTO(15000, CLIENT, 15001, "Textnachricht.");
     var message2_1 = new TextMessageDTO(15001, CLIENT, 15000, "Textnachricht.");
-    var message2_2 = new TextMessageDTO(15001, CLIENT, 15000, "Textnachricht.Textnachricht.Textnachricht.Textnachricht.Textnachricht.");
+    var message2_2 = new TextMessageDTO(15001, CLIENT, 15000,
+        "Textnachricht.Textnachricht.Textnachricht.Textnachricht.Textnachricht.");
 
     messages.addElement(message1_1);
     messages.addElement(message2_1);
@@ -48,22 +51,23 @@ public class TestMessageHistory {
 
     showMainFrame();
   }
-  void createAndShowMessageHistory(){
-  final var m = new MessageHistory();
-  m.addClientMessage("Testnachricht.");
-    m.addClientMessage("Testnachricht.");
-    m.addContactMessage("Testnachricht.");
-    m.addClientMessage("Testnachricht.");
-    m.addContactMessage("Testnachricht.");
-  mainPanel.add(m);
-  showMainFrame();
-}
 
-private void showMainFrame(){
+  void createAndShowMessageHistory() {
+    final var m = new MessageHistory();
+    m.addClientMessage("Testnachricht.");
+    m.addClientMessage("Testnachricht.");
+    m.addContactMessage("Testnachricht.");
+    m.addClientMessage("Testnachricht.");
+    m.addContactMessage("Testnachricht.");
+    mainPanel.add(m);
+    showMainFrame();
+  }
+
+  private void showMainFrame() {
     SwingUtilities.invokeLater(() -> {
-    mainFrame.validate();
-    mainFrame.pack();
-    mainFrame.setVisible(true);
-  });
-}
+      mainFrame.validate();
+      mainFrame.pack();
+      mainFrame.setVisible(true);
+    });
+  }
 }

@@ -1,4 +1,3 @@
-
 package de.vsy.client;
 
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
@@ -7,7 +6,6 @@ import de.vsy.client.controlling.ChatClientController;
 import de.vsy.shared_module.packet_creation.ContentIdentificationProviderImpl;
 import de.vsy.shared_module.packet_creation.PacketCompiler;
 import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
-import java.nio.channels.InterruptedByTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -50,21 +48,20 @@ public class ChatClient {
   public void handleClient() {
     LOGGER.info("Client started.");
 
-      while(this.clientController.clientNotTerminated()){
-        clientHandler = Executors.newSingleThreadExecutor();
-        clientHandler.execute(clientController);
+    while (this.clientController.clientNotTerminated()) {
+      this.clientHandler = Executors.newSingleThreadExecutor();
+      this.clientHandler.execute(this.clientController);
+    }
 
-        try {
-          final var handlerShutdown = clientHandler.awaitTermination(500, TimeUnit.MILLISECONDS);
+    try {
+      final var handlerShutdown = this.clientHandler.awaitTermination(500, TimeUnit.MILLISECONDS);
 
-          if(!handlerShutdown){
-            LOGGER.error("ClientHandler thread could not be shutdown. Client will be terminated.");
-            this.clientController.closeApplication();
-            break;
-          }
-        }catch(InterruptedException ie){
-          LOGGER.error("Interrupted while waiting for clientHandler thread to terminate.");
-        }
+      if (!handlerShutdown) {
+        LOGGER.error("ClientHandler thread could not be shutdown. Client will be terminated.");
+        this.clientController.closeApplication();
       }
+    } catch (InterruptedException ie) {
+      LOGGER.error("Interrupted while waiting for clientHandler thread to terminate.");
+    }
   }
 }

@@ -1,8 +1,4 @@
-
 package de.vsy.client.gui;
-
-import static java.awt.Component.LEFT_ALIGNMENT;
-import static java.awt.Component.RIGHT_ALIGNMENT;
 
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import java.awt.BorderLayout;
@@ -38,16 +34,18 @@ public class MessageListRenderer extends JPanel implements ListCellRenderer<Text
     var listWidth = list.getWidth();
     setBackground(list.getBackground());
 
-    if(clientBound){
+    if (clientBound) {
       textArea.setBackground(new Color(0.176f, 0.6f, 0.71f));
-      setBorder(BorderFactory.createEmptyBorder(0, Math.min(10, (int)(listWidth*0.10)), 5, Math.min(10, (int)(listWidth*0.05))));
+      setBorder(BorderFactory.createEmptyBorder(0, Math.min(10, (int) (listWidth * 0.10)), 5,
+          Math.min(10, (int) (listWidth * 0.05))));
       setAlignmentX(RIGHT_ALIGNMENT);
-    }else{
+    } else {
       textArea.setBackground(new Color(0.278f, 0.827f, 0.808f));
       setAlignmentX(LEFT_ALIGNMENT);
-      setBorder(BorderFactory.createEmptyBorder(0, Math.min(10, (int)(listWidth*0.05)), 5, Math.min(10, (int)(listWidth*0.10))));
+      setBorder(BorderFactory.createEmptyBorder(0, Math.min(10, (int) (listWidth * 0.05)), 5,
+          Math.min(10, (int) (listWidth * 0.10))));
     }
-    if(list.getModel().getSize() >= MAX_MESSAGE_COUNT){
+    if (list.getModel().getSize() >= MAX_MESSAGE_COUNT) {
       list.remove(0);
     }
     return this;

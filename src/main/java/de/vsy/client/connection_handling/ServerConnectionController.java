@@ -1,4 +1,3 @@
-
 package de.vsy.client.connection_handling;
 
 import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
@@ -78,7 +77,7 @@ public class ServerConnectionController {
 
     var reconnectTries = 3;
 
-      if (!(getConnectionState())) {
+    if (!(getConnectionState())) {
 
       while (reconnectTries > 0) {
 

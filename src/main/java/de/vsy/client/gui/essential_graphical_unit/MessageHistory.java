@@ -1,4 +1,3 @@
-
 package de.vsy.client.gui.essential_graphical_unit;
 
 import static javax.swing.BoxLayout.Y_AXIS;

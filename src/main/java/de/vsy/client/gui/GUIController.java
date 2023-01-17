@@ -1,4 +1,3 @@
-
 package de.vsy.client.gui;
 
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.INITIAL;

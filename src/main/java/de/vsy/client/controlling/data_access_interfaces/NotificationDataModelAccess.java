@@ -8,5 +8,5 @@ public interface NotificationDataModelAccess extends EssentialDataModelAccess {
   /**
    * Allows the notification Packet handlers to fully reset client.
    */
-    void resetClient();
+  void resetClient();
 }

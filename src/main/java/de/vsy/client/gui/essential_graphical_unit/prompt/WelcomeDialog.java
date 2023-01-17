@@ -1,4 +1,3 @@
-
 package de.vsy.client.gui.essential_graphical_unit.prompt;
 
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.ACCOUNT_CREATION;

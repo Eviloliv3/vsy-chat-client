@@ -22,7 +22,11 @@ public class LoginPanel extends javax.swing.JPanel {
     JLabel usernameLabel = new JLabel();
     JLabel passwordLabel = new JLabel();
     usernameField = new JTextField() {
-      @Override public void addNotify(){ super.addNotify(); requestFocusInWindow();}
+      @Override
+      public void addNotify() {
+        super.addNotify();
+        requestFocusInWindow();
+      }
     };
     passwordField = new JPasswordField();
 

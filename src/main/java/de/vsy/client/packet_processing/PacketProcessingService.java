@@ -1,4 +1,3 @@
-
 package de.vsy.client.packet_processing;
 
 import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.OUTSIDE_BOUND;
@@ -63,7 +62,8 @@ public class PacketProcessingService implements Runnable {
 
   private PacketProcessor createProcessor(final ChatClientController dataController,
       final PacketManagementUtilityProvider packetManagement) {
-    final var processorManager = new PacketProcessorManager(new StandardProcessorFactoryProvider(dataController, packetManagement));
+    final var processorManager = new PacketProcessorManager(
+        new StandardProcessorFactoryProvider(dataController, packetManagement));
     final var processorLink = new ClientPacketProcessorLink(processorManager);
     return new PacketSyntaxCheckLink(processorLink, new SimplePacketChecker(setupValidator()));
 

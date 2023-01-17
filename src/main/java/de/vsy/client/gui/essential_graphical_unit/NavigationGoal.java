@@ -1,4 +1,3 @@
-
 package de.vsy.client.gui.essential_graphical_unit;
 
 /**
@@ -16,10 +15,12 @@ public enum NavigationGoal {
 
   private final String goalAsString;
 
-  NavigationGoal(final String stringVersion){
+  NavigationGoal(final String stringVersion) {
     this.goalAsString = stringVersion;
   }
 
   @Override
-  public String toString(){ return this.goalAsString; }
+  public String toString() {
+    return this.goalAsString;
+  }
 }

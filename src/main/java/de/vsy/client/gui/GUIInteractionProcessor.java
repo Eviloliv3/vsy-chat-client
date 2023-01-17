@@ -1,4 +1,3 @@
-
 package de.vsy.client.gui;
 
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.INITIAL;
@@ -113,7 +112,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
       }
       this.chatManager.addActiveChat(contact, preBuiltHistory);
 
-      if(evt.getComponent().getParent() instanceof final JList<?> contactList){
+      if (evt.getComponent().getParent() instanceof final JList<?> contactList) {
         contactList.clearSelection();
       }
     }

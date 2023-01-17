@@ -1,9 +1,7 @@
-
 package de.vsy.client.packet_processing.content_processing;
 
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 
-import de.vsy.client.controlling.data_access_interfaces.EssentialDataModelAccess;
 import de.vsy.client.controlling.data_access_interfaces.NotificationDataModelAccess;
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.ResultingPacketContentHandler;
@@ -38,7 +36,7 @@ public class SimpleErrorProcessor implements ContentProcessor<ErrorDTO> {
     if (clientId == toProcess.getOriginPacket().getPacketProperties().getSender().getEntityId()) {
       this.dataModel.addNotification(toProcess);
 
-      if(clientId == STANDARD_CLIENT_ID){
+      if (clientId == STANDARD_CLIENT_ID) {
         this.dataModel.resetClient();
       }
     } else {

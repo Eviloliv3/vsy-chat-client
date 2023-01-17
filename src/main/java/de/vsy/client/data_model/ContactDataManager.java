@@ -1,4 +1,3 @@
-
 package de.vsy.client.data_model;
 
 import de.vsy.shared_transmission.dto.CommunicatorDTO;

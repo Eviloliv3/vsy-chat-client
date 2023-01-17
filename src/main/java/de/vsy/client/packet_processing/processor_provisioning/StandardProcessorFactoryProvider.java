@@ -11,7 +11,7 @@ public class StandardProcessorFactoryProvider implements CategoryProcessorFactor
   private final ResultingContentHandlingProvider handlerProvider;
 
   public StandardProcessorFactoryProvider(final ChatClientController dataModel,
-      final ResultingContentHandlingProvider handlerProvider){
+      final ResultingContentHandlingProvider handlerProvider) {
     this.dataModel = dataModel;
     this.handlerProvider = handlerProvider;
   }
@@ -19,7 +19,8 @@ public class StandardProcessorFactoryProvider implements CategoryProcessorFactor
   @Override
   public ContentBasedProcessorFactory getCategoryHandlerFactory(final PacketCategory category) {
     return switch (category) {
-      case AUTHENTICATION -> new AuthenticationPacketProcessorFactory(this.dataModel, this.handlerProvider);
+      case AUTHENTICATION ->
+          new AuthenticationPacketProcessorFactory(this.dataModel, this.handlerProvider);
       case STATUS -> new StatusPacketProcessorFactory(this.dataModel, this.handlerProvider);
       case RELATION -> new RelationPacketProcessorFactory(this.dataModel, this.handlerProvider);
       case CHAT -> new ChatPacketProcessorFactory(this.dataModel, this.handlerProvider);

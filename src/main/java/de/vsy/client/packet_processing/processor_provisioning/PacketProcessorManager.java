@@ -1,8 +1,5 @@
-
 package de.vsy.client.packet_processing.processor_provisioning;
 
-import de.vsy.client.controlling.ChatClientController;
-import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.shared_module.packet_processing.PacketProcessor;
 import de.vsy.shared_module.packet_processing.processor_provision.ContentBasedPacketProcessorProvider;
 import de.vsy.shared_module.packet_processing.processor_provision.PacketProcessorProvider;
@@ -33,7 +30,8 @@ public class PacketProcessorManager {
     if (categoryProcessing.isEmpty()) {
       var factory =
           new ContentBasedPacketProcessorProvider(
-              this.processorFactoryProvider.getCategoryHandlerFactory(identifier.getPacketCategory()));
+              this.processorFactoryProvider.getCategoryHandlerFactory(
+                  identifier.getPacketCategory()));
       this.contentHandlerProvider.registerTypeProcessingProvider(
           identifier.getPacketCategory(), factory);
       categoryProcessing = factory.getProcessor(contentType);
