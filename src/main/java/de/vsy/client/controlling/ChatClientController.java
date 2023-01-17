@@ -1,30 +1,19 @@
 package de.vsy.client.controlling;
 
-import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.HANDLER_BOUND;
-import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.OUTSIDE_BOUND;
 import static de.vsy.shared_transmission.packet.content.status.ClientService.MESSENGER;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getClientEntity;
-import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getServerEntity;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_BROADCAST_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
-import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
 import static java.util.Arrays.asList;
 
-import de.vsy.client.connection_handling.ClientConnectionWatcher;
 import de.vsy.client.connection_handling.ServerConnectionController;
 import de.vsy.client.controlling.data_access_interfaces.AuthenticationDataModelAccess;
 import de.vsy.client.controlling.data_access_interfaces.ChatDataModelAccess;
 import de.vsy.client.controlling.data_access_interfaces.NotificationDataModelAccess;
 import de.vsy.client.controlling.data_access_interfaces.StatusDataModelAccess;
-import de.vsy.client.data_model.ClientDataManager;
-import de.vsy.client.data_model.ClientNotificationManager;
-import de.vsy.client.data_model.ContactDataManager;
-import de.vsy.client.data_model.MessageManager;
 import de.vsy.client.data_model.ServerDataCache;
 import de.vsy.client.data_model.notification.SimpleInformation;
-import de.vsy.client.gui.ClientChatGUI;
 import de.vsy.client.gui.GUIController;
-import de.vsy.client.gui.GUIInteractionProcessor;
 import de.vsy.client.packet_processing.PacketManagementUtilityProvider;
 import de.vsy.client.packet_processing.PacketProcessingService;
 import de.vsy.client.packet_processing.RequestPacketCreator;
@@ -34,7 +23,6 @@ import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.HumanInteractionRequest;
 import de.vsy.shared_transmission.packet.content.Translatable;
-import de.vsy.shared_transmission.packet.content.authentication.ReconnectRequestDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
 import de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity;
 import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
@@ -42,8 +30,6 @@ import de.vsy.shared_utility.id_manipulation.IdComparator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -55,10 +41,11 @@ import org.apache.logging.log4j.Logger;
  * initializing Packet are sent.
  */
 public class ChatClientController implements AuthenticationDataModelAccess, ChatDataModelAccess,
-    StatusDataModelAccess, NotificationDataModelAccess, ClientTerminator, Runnable {
+    StatusDataModelAccess, NotificationDataModelAccess, ClientTerminator {
 
   private static final Logger LOGGER = LogManager.getLogger();
   private final ServerConnectionController connectionManager;
+  private final ThreadPacketBufferManager packetBuffers;
   private final PacketManagementUtilityProvider packetManagement;
   private final RequestPacketCreator requester;
   private final ServerDataCache serverDataModel;
@@ -66,43 +53,24 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
   private volatile boolean clientTerminated;
   private ExecutorService notificationProcessor;
   private ExecutorService packetProcessor;
-  private Timer connectionWatcher;
-  private CountDownLatch connectionWaiter;
-  private ThreadPacketBufferManager packetBuffers;
 
   /**
    * Instantiates a new chat client controller.
-   *
-   * @param serverAddress the server address
-   * @param serverPorts   the server ports
    */
-  public ChatClientController(final String serverAddress, final int[] serverPorts) {
-    setupPacketBuffers();
-    this.connectionManager = new ServerConnectionController(serverAddress, serverPorts,
-        this.packetBuffers);
-    this.serverDataModel = new ServerDataCache(new ClientDataManager(), new ContactDataManager(),
-        new MessageManager(), new ClientNotificationManager());
-    this.packetManagement = new PacketManagementUtilityProvider();
-    this.requester = new RequestPacketCreator(this.packetBuffers.getPacketBuffer(HANDLER_BOUND),
-        this.packetManagement.getPacketTransmissionCache(),
-        this.packetManagement.getResultingPacketContentHandler());
+  public ChatClientController(final ServerConnectionController connectionManager,
+      final PacketManagementUtilityProvider packetManagement,
+      final ThreadPacketBufferManager packetBuffers,
+      final RequestPacketCreator requester,
+      final ServerDataCache serverDataModel,
+      final GUIController guiController) {
+    this.connectionManager = connectionManager;
+    this.packetManagement = packetManagement;
+    this.packetBuffers = packetBuffers;
+    this.requester = requester;
+    this.serverDataModel = serverDataModel;
+    this.guiController = guiController;
     this.clientTerminated = false;
-    this.guiController = setupGUIController();
   }
-
-  private GUIController setupGUIController() {
-    ClientChatGUI gui = new ClientChatGUI();
-    GUIInteractionProcessor guiInteractions = new GUIInteractionProcessor(gui, gui, this,
-        this.serverDataModel, this.requester);
-    return new GUIController(gui, this.serverDataModel, guiInteractions);
-  }
-
-  private void setupPacketBuffers() {
-    this.packetBuffers = new ThreadPacketBufferManager();
-    this.packetBuffers.registerPacketBuffer(HANDLER_BOUND);
-    this.packetBuffers.registerPacketBuffer(OUTSIDE_BOUND);
-  }
-
 
   @Override
   public void closeApplication() {
@@ -121,7 +89,6 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
       LOGGER.error("Interrupted while waiting for GUI components to be removed.");
     }
   }
-
 
   /**
    * Adds the contact dataManagement.
@@ -280,26 +247,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     }
   }
 
-  @Override
-  public void run() {
-    try {
-      if (connect()) {
-        LOGGER.info("Connection initiated.");
-        initiateServices();
-        initiateGUI();
-        this.connectionWaiter.await();
-        resetConnection();
-      } else {
-        resetClient();
-        LOGGER.error("No connection could be established.");
-      }
-    } catch (InterruptedException ie) {
-      LOGGER.error("Interrupted while: {}", Arrays.asList(ie.getStackTrace()));
-      closeApplication();
-    }
-  }
-
-  private void initiateServices() {
+  public void initiateServices() {
     if (this.packetProcessor == null || this.packetProcessor.isShutdown()) {
       startNewPacketProcessor();
       LOGGER.info("PacketProcessingService started.");
@@ -315,80 +263,9 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     }
   }
 
-  private void initiateGUI() {
-    if (!this.guiController.guiNotTerminated()) {
-      this.guiController.startGUI();
-      this.guiController.startInteracting();
-      LOGGER.info("GUI initiated.");
-    } else {
-      LOGGER.trace("GUI is still active.");
-    }
-  }
-
-  private void resetConnection() {
-    this.connectionWatcher.cancel();
-    this.connectionWatcher.purge();
-    this.connectionManager.closeConnection();
-  }
 
   public boolean clientNotTerminated() {
     return !(this.clientTerminated);
-  }
-
-  /**
-   * Connect.
-   *
-   * @return true, if successful
-   */
-  private boolean connect() throws InterruptedException {
-    final var connectionEstablished = this.connectionManager.initiateConnection();
-
-    if (connectionEstablished) {
-      setupConnectionWatcher();
-
-      if (this.serverDataModel.getClientId() != STANDARD_CLIENT_ID) {
-        tryReconnection();
-      } else {
-        LOGGER.trace("Reconnection not attempted, GUI not ready.");
-      }
-    } else {
-      final var errorCause = "No connection could be initiated. If you do not want to attempt another reconnection try close the application within 10 seconds.";
-      final var notification = new SimpleInformation(errorCause);
-      this.serverDataModel.addNotification(notification);
-      reset();
-      Thread.sleep(10000);
-    }
-    return connectionEstablished;
-  }
-
-  private void setupConnectionWatcher() {
-    if (this.connectionWatcher != null) {
-      this.connectionWatcher.cancel();
-    }
-    this.connectionWatcher = new Timer("ClientConnectionWatcher");
-    this.connectionWaiter = new CountDownLatch(1);
-    var connectionWatcherTask = new ClientConnectionWatcher(this.connectionManager,
-        this.connectionWaiter);
-    this.connectionWatcher.scheduleAtFixedRate(connectionWatcherTask, 50, 1000);
-  }
-
-  private void tryReconnection() throws InterruptedException {
-    CommunicatorDTO clientData = this.serverDataModel.getCommunicatorData();
-
-    if (clientData != null) {
-      final var clientId = clientData.getCommunicatorId();
-
-      if (clientId != STANDARD_CLIENT_ID) {
-        Thread.sleep(300);
-        final var reconnectRequest = new ReconnectRequestDTO(clientData);
-        this.requester.request(reconnectRequest, getServerEntity(STANDARD_SERVER_ID));
-        LOGGER.info("ReconnectRequest sent.");
-      } else {
-        LOGGER.error("No Client data found.");
-      }
-    } else {
-      LOGGER.info("Cache does not contain client data (null).");
-    }
   }
 
   @Override
