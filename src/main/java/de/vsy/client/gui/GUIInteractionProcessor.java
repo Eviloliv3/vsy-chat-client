@@ -145,6 +145,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
   public void handleLogout() {
 
     if (this.serverDataModel.getClientId() != STANDARD_CLIENT_ID) {
+      //TODO feststellen, ob Klient MESSENGER dienst nutzt
       this.requester.request(
           new ClientStatusChangeDTO(
               MESSENGER, false,

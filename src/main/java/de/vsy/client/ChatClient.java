@@ -44,7 +44,7 @@ public class ChatClient {
   private final ServerConnectionController connectionManager;
   private final ServerDataCache serverDataModel;
   private final RequestPacketCreator requester;
-  private final GUIController guiController;
+  private GUIController guiController;
   private ThreadPacketBufferManager packetBuffers;
   private ChatClientController clientController;
   private Timer connectionWatcher;
@@ -60,9 +60,9 @@ public class ChatClient {
     this.requester = new RequestPacketCreator(this.packetBuffers.getPacketBuffer(HANDLER_BOUND),
         packetManagement.getPacketTransmissionCache(),
         packetManagement.getResultingPacketContentHandler());
-    this.guiController = setupGUIController();
     this.clientController = new ChatClientController(this.connectionManager, packetManagement,
-        this.packetBuffers, this.requester, this.serverDataModel, this.guiController);
+        this.packetBuffers, this.requester, this.serverDataModel);
+    setupGUIController();
   }
 
   /**
@@ -88,12 +88,13 @@ public class ChatClient {
     this.packetBuffers.registerPacketBuffer(OUTSIDE_BOUND);
   }
 
-  private GUIController setupGUIController() {
+  private void setupGUIController() {
     ClientChatGUI gui = new ClientChatGUI();
     GUIInteractionProcessor guiInteractions = new GUIInteractionProcessor(gui, gui,
         this.clientController,
         this.serverDataModel, this.requester);
-    return new GUIController(gui, this.serverDataModel, guiInteractions);
+    this.guiController = new GUIController(gui, this.serverDataModel, guiInteractions);
+    this.clientController.setGUIController(this.guiController);
   }
 
   private boolean connect() throws InterruptedException {

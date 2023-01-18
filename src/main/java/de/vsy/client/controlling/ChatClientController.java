@@ -49,7 +49,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
   private final PacketManagementUtilityProvider packetManagement;
   private final RequestPacketCreator requester;
   private final ServerDataCache serverDataModel;
-  private final GUIController guiController;
+  private GUIController guiController;
   private volatile boolean clientTerminated;
   private ExecutorService notificationProcessor;
   private ExecutorService packetProcessor;
@@ -61,15 +61,17 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
       final PacketManagementUtilityProvider packetManagement,
       final ThreadPacketBufferManager packetBuffers,
       final RequestPacketCreator requester,
-      final ServerDataCache serverDataModel,
-      final GUIController guiController) {
+      final ServerDataCache serverDataModel) {
     this.connectionManager = connectionManager;
     this.packetManagement = packetManagement;
     this.packetBuffers = packetBuffers;
     this.requester = requester;
     this.serverDataModel = serverDataModel;
-    this.guiController = guiController;
     this.clientTerminated = false;
+  }
+
+  public void setGUIController(GUIController guiController) {
+    this.guiController = guiController;
   }
 
   @Override
