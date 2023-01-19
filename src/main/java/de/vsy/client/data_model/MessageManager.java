@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class MessageManager {
 
-  private final Map<Integer, List<TextMessageDTO>> oldMessages;
+  private final Map<Integer, List<TextMessageDTO>> messageHistories;
 
   public MessageManager() {
     this(new HashMap<>());
@@ -30,9 +30,9 @@ public class MessageManager {
     // private)
 
     if (!newMessageMap.isEmpty()) {
-      this.oldMessages = newMessageMap;
+      this.messageHistories = newMessageMap;
     } else {
-      this.oldMessages = new HashMap<>();
+      this.messageHistories = new HashMap<>();
     }
   }
 
@@ -44,10 +44,10 @@ public class MessageManager {
    */
   public void addMessagesForClient(final int clientId, final List<TextMessageDTO> messages) {
 
-    if (IdCheck.checkData(clientId).isPresent() && messages != null) {
+    if (IdCheck.checkData(clientId).isEmpty() && messages != null) {
 
-      if (!(this.oldMessages.containsKey(clientId))) {
-        this.oldMessages.put(clientId, messages);
+      if (!(this.messageHistories.containsKey(clientId))) {
+        this.messageHistories.put(clientId, messages);
       } else {
 
         for (var currentMessage : messages) {
@@ -66,11 +66,7 @@ public class MessageManager {
    * @param newMessage the new message
    */
   public void addMessage(final int clientId, final TextMessageDTO newMessage) {
-    List<TextMessageDTO> messageList;
-
-    if ((messageList = this.oldMessages.get(clientId)) == null) {
-      messageList = new ArrayList<>();
-    }
+    List<TextMessageDTO> messageList = this.messageHistories.getOrDefault(clientId, new ArrayList<>());
 
     if (messageList.size() >= 50) {
       final var messageListCopy = new ArrayList<>(messageList);
@@ -79,7 +75,7 @@ public class MessageManager {
       messageList.addAll(messageListCopy);
     }
     messageList.add(newMessage);
-    this.oldMessages.put(clientId, messageList);
+    this.messageHistories.put(clientId, messageList);
   }
 
   /**
@@ -91,7 +87,7 @@ public class MessageManager {
   public List<TextMessageDTO> getMessages(final int clientId) {
     List<TextMessageDTO> messageList;
 
-    if ((messageList = this.oldMessages.get(clientId)) == null) {
+    if ((messageList = this.messageHistories.get(clientId)) == null) {
       messageList = new ArrayList<>();
     }
 
@@ -104,7 +100,7 @@ public class MessageManager {
    * @param clientId the client id
    */
   public void removeMessagesForClient(final int clientId) {
-    this.oldMessages.remove(clientId);
+    this.messageHistories.remove(clientId);
   }
 
   /**
@@ -113,6 +109,6 @@ public class MessageManager {
    * @param newMap the new map
    */
   public void setNewMessageMap(final Map<Integer, List<TextMessageDTO>> newMap) {
-    this.oldMessages.putAll(newMap);
+    this.messageHistories.putAll(newMap);
   }
 }
