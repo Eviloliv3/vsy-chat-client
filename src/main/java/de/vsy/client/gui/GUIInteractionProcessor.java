@@ -89,7 +89,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
    */
   @Override
   public void chooseContact(final MouseEvent evt) {
-
+    //TODO von hier aus debuggen
     if (evt.getClickCount() == 2) {
       final var contact = this.guiLiveData.getSelectedContact();
       final var messages = this.serverDataModel.getMessageList(contact.getCommunicatorId());
