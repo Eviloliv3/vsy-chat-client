@@ -330,7 +330,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   public void removeActiveChat(final CommunicatorDTO contact) {
       SwingUtilities.invokeLater(() -> {
         var contactTabIndex = this.chatHistoryTabPane.indexOfTab(contact.getDisplayLabel());
-        if (contactTabIndex > 0) {
+        if (contactTabIndex >= 0) {
         this.chatHistoryTabPane.removeTabAt(contactTabIndex);
           this.activeChatTabs.remove(contact);
         } else {
