@@ -6,6 +6,7 @@ import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CONTACT_
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CONTACT_REMOVAL;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.LOGOUT;
 import static de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity.CLIENT;
+import static de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity.GROUP;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
@@ -327,13 +328,15 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
 
   @Override
   public void removeActiveChat(final CommunicatorDTO contact) {
-    var contactTabIndex = this.chatHistoryTabPane.indexOfTab(contact.getDisplayLabel());
-    if (contactTabIndex > 0) {
-      SwingUtilities.invokeLater(() -> this.chatHistoryTabPane.removeTabAt(contactTabIndex));
-      this.activeChatTabs.remove(contact);
-    } else {
-      LOGGER.error("No chat tab found for {}.", contact);
-    }
+      SwingUtilities.invokeLater(() -> {
+        var contactTabIndex = this.chatHistoryTabPane.indexOfTab(contact.getDisplayLabel());
+        if (contactTabIndex > 0) {
+        this.chatHistoryTabPane.removeTabAt(contactTabIndex);
+          this.activeChatTabs.remove(contact);
+        } else {
+          LOGGER.error("No chat tab found for {}.", contact);
+        }
+      });
   }
 
   public void setClientTitle(final String clientTitle) {
@@ -352,7 +355,7 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
 
     if (messageHistory != null) {
       var messageContent = message.getMessage();
-      var isGroupMessage = message.getContactType().equals(CLIENT);
+      var isGroupMessage = message.getContactType().equals(GROUP);
 
       if (isGroupMessage) {
         if (clientBound) {

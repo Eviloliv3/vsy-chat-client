@@ -12,8 +12,6 @@ import org.apache.logging.log4j.core.tools.picocli.CommandLine.Help.Ansi.Text;
 
 /**
  * Manages messages histories for all client's active contacts.
- *
- * <p>Frederic Heath
  */
 public class MessageManager {
 
@@ -31,7 +29,7 @@ public class MessageManager {
    * @param messages the messages
    */
   public void addMessagesForClient(final int contactId, final List<TextMessageDTO> messages) {
-    if (IdCheck.checkData(contactId).isEmpty()) {
+    if (IdCheck.checkData(contactId).isPresent()) {
       return;
     }
 
@@ -48,7 +46,7 @@ public class MessageManager {
         allContactMessages.subList(0, (messageCount - MAX_MESSAGE_COUNT)).clear();
         allContactMessages.trimToSize();
       }
-      this.messageHistories.put(contactId, existingMessages);
+      this.messageHistories.put(contactId, allContactMessages);
     }else{
       this.messageHistories.putIfAbsent(contactId, new ArrayList<>(MAX_MESSAGE_COUNT));
     }
@@ -57,11 +55,11 @@ public class MessageManager {
   /**
    * Adds the message.
    *
-   * @param clientId   the client id
+   * @param contactId   the contact id
    * @param newMessage the new message
    */
-  public void addMessage(final int clientId, final TextMessageDTO newMessage) {
-    List<TextMessageDTO> messageList = this.messageHistories.getOrDefault(clientId, new ArrayList<>(MAX_MESSAGE_COUNT));
+  public void addMessage(final int contactId, final TextMessageDTO newMessage) {
+    List<TextMessageDTO> messageList = this.messageHistories.getOrDefault(contactId, new ArrayList<>(MAX_MESSAGE_COUNT));
     messageList.add(newMessage);
 
     if (messageList.size() > MAX_MESSAGE_COUNT) {
@@ -71,32 +69,31 @@ public class MessageManager {
         messageHistory.trimToSize();
       }
     }
-    this.messageHistories.put(clientId, messageList);
+    this.messageHistories.put(contactId, messageList);
   }
 
   /**
    * Gets the messages.
    *
-   * @param clientId the client id
+   * @param contactId the contact id
    * @return the messages
    */
-  public List<TextMessageDTO> getMessages(final int clientId) {
+  public List<TextMessageDTO> getMessages(final int contactId) {
     List<TextMessageDTO> messageList;
 
-    if ((messageList = this.messageHistories.get(clientId)) == null) {
+    if ((messageList = this.messageHistories.get(contactId)) == null) {
       messageList = new ArrayList<>();
     }
-
     return messageList;
   }
 
   /**
    * Removes the messages for client.
    *
-   * @param clientId the client id
+   * @param contactId the contact id
    */
-  public void removeMessagesForClient(final int clientId) {
-    this.messageHistories.remove(clientId);
+  public void removeMessagesForClient(final int contactId) {
+    this.messageHistories.remove(contactId);
   }
 
   /**

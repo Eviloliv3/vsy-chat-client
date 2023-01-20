@@ -32,15 +32,10 @@ public class SimpleErrorProcessor implements ContentProcessor<ErrorDTO> {
   @Override
   public void processContent(ErrorDTO toProcess) {
     final var clientId = this.dataModel.getClientId();
-
-    if (clientId == toProcess.getOriginPacket().getPacketProperties().getSender().getEntityId()) {
+    final var clientAuthenticated = clientId != STANDARD_CLIENT_ID;
       this.dataModel.addNotification(toProcess);
-
-      if (clientId == STANDARD_CLIENT_ID) {
+      if (!(clientAuthenticated)) {
         this.dataModel.resetClient();
       }
-    } else {
-      this.contentHandler.addRequest(toProcess);
-    }
   }
 }
