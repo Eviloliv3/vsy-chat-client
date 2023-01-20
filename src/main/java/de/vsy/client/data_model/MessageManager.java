@@ -1,11 +1,14 @@
 package de.vsy.client.data_model;
 
+import de.vsy.client.gui.essential_graphical_unit.MessageHistory;
 import de.vsy.shared_module.data_element_validation.IdCheck;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
+import java.security.DrbgParameters.NextBytes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.core.tools.picocli.CommandLine.Help.Ansi.Text;
 
 /**
  * Manages messages histories for all client's active contacts.
@@ -14,48 +17,40 @@ import java.util.Map;
  */
 public class MessageManager {
 
+  private static final int MAX_MESSAGE_COUNT = 50;
   private final Map<Integer, List<TextMessageDTO>> messageHistories;
 
   public MessageManager() {
-    this(new HashMap<>());
-  }
-
-  /**
-   * Instantiates a new message controller.
-   *
-   * @param newMessageMap the new message map
-   */
-  public MessageManager(final Map<Integer, List<TextMessageDTO>> newMessageMap) { // NO_UCD
-    // (use
-    // private)
-
-    if (!newMessageMap.isEmpty()) {
-      this.messageHistories = newMessageMap;
-    } else {
-      this.messageHistories = new HashMap<>();
-    }
+    this.messageHistories = new HashMap<>();
   }
 
   /**
    * Adds the messages for client.
    *
-   * @param clientId the client id
+   * @param contactId the contact id
    * @param messages the messages
    */
-  public void addMessagesForClient(final int clientId, final List<TextMessageDTO> messages) {
+  public void addMessagesForClient(final int contactId, final List<TextMessageDTO> messages) {
+    if (IdCheck.checkData(contactId).isEmpty()) {
+      return;
+    }
 
-    if (IdCheck.checkData(clientId).isEmpty() && messages != null) {
+    if(messages != null && !(messages.isEmpty())){
+      final int messageCount;
+      final var existingMessages = this.messageHistories.getOrDefault(contactId, new ArrayList<>(MAX_MESSAGE_COUNT));
+      final var allContactMessages = new ArrayList<TextMessageDTO>(messages.size() + existingMessages.size());
 
-      if (!(this.messageHistories.containsKey(clientId))) {
-        this.messageHistories.put(clientId, messages);
-      } else {
+      allContactMessages.addAll(existingMessages);
+      allContactMessages.addAll(messages);
+      messageCount = allContactMessages.size();
 
-        for (var currentMessage : messages) {
-          if (currentMessage != null) {
-            addMessage(clientId, currentMessage);
-          }
-        }
+      if(messageCount > MAX_MESSAGE_COUNT){
+        allContactMessages.subList(0, (messageCount - MAX_MESSAGE_COUNT)).clear();
+        allContactMessages.trimToSize();
       }
+      this.messageHistories.put(contactId, existingMessages);
+    }else{
+      this.messageHistories.putIfAbsent(contactId, new ArrayList<>(MAX_MESSAGE_COUNT));
     }
   }
 
@@ -66,15 +61,16 @@ public class MessageManager {
    * @param newMessage the new message
    */
   public void addMessage(final int clientId, final TextMessageDTO newMessage) {
-    List<TextMessageDTO> messageList = this.messageHistories.getOrDefault(clientId, new ArrayList<>());
-
-    if (messageList.size() >= 50) {
-      final var messageListCopy = new ArrayList<>(messageList);
-      messageListCopy.remove(0);
-      messageList.clear();
-      messageList.addAll(messageListCopy);
-    }
+    List<TextMessageDTO> messageList = this.messageHistories.getOrDefault(clientId, new ArrayList<>(MAX_MESSAGE_COUNT));
     messageList.add(newMessage);
+
+    if (messageList.size() > MAX_MESSAGE_COUNT) {
+      messageList.remove(0);
+
+      if(messageList instanceof ArrayList<TextMessageDTO> messageHistory){
+        messageHistory.trimToSize();
+      }
+    }
     this.messageHistories.put(clientId, messageList);
   }
 
@@ -106,9 +102,15 @@ public class MessageManager {
   /**
    * Lists the new message map.
    *
-   * @param newMap the new map
+   * @param contactMessages the new map
    */
-  public void setNewMessageMap(final Map<Integer, List<TextMessageDTO>> newMap) {
-    this.messageHistories.putAll(newMap);
+  public void setNewMessageMap(final Map<Integer, List<TextMessageDTO>> contactMessages) {
+
+    if(contactMessages != null && !(contactMessages.isEmpty())){
+
+      for(final var messageHistory : contactMessages.entrySet()){
+        addMessagesForClient(messageHistory.getKey(), messageHistory.getValue());
+      }
+    }
   }
 }
