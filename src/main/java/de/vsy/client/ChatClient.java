@@ -5,6 +5,7 @@ import static de.vsy.shared_module.packet_management.ThreadPacketBufferLabel.OUT
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getServerEntity;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_SERVER_ID;
+import static de.vsy.shared_utility.standard_value.ThreadContextValues.STANDARD_CLIENT_ROUTE_VALUE;
 
 import de.vsy.client.connection_handling.ClientConnectionWatcher;
 import de.vsy.client.connection_handling.ServerConnectionController;
@@ -26,11 +27,14 @@ import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.authentication.ReconnectRequestDTO;
 import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
+import de.vsy.shared_utility.standard_value.ThreadContextValues;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.concurrent.CountDownLatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  * Handles Client Connection. Processes client requests and transfers requests into server readable
@@ -71,6 +75,8 @@ public class ChatClient {
    * @param args the arguments
    */
   public static void main(final String[] args) {
+    ThreadContext.put(ThreadContextValues.LOG_ROUTE_CONTEXT_KEY, STANDARD_CLIENT_ROUTE_VALUE);
+    ThreadContext.put(ThreadContextValues.LOG_FILE_CONTEXT_KEY, "ChatClient[" + Instant.now() + "]");
     final var client = new ChatClient();
     setupPacketCompiler();
     client.handleClient();
