@@ -38,5 +38,5 @@ public class MessengerSetupProcessor implements ContentProcessor<MessengerSetupD
       contacts.put(contactMapping.getKey(), listedContacts);
     }
     this.dataModel.setupMessenger(toProcess.getOldMessages(), contacts);
-    }
+  }
 }

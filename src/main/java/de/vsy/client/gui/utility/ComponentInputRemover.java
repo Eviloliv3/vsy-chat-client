@@ -23,7 +23,7 @@ public class ComponentInputRemover {
           textField.setText(STANDARD_EMPTY_STRING);
         } else if (compList[i] instanceof JTextArea textArea) {
           textArea.setText(STANDARD_EMPTY_STRING);
-        } else if(compList[i] instanceof JPasswordField passwordField){
+        } else if (compList[i] instanceof JPasswordField passwordField) {
           passwordField.setText(STANDARD_EMPTY_STRING);
         }
       }

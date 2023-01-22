@@ -9,7 +9,7 @@ import de.vsy.shared_module.packet_processing.ProcessingCondition;
 import de.vsy.shared_module.packet_processing.processor_provision.ContentBasedProcessorFactory;
 import de.vsy.shared_module.packet_validation.content_validation.error.ErrorContentValidator;
 import de.vsy.shared_transmission.packet.content.PacketContent;
-import de.vsy.shared_transmission.packet.content.notification.ErrorContent;
+import de.vsy.shared_transmission.packet.content.notification.NotificationContent;
 
 public class ErrorPacketProcessorFactory implements ContentBasedProcessorFactory {
 
@@ -29,9 +29,9 @@ public class ErrorPacketProcessorFactory implements ContentBasedProcessorFactory
 
   @Override
   public PacketProcessor createTypeProcessor(Class<? extends PacketContent> contentType) {
-    final var errorType = ErrorContent.valueOf(contentType.getSimpleName());
+    final var notificationType = NotificationContent.valueOf(contentType.getSimpleName());
 
-    if (errorType.equals(ErrorContent.ErrorDTO)) {
+    if (notificationType.equals(NotificationContent.ErrorDTO) || notificationType.equals(NotificationContent.SimpleInformationDTO)) {
       return new ClientPacketProcessor<>(
           getSimpleErrorProcessingCondition(),
           new ErrorContentValidator(),

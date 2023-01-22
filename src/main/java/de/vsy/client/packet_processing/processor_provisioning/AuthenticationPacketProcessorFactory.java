@@ -14,7 +14,6 @@ import de.vsy.client.packet_processing.content_processing.LogoutResponseProcesso
 import de.vsy.client.packet_processing.content_processing.NewAccountRequestProcessor;
 import de.vsy.client.packet_processing.content_processing.ReconnectRequestProcessor;
 import de.vsy.client.packet_processing.content_processing.ReconnectResponseProcessor;
-import de.vsy.shared_module.packet_processing.HandlerProcessingCondition;
 import de.vsy.shared_module.packet_processing.PacketProcessor;
 import de.vsy.shared_module.packet_processing.ProcessingConditionType;
 import de.vsy.shared_module.packet_processing.processor_provision.ContentBasedProcessorFactory;

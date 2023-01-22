@@ -1,8 +1,8 @@
 package de.vsy.client.packet_processing;
 
-import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.shared_module.packet_content_translation.NotificationTranslator;
 import de.vsy.shared_transmission.packet.content.Translatable;
+import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 
 public class ClientNotificationTranslator extends NotificationTranslator {
 

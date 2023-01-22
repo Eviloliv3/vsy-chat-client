@@ -12,7 +12,6 @@ import de.vsy.client.controlling.ClientTerminator;
 import de.vsy.client.controlling.essential_gui_action_interfaces.Navigator;
 import de.vsy.client.controlling.essential_gui_action_interfaces.guiActionInterfaces.GUIChatActions;
 import de.vsy.client.data_model.ServerDataCache;
-import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.client.gui.essential_graphical_unit.MenuActionListener;
 import de.vsy.client.gui.essential_graphical_unit.MessageHistory;
 import de.vsy.client.gui.essential_graphical_unit.NavigationGoal;
@@ -30,6 +29,7 @@ import de.vsy.shared_transmission.packet.content.authentication.AccountDeletionR
 import de.vsy.shared_transmission.packet.content.authentication.LoginRequestDTO;
 import de.vsy.shared_transmission.packet.content.authentication.LogoutRequestDTO;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
+import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.shared_transmission.packet.content.relation.ContactRelationRequestDTO;
 import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
 import java.awt.event.MouseEvent;
@@ -287,7 +287,8 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
       }
 
       if (contactId < 0) {
-        this.serverDataModel.addNotification(new SimpleInformationDTO("Negative ids do not exist."));
+        this.serverDataModel.addNotification(
+            new SimpleInformationDTO("Negative ids do not exist."));
       } else {
         this.requester.request(new ContactRelationRequestDTO(CLIENT,
             STANDARD_CLIENT_ID, contactId, this.serverDataModel.getClientAccountData()

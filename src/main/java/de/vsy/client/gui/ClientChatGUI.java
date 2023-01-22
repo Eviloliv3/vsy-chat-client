@@ -5,7 +5,6 @@ import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CLOSE_AP
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CONTACT_ADDITION;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CONTACT_REMOVAL;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.LOGOUT;
-import static de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity.CLIENT;
 import static de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity.GROUP;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
@@ -252,15 +251,16 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
     this.chatHistoryTabPane.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        if(SwingUtilities.isRightMouseButton(e)){
+        if (SwingUtilities.isRightMouseButton(e)) {
           var rightClickLocatedTab = chatHistoryTabPane.getSelectedIndex();
 
-          if(rightClickLocatedTab >= 0){
+          if (rightClickLocatedTab >= 0) {
             var tabTitle = chatHistoryTabPane.getTitleAt(rightClickLocatedTab);
             chatHistoryTabPane.removeTabAt(rightClickLocatedTab);
             activeChatTabs.keySet().removeIf(contact -> contact.getDisplayLabel().equals(tabTitle));
           }
-        }}
+        }
+      }
     });
     this.contactList.addMouseListener(new MouseAdapter() {
       @Override
@@ -325,7 +325,8 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
       chatHistoryScrollPane.setAutoscrolls(true);
       chatHistoryScrollPane.setViewportView(chatHistory);
       this.activeChatTabs.put(contact, chatHistory);
-      SwingUtilities.invokeLater(() -> this.chatHistoryTabPane.addTab(tabTitle, chatHistoryScrollPane));
+      SwingUtilities.invokeLater(
+          () -> this.chatHistoryTabPane.addTab(tabTitle, chatHistoryScrollPane));
     } else {
       SwingUtilities.invokeLater(
           () -> {
@@ -339,16 +340,16 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   @Override
   public void removeActiveChat(final CommunicatorDTO contact) {
 
-      SwingUtilities.invokeLater(() -> {
-        var contactTabIndex = this.chatHistoryTabPane.indexOfTab(contact.getDisplayLabel());
+    SwingUtilities.invokeLater(() -> {
+      var contactTabIndex = this.chatHistoryTabPane.indexOfTab(contact.getDisplayLabel());
 
-        if (contactTabIndex >= 0) {
+      if (contactTabIndex >= 0) {
         this.chatHistoryTabPane.removeTabAt(contactTabIndex);
-          this.activeChatTabs.remove(contact);
-        } else {
-          LOGGER.error("No chat tab found for {}.", contact);
-        }
-      });
+        this.activeChatTabs.remove(contact);
+      } else {
+        LOGGER.error("No chat tab found for {}.", contact);
+      }
+    });
   }
 
   public void setClientTitle(final String clientTitle) {

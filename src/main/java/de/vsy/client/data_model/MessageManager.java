@@ -1,14 +1,11 @@
 package de.vsy.client.data_model;
 
-import de.vsy.client.gui.essential_graphical_unit.MessageHistory;
 import de.vsy.shared_module.data_element_validation.IdCheck;
 import de.vsy.shared_transmission.packet.content.chat.TextMessageDTO;
-import java.security.DrbgParameters.NextBytes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine.Help.Ansi.Text;
 
 /**
  * Manages messages histories for all client's active contacts.
@@ -26,28 +23,30 @@ public class MessageManager {
    * Adds the messages for client.
    *
    * @param contactId the contact id
-   * @param messages the messages
+   * @param messages  the messages
    */
   public void addMessagesForClient(final int contactId, final List<TextMessageDTO> messages) {
     if (IdCheck.checkData(contactId).isPresent()) {
       return;
     }
 
-    if(messages != null && !(messages.isEmpty())){
+    if (messages != null && !(messages.isEmpty())) {
       final int messageCount;
-      final var existingMessages = this.messageHistories.getOrDefault(contactId, new ArrayList<>(MAX_MESSAGE_COUNT));
-      final var allContactMessages = new ArrayList<TextMessageDTO>(messages.size() + existingMessages.size());
+      final var existingMessages = this.messageHistories.getOrDefault(contactId,
+          new ArrayList<>(MAX_MESSAGE_COUNT));
+      final var allContactMessages = new ArrayList<TextMessageDTO>(
+          messages.size() + existingMessages.size());
 
       allContactMessages.addAll(existingMessages);
       allContactMessages.addAll(messages);
       messageCount = allContactMessages.size();
 
-      if(messageCount > MAX_MESSAGE_COUNT){
+      if (messageCount > MAX_MESSAGE_COUNT) {
         allContactMessages.subList(0, (messageCount - MAX_MESSAGE_COUNT)).clear();
         allContactMessages.trimToSize();
       }
       this.messageHistories.put(contactId, allContactMessages);
-    }else{
+    } else {
       this.messageHistories.putIfAbsent(contactId, new ArrayList<>(MAX_MESSAGE_COUNT));
     }
   }
@@ -55,17 +54,18 @@ public class MessageManager {
   /**
    * Adds the message.
    *
-   * @param contactId   the contact id
+   * @param contactId  the contact id
    * @param newMessage the new message
    */
   public void addMessage(final int contactId, final TextMessageDTO newMessage) {
-    List<TextMessageDTO> messageList = this.messageHistories.getOrDefault(contactId, new ArrayList<>(MAX_MESSAGE_COUNT));
+    List<TextMessageDTO> messageList = this.messageHistories.getOrDefault(contactId,
+        new ArrayList<>(MAX_MESSAGE_COUNT));
     messageList.add(newMessage);
 
     if (messageList.size() > MAX_MESSAGE_COUNT) {
       messageList.remove(0);
 
-      if(messageList instanceof ArrayList<TextMessageDTO> messageHistory){
+      if (messageList instanceof ArrayList<TextMessageDTO> messageHistory) {
         messageHistory.trimToSize();
       }
     }
@@ -103,9 +103,9 @@ public class MessageManager {
    */
   public void setNewMessageMap(final Map<Integer, List<TextMessageDTO>> contactMessages) {
 
-    if(contactMessages != null && !(contactMessages.isEmpty())){
+    if (contactMessages != null && !(contactMessages.isEmpty())) {
 
-      for(final var messageHistory : contactMessages.entrySet()){
+      for (final var messageHistory : contactMessages.entrySet()) {
         addMessagesForClient(messageHistory.getKey(), messageHistory.getValue());
       }
     }

@@ -15,7 +15,6 @@ import de.vsy.client.data_model.ClientNotificationManager;
 import de.vsy.client.data_model.ContactDataManager;
 import de.vsy.client.data_model.MessageManager;
 import de.vsy.client.data_model.ServerDataCache;
-import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.client.gui.ClientChatGUI;
 import de.vsy.client.gui.GUIController;
 import de.vsy.client.gui.GUIInteractionProcessor;
@@ -26,6 +25,7 @@ import de.vsy.shared_module.packet_creation.PacketCompiler;
 import de.vsy.shared_module.packet_management.ThreadPacketBufferManager;
 import de.vsy.shared_transmission.dto.CommunicatorDTO;
 import de.vsy.shared_transmission.packet.content.authentication.ReconnectRequestDTO;
+import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint;
 import de.vsy.shared_utility.standard_value.ThreadContextValues;
 import java.time.Instant;
@@ -76,7 +76,8 @@ public class ChatClient {
    */
   public static void main(final String[] args) {
     ThreadContext.put(ThreadContextValues.LOG_ROUTE_CONTEXT_KEY, STANDARD_CLIENT_ROUTE_VALUE);
-    ThreadContext.put(ThreadContextValues.LOG_FILE_CONTEXT_KEY, "ChatClient[" + Instant.now() + "]");
+    ThreadContext.put(ThreadContextValues.LOG_FILE_CONTEXT_KEY,
+        "ChatClient[" + Instant.now() + "]");
     final var client = new ChatClient();
     setupPacketCompiler();
     client.handleClient();

@@ -33,9 +33,9 @@ public class SimpleErrorProcessor implements ContentProcessor<ErrorDTO> {
   public void processContent(ErrorDTO toProcess) {
     final var clientId = this.dataModel.getClientId();
     final var clientAuthenticated = clientId != STANDARD_CLIENT_ID;
-      this.dataModel.addNotification(toProcess);
-      if (!(clientAuthenticated)) {
-        this.dataModel.resetClient();
-      }
+    this.dataModel.addNotification(toProcess);
+    if (!(clientAuthenticated)) {
+      this.dataModel.resetClient();
+    }
   }
 }
