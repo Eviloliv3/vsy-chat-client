@@ -249,6 +249,19 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
         dispose();
       }
     });
+    this.chatHistoryTabPane.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if(SwingUtilities.isRightMouseButton(e)){
+          var rightClickLocatedTab = chatHistoryTabPane.getSelectedIndex();
+
+          if(rightClickLocatedTab >= 0){
+            var tabTitle = chatHistoryTabPane.getTitleAt(rightClickLocatedTab);
+            chatHistoryTabPane.removeTabAt(rightClickLocatedTab);
+            activeChatTabs.keySet().removeIf(contact -> contact.getDisplayLabel().equals(tabTitle));
+          }
+        }}
+    });
     this.contactList.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
@@ -304,22 +317,19 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
 
   @Override
   public void addActiveChat(final CommunicatorDTO contact, MessageHistory chatHistory) {
+    final var tabTitle = contact.getDisplayLabel();
+
     if (!(this.activeChatTabs.containsKey(contact))) {
       JScrollPane chatHistoryScrollPane = new JScrollPane(VERTICAL_SCROLLBAR_AS_NEEDED,
           HORIZONTAL_SCROLLBAR_NEVER);
       chatHistoryScrollPane.setAutoscrolls(true);
       chatHistoryScrollPane.setViewportView(chatHistory);
       this.activeChatTabs.put(contact, chatHistory);
-      SwingUtilities.invokeLater(
-          () -> {
-            this.chatHistoryTabPane.addTab(contact.getDisplayLabel(), chatHistoryScrollPane);
-            chatHistory.requestFocusInWindow();
-          });
+      SwingUtilities.invokeLater(() -> this.chatHistoryTabPane.addTab(tabTitle, chatHistoryScrollPane));
     } else {
       SwingUtilities.invokeLater(
           () -> {
-            final var contactChatIndex = this.chatHistoryTabPane.indexOfTab(
-                contact.getDisplayLabel());
+            final var contactChatIndex = this.chatHistoryTabPane.indexOfTab(tabTitle);
             final var contactChatTab = this.chatHistoryTabPane.getTabComponentAt(contactChatIndex);
             contactChatTab.requestFocusInWindow();
           });
@@ -328,8 +338,10 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
 
   @Override
   public void removeActiveChat(final CommunicatorDTO contact) {
+
       SwingUtilities.invokeLater(() -> {
         var contactTabIndex = this.chatHistoryTabPane.indexOfTab(contact.getDisplayLabel());
+
         if (contactTabIndex >= 0) {
         this.chatHistoryTabPane.removeTabAt(contactTabIndex);
           this.activeChatTabs.remove(contact);

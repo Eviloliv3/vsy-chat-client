@@ -35,6 +35,7 @@ import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
 import java.awt.event.MouseEvent;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class GUIInteractionProcessor implements GUIChatActions, Navigator {
 
