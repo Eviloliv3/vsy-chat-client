@@ -16,7 +16,7 @@ public class ClientConnectionWatcher extends TimerTask {
 
   @Override
   public void run() {
-    if (!this.connectionManager.getConnectionState()) {
+    if (!(this.connectionManager.getConnectionState())) {
       this.connectionWaiter.countDown();
     }
   }

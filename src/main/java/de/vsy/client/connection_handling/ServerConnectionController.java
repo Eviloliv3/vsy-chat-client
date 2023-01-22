@@ -73,7 +73,7 @@ public class ServerConnectionController {
    * @return true, if successful
    */
   public boolean initiateConnection() {
-    LOGGER.info("Connection initiated.");
+    LOGGER.info("Connection initiation started.");
 
     var reconnectTries = 3;
 
@@ -88,7 +88,7 @@ public class ServerConnectionController {
         reconnectTries--;
       }
     }
-    LOGGER.error("Connection failed.");
+    LOGGER.error("Connection initiation failed.");
     return false;
   }
 

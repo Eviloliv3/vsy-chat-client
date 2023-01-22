@@ -142,8 +142,8 @@ public class ChatClient {
       final var clientId = clientData.getCommunicatorId();
 
       if (clientId != STANDARD_CLIENT_ID) {
-        Thread.sleep(300);
         final var reconnectRequest = new ReconnectRequestDTO(clientData);
+        Thread.sleep(1000);
         this.requester.request(reconnectRequest, getServerEntity(STANDARD_SERVER_ID));
         LOGGER.info("ReconnectRequest sent.");
       } else {
