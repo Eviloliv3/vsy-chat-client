@@ -1,7 +1,7 @@
 package de.vsy.client.packet_processing.content_processing;
 
 import de.vsy.client.controlling.data_access_interfaces.AuthenticationDataModelAccess;
-import de.vsy.client.data_model.notification.SimpleInformation;
+import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
 import de.vsy.shared_transmission.packet.content.authentication.ReconnectResponseDTO;
 
@@ -29,7 +29,7 @@ public class ReconnectResponseProcessor implements ContentProcessor<ReconnectRes
       this.dataModel.completeReconnect(toProcess.getReconnectionState());
     } else {
       this.dataModel.addNotification(
-          new SimpleInformation("Authentication failed. Please reenter your credentials."));
+          new SimpleInformationDTO("Authentication failed. Please reenter your credentials."));
       this.dataModel.completeLogout();
     }
   }

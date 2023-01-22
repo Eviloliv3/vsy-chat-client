@@ -12,7 +12,7 @@ import de.vsy.client.controlling.data_access_interfaces.ChatDataModelAccess;
 import de.vsy.client.controlling.data_access_interfaces.NotificationDataModelAccess;
 import de.vsy.client.controlling.data_access_interfaces.StatusDataModelAccess;
 import de.vsy.client.data_model.ServerDataCache;
-import de.vsy.client.data_model.notification.SimpleInformation;
+import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.client.gui.GUIController;
 import de.vsy.client.packet_processing.PacketManagementUtilityProvider;
 import de.vsy.client.packet_processing.PacketProcessingService;
@@ -179,7 +179,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
 
   public void authenticationFailed() {
     this.serverDataModel.addNotification(
-        new SimpleInformation("Authentication failed. Please reenter your credentials."));
+        new SimpleInformationDTO("Authentication failed. Please reenter your credentials."));
     reset();
   }
 

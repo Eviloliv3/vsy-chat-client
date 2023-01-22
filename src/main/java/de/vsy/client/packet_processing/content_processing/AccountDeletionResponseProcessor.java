@@ -1,7 +1,7 @@
 package de.vsy.client.packet_processing.content_processing;
 
 import de.vsy.client.controlling.data_access_interfaces.AuthenticationDataModelAccess;
-import de.vsy.client.data_model.notification.SimpleInformation;
+import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.ResultingPacketContentHandler;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
@@ -23,11 +23,11 @@ public class AccountDeletionResponseProcessor implements
   @Override
   public void processContent(AccountDeletionResponseDTO toProcess) {
     if (toProcess.getAccountDeleted()) {
-      this.dataModel.addNotification(new SimpleInformation("Account deleted successfully."));
+      this.dataModel.addNotification(new SimpleInformationDTO("Account deleted successfully."));
       this.dataModel.completeLogout();
     } else {
       this.dataModel.addNotification(
-          new SimpleInformation("Account deletion failed. Please contact "
+          new SimpleInformationDTO("Account deletion failed. Please contact "
               + "the chatter support team."));
     }
     contentHandler.addRequest(toProcess);

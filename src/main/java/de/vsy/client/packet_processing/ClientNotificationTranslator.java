@@ -1,13 +1,13 @@
 package de.vsy.client.packet_processing;
 
-import de.vsy.client.data_model.notification.SimpleInformation;
+import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.shared_module.packet_content_translation.NotificationTranslator;
 import de.vsy.shared_transmission.packet.content.Translatable;
 
 public class ClientNotificationTranslator extends NotificationTranslator {
 
   static {
-    translators.put(SimpleInformation.class, SimpleInformationTranslator::translate);
+    translators.put(SimpleInformationDTO.class, SimpleInformationTranslator::translate);
   }
 
   protected ClientNotificationTranslator() {

@@ -9,7 +9,7 @@ import de.vsy.shared_module.packet_processing.ProcessingCondition;
 import de.vsy.shared_module.packet_processing.processor_provision.ContentBasedProcessorFactory;
 import de.vsy.shared_module.packet_validation.content_validation.error.ErrorContentValidator;
 import de.vsy.shared_transmission.packet.content.PacketContent;
-import de.vsy.shared_transmission.packet.content.error.ErrorContent;
+import de.vsy.shared_transmission.packet.content.notification.ErrorContent;
 
 public class ErrorPacketProcessorFactory implements ContentBasedProcessorFactory {
 
@@ -17,7 +17,7 @@ public class ErrorPacketProcessorFactory implements ContentBasedProcessorFactory
   private final ResultingContentHandlingProvider handlerProvider;
 
   /**
-   * Instantiates a new error handler.
+   * Instantiates a new notification handler.
    *
    * @param dataManager the dataManagement manager
    */
@@ -49,7 +49,7 @@ public class ErrorPacketProcessorFactory implements ContentBasedProcessorFactory
 
       @Override
       public String getErrorMessage() {
-        return "This error message should not occur, because checkCondition always returns true.";
+        return "This notification message should not occur, because checkCondition always returns true.";
       }
     };
   }

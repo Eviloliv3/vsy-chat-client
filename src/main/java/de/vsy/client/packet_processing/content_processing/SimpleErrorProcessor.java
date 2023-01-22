@@ -6,10 +6,10 @@ import de.vsy.client.controlling.data_access_interfaces.NotificationDataModelAcc
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.ResultingPacketContentHandler;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
-import de.vsy.shared_transmission.packet.content.error.ErrorDTO;
+import de.vsy.shared_transmission.packet.content.notification.ErrorDTO;
 
 /**
- * PacketProcessor for error type Packet.
+ * PacketProcessor for notification type Packet.
  *
  * <p>Frederic Heath
  */
@@ -19,7 +19,7 @@ public class SimpleErrorProcessor implements ContentProcessor<ErrorDTO> {
   private final ResultingPacketContentHandler contentHandler;
 
   /**
-   * Instantiates a new simple error handler.
+   * Instantiates a new simple notification handler.
    *
    * @param dataModel the update unit
    */

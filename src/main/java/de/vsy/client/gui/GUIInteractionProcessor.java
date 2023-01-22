@@ -12,7 +12,7 @@ import de.vsy.client.controlling.ClientTerminator;
 import de.vsy.client.controlling.essential_gui_action_interfaces.Navigator;
 import de.vsy.client.controlling.essential_gui_action_interfaces.guiActionInterfaces.GUIChatActions;
 import de.vsy.client.data_model.ServerDataCache;
-import de.vsy.client.data_model.notification.SimpleInformation;
+import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.client.gui.essential_graphical_unit.MenuActionListener;
 import de.vsy.client.gui.essential_graphical_unit.MessageHistory;
 import de.vsy.client.gui.essential_graphical_unit.NavigationGoal;
@@ -35,7 +35,6 @@ import de.vsy.shared_transmission.packet.content.status.ClientStatusChangeDTO;
 import java.awt.event.MouseEvent;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 public class GUIInteractionProcessor implements GUIChatActions, Navigator {
 
@@ -79,7 +78,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
           getClientEntity(contactId));
     } else {
       final var errorMessage = "Relationship was not upended. No contact list entry selected";
-      this.serverDataModel.addNotification(new SimpleInformation(errorMessage));
+      this.serverDataModel.addNotification(new SimpleInformationDTO(errorMessage));
     }
   }
 
@@ -200,11 +199,11 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
         passwordChars = loginPanel.getPassword();
 
         if (username.length() < 5) {
-          this.serverDataModel.addPriorityNotification(new SimpleInformation(
+          this.serverDataModel.addPriorityNotification(new SimpleInformationDTO(
               "Retry: username length has to be greater than 5, provided " + username.length()));
           handleLogin();
         } else if (passwordChars.length < 5) {
-          this.serverDataModel.addPriorityNotification(new SimpleInformation(
+          this.serverDataModel.addPriorityNotification(new SimpleInformationDTO(
               "Retry: password length has to be greater than 5, provided " + passwordChars.length));
           handleLogin();
         } else {
@@ -217,7 +216,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
         navigate(INITIAL);
       }
     } else {
-      final var notification = new SimpleInformation(
+      final var notification = new SimpleInformationDTO(
           "You cannot do this right now. Please logout before retrying.");
       this.serverDataModel.addNotification(notification);
     }
@@ -231,7 +230,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
     if (decision == 0) {
       final var deletionRequest = new AccountDeletionRequestDTO();
       this.requester.request(deletionRequest, getServerEntity(STANDARD_SERVER_ID));
-      this.serverDataModel.addNotification(new SimpleInformation("Account deletion initiated."));
+      this.serverDataModel.addNotification(new SimpleInformationDTO("Account deletion initiated."));
     }
   }
 
@@ -261,7 +260,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
         this.navigate(INITIAL);
       }
     } else {
-      final var notification = new SimpleInformation(
+      final var notification = new SimpleInformationDTO(
           "You cannot do this right now. Please logout before retrying.");
       this.serverDataModel.addNotification(notification);
     }
@@ -282,13 +281,13 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
         contactId = contactAdd.getContactId();
       } catch (NumberFormatException nfe) {
         this.serverDataModel.addPriorityNotification(
-            new SimpleInformation("Input cannot be parsed to a number."));
+            new SimpleInformationDTO("Input cannot be parsed to a number."));
         this.handleContactAddition();
         return;
       }
 
       if (contactId < 0) {
-        this.serverDataModel.addNotification(new SimpleInformation("Negative ids do not exist."));
+        this.serverDataModel.addNotification(new SimpleInformationDTO("Negative ids do not exist."));
       } else {
         this.requester.request(new ContactRelationRequestDTO(CLIENT,
             STANDARD_CLIENT_ID, contactId, this.serverDataModel.getClientAccountData()

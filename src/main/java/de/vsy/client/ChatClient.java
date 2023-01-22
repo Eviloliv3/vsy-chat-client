@@ -15,7 +15,7 @@ import de.vsy.client.data_model.ClientNotificationManager;
 import de.vsy.client.data_model.ContactDataManager;
 import de.vsy.client.data_model.MessageManager;
 import de.vsy.client.data_model.ServerDataCache;
-import de.vsy.client.data_model.notification.SimpleInformation;
+import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 import de.vsy.client.gui.ClientChatGUI;
 import de.vsy.client.gui.GUIController;
 import de.vsy.client.gui.GUIInteractionProcessor;
@@ -116,7 +116,7 @@ public class ChatClient {
       }
     } else {
       final var errorCause = "No connection could be initiated. If you do not want to attempt another reconnection try close the application within 10 seconds.";
-      final var notification = new SimpleInformation(errorCause);
+      final var notification = new SimpleInformationDTO(errorCause);
       this.serverDataModel.addNotification(notification);
       this.clientController.resetClient();
       Thread.sleep(10000);
