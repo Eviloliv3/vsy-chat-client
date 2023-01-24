@@ -30,6 +30,7 @@ import de.vsy.shared_utility.id_manipulation.IdComparator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -131,6 +132,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
   public void completeLogout() {
     reset();
     PacketCompiler.addOriginatorEntityProvider(() -> getClientEntity(STANDARD_CLIENT_ID));
+    this.guiController.startInteracting();
   }
 
   @Override
@@ -164,7 +166,9 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
 
   @Override
   public void tearDownMessenger() {
-    reset();
+    this.serverDataModel.initialMessengerSetup(Map.of(), Map.of());
+    this.guiController.resetGUIData();
+    this.guiController.addClientTitle(this.serverDataModel.getCommunicatorData());
   }
 
   @Override

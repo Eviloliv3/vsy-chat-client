@@ -119,7 +119,6 @@ public class GUIController {
 
   public void resetGUIData() {
     this.gui.resetData();
-    this.guiInteractions.navigate(INITIAL);
   }
 
   public void startGUI() {

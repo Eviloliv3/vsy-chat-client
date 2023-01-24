@@ -96,9 +96,9 @@ public class ContactDataManager {
    */
   public void setNewClientList(
       final Map<EligibleContactEntity, List<CommunicatorDTO>> activeContactMap) {
+    resetContactList();
 
     if (!activeContactMap.isEmpty()) {
-      resetContactList();
       this.activeContactMap.putAll(activeContactMap);
       activeContactMap.values().forEach(this.indexList::addAll);
     }

@@ -102,6 +102,7 @@ public class MessageManager {
    * @param contactMessages the new map
    */
   public void setNewMessageMap(final Map<Integer, List<TextMessageDTO>> contactMessages) {
+    this.messageHistories.clear();
 
     if (contactMessages != null && !(contactMessages.isEmpty())) {
 
