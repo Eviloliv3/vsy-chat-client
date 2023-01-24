@@ -23,13 +23,12 @@ public class AccountDeletionResponseProcessor implements
   @Override
   public void processContent(AccountDeletionResponseDTO toProcess) {
     if (toProcess.getAccountDeleted()) {
-      this.dataModel.addNotification(new SimpleInformationDTO("Account deleted successfully."));
       this.dataModel.completeLogout();
+      this.dataModel.addNotification(new SimpleInformationDTO("Account deleted successfully."));
     } else {
       this.dataModel.addNotification(
           new SimpleInformationDTO("Account deletion failed. Please contact "
               + "the chatter support team."));
     }
-    contentHandler.addRequest(toProcess);
   }
 }
