@@ -24,7 +24,7 @@ public class StandardProcessorFactoryProvider implements CategoryProcessorFactor
       case STATUS -> new StatusPacketProcessorFactory(this.dataModel, this.handlerProvider);
       case RELATION -> new RelationPacketProcessorFactory(this.dataModel, this.handlerProvider);
       case CHAT -> new ChatPacketProcessorFactory(this.dataModel, this.handlerProvider);
-      case NOTIFICATION -> new ErrorPacketProcessorFactory(this.dataModel, this.handlerProvider);
+      case NOTIFICATION -> new NotificationPacketProcessorFactory(this.dataModel, this.handlerProvider);
     };
   }
 }

@@ -291,7 +291,7 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
             new SimpleInformationDTO("Negative ids do not exist."));
       } else {
         this.requester.request(new ContactRelationRequestDTO(CLIENT,
-            STANDARD_CLIENT_ID, contactId, this.serverDataModel.getClientAccountData()
+            this.serverDataModel.getClientId(), contactId, this.serverDataModel.getClientAccountData()
             .getCommunicatorDTO(), true), getClientEntity(contactId));
       }
     } else {

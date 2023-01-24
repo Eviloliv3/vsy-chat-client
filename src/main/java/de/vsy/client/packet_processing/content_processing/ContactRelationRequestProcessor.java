@@ -24,9 +24,13 @@ public class ContactRelationRequestProcessor
     final var iAmOriginator = clientId == validatedContent.getOriginatorId();
 
     if (!iAmOriginator) {
-      this.dataModel.removeContactData(
-          validatedContent.getContactType(), validatedContent.getRequestingClient());
-      this.dataModel.addNotification(validatedContent);
+      if(!validatedContent.getDesiredState()) {
+        this.dataModel.removeContactData(
+            validatedContent.getContactType(), validatedContent.getRequestingClient());
+        this.dataModel.addNotification(validatedContent);
+      }else{
+        this.dataModel.addRequest(validatedContent);
+      }
     } else {
       this.contentHandler.addRequest(validatedContent);
     }

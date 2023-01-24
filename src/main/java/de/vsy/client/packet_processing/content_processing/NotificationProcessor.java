@@ -6,14 +6,14 @@ import de.vsy.client.controlling.data_access_interfaces.NotificationDataModelAcc
 import de.vsy.client.packet_processing.ResultingContentHandlingProvider;
 import de.vsy.client.packet_processing.ResultingPacketContentHandler;
 import de.vsy.shared_module.packet_processing.ContentProcessor;
-import de.vsy.shared_transmission.packet.content.notification.ErrorDTO;
+import de.vsy.shared_transmission.packet.content.notification.SimpleInformationDTO;
 
 /**
  * PacketProcessor for notification type Packet.
  *
  * <p>Frederic Heath
  */
-public class SimpleErrorProcessor implements ContentProcessor<ErrorDTO> {
+public class NotificationProcessor implements ContentProcessor<SimpleInformationDTO> {
 
   private final NotificationDataModelAccess dataModel;
   private final ResultingPacketContentHandler contentHandler;
@@ -23,14 +23,14 @@ public class SimpleErrorProcessor implements ContentProcessor<ErrorDTO> {
    *
    * @param dataModel the update unit
    */
-  public SimpleErrorProcessor(final NotificationDataModelAccess dataModel,
+  public NotificationProcessor(final NotificationDataModelAccess dataModel,
       final ResultingContentHandlingProvider handlerProvider) {
     this.dataModel = dataModel;
     this.contentHandler = handlerProvider.getResultingPacketContentHandler();
   }
 
   @Override
-  public void processContent(ErrorDTO toProcess) {
+  public void processContent(SimpleInformationDTO toProcess) {
     final var clientId = this.dataModel.getClientId();
     final var clientAuthenticated = clientId != STANDARD_CLIENT_ID;
     this.dataModel.addNotification(toProcess);
