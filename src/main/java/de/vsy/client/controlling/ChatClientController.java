@@ -243,9 +243,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
             LOGGER.info("{} instance stopped.", currentThread.getClass().getSimpleName());
           }
         } else {
-          final var errorMessage = "Thread instances could not be stopped: " + Arrays.toString(
-              threadList.toArray());
-          throw new RuntimeException(errorMessage);
+          LOGGER.error("Thread instances could not be stopped: " + threadList.toArray());
         }
       } catch (InterruptedException ie) {
         LOGGER.error("Interrupted while waiting for service termination. {}",
