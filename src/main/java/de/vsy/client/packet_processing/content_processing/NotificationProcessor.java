@@ -31,11 +31,9 @@ public class NotificationProcessor implements ContentProcessor<SimpleInformation
 
   @Override
   public void processContent(SimpleInformationDTO toProcess) {
-    final var clientId = this.dataModel.getClientId();
-    final var clientAuthenticated = clientId != STANDARD_CLIENT_ID;
     this.dataModel.addNotification(toProcess);
 
-    if (!(clientAuthenticated)) {
+    if (!(this.dataModel.isClientLoggedIn())) {
       this.dataModel.resetClient();
     }
   }

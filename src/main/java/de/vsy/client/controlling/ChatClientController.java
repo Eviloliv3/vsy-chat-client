@@ -143,7 +143,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
   @Override
   public boolean isClientLoggedIn() {
     final var clientId = getClientId();
-    return IdCheck.checkData(clientId).isEmpty() && clientId > 0;
+    return clientId == STANDARD_CLIENT_ID;
   }
 
   @Override
@@ -185,6 +185,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
     this.serverDataModel.addNotification(
         new SimpleInformationDTO("Authentication failed. Please reenter your credentials."));
     reset();
+    this.guiController.startInteracting();
   }
 
   @Override
