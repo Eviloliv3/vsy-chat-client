@@ -92,25 +92,28 @@ public class GUIInteractionProcessor implements GUIChatActions, Navigator {
     //TODO von hier aus debuggen
     if (evt.getClickCount() == 2) {
       final var contact = this.guiLiveData.getSelectedContact();
-      final var messages = this.serverDataModel.getMessageList(contact.getCommunicatorId());
-      final var preBuiltHistory = new MessageHistory();
-      final var contactId = contact.getCommunicatorId();
 
-      for (var message : messages) {
-        final var text = message.getMessage();
+      if(!(this.chatManager.checkActiveChat(contact))) {
+        final var messages = this.serverDataModel.getMessageList(contact.getCommunicatorId());
+        final var preBuiltHistory = new MessageHistory();
+        final var contactId = contact.getCommunicatorId();
 
-        if (message.getOriginatorId() == contactId) {
+        for (var message : messages) {
+          final var text = message.getMessage();
 
-          if (message.getContactType().equals(CLIENT)) {
-            preBuiltHistory.addContactMessage(text);
+          if (message.getOriginatorId() == contactId) {
+
+            if (message.getContactType().equals(CLIENT)) {
+              preBuiltHistory.addContactMessage(text);
+            } else {
+              preBuiltHistory.addContactMessage(text, contact.getDisplayLabel());
+            }
           } else {
-            preBuiltHistory.addContactMessage(text, contact.getDisplayLabel());
+            preBuiltHistory.addClientMessage(text);
           }
-        } else {
-          preBuiltHistory.addClientMessage(text);
         }
+        this.chatManager.addActiveChat(contact, preBuiltHistory);
       }
-      this.chatManager.addActiveChat(contact, preBuiltHistory);
 
       if (evt.getComponent().getParent() instanceof final JList<?> contactList) {
         contactList.clearSelection();

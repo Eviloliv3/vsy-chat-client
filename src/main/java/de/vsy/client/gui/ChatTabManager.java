@@ -6,6 +6,13 @@ import de.vsy.shared_transmission.dto.CommunicatorDTO;
 public interface ChatTabManager {
 
   /**
+   * Checks whether a chat history already exists for the specified contact.
+   * @param contact the contact CommunicatorDTO to check
+   * @return  true, if active chat history was found; false otherwise
+   */
+  boolean checkActiveChat(final CommunicatorDTO contact);
+
+  /**
    * Adds the specified chat history for the specified contact data to the GUI.
    *
    * @param contact     the contact's CommunicatorDTO

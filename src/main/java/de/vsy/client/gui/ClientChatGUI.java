@@ -316,6 +316,11 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   }
 
   @Override
+  public boolean checkActiveChat(CommunicatorDTO contact) {
+    return this.activeChatTabs.containsKey(contact);
+  }
+
+  @Override
   public void addActiveChat(final CommunicatorDTO contact, MessageHistory chatHistory) {
     final var tabTitle = contact.getDisplayLabel();
 
@@ -327,13 +332,6 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
       this.activeChatTabs.put(contact, chatHistory);
       SwingUtilities.invokeLater(
           () -> this.chatHistoryTabPane.addTab(tabTitle, chatHistoryScrollPane));
-    } else {
-      SwingUtilities.invokeLater(
-          () -> {
-            final var contactChatIndex = this.chatHistoryTabPane.indexOfTab(tabTitle);
-            final var contactChatTab = this.chatHistoryTabPane.getTabComponentAt(contactChatIndex);
-            contactChatTab.requestFocusInWindow();
-          });
     }
   }
 
