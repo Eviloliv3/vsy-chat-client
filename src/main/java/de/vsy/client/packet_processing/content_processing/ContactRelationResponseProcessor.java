@@ -22,14 +22,16 @@ public class ContactRelationResponseProcessor
   public void processContent(ContactRelationResponseDTO toProcess) {
     final var clientId = this.dataModel.getClientId();
     final var originalRequestData = toProcess.getRequestData();
-    final var iAmOriginator = clientId == originalRequestData.getOriginatorId();
+    final var iAmRequestOriginator = clientId == originalRequestData.getOriginatorId();
 
     if (toProcess.getRequestData().getDesiredState() && toProcess.getDecision()) {
       this.dataModel.addContactData(originalRequestData.getContactType(),
           toProcess.getRespondingClient(), null);
+    } else {
+      this.dataModel.removeContactData(originalRequestData.getContactType(), toProcess.getRespondingClient());
     }
 
-    if (!iAmOriginator) {
+    if (!iAmRequestOriginator) {
       this.dataModel.addNotification(toProcess);
     } else {
       this.contentHandler.addRequest(toProcess);
