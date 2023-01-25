@@ -143,7 +143,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
   @Override
   public boolean isClientLoggedIn() {
     final var clientId = getClientId();
-    return clientId == STANDARD_CLIENT_ID;
+    return IdCheck.checkData(clientId).isEmpty() && clientId != STANDARD_CLIENT_ID;
   }
 
   @Override
@@ -243,7 +243,9 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
             LOGGER.info("{} instance stopped.", currentThread.getClass().getSimpleName());
           }
         } else {
-          LOGGER.error("Thread instances could not be stopped: " + threadList.toArray());
+          final var errorMessage = "Thread instances could not be stopped: " + Arrays.toString(
+              threadList.toArray());
+          throw new RuntimeException(errorMessage);
         }
       } catch (InterruptedException ie) {
         LOGGER.error("Interrupted while waiting for service termination. {}",
