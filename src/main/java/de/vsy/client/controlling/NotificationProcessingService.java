@@ -33,7 +33,7 @@ public class NotificationProcessingService implements Runnable {
     do {
       currentNotification = notificationProvider.getNextNotification();
 
-      if (currentNotification instanceof HumanInteractionRequest request) {
+      if (currentNotification instanceof HumanInteractionRequest request && request.getDesiredState()) {
         handleContactRequest(request);
       } else if (currentNotification != null) {
         handleNotification(currentNotification);
