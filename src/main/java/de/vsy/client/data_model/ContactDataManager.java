@@ -60,7 +60,8 @@ public class ContactDataManager {
       this.indexList = CommunicatorDataSorter.sortByFirstLastName(this.indexList);
       contactIndex = indexList.indexOf(contact);
     } else {
-      LOGGER.warn("Contact not added - already contained.");
+      contactIndex = indexList.indexOf(contact);
+      LOGGER.trace("Contact not added - already contained.");
     }
     return contactIndex;
   }

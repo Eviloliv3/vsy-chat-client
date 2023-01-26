@@ -305,7 +305,11 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
   }
 
   public void addContact(final int index, final CommunicatorDTO contact) {
-    SwingUtilities.invokeLater(() -> this.contactListModel.add(index, contact));
+    SwingUtilities.invokeLater(() -> {
+      if(!this.contactListModel.contains(contact)){
+        this.contactListModel.add(index, contact);
+      }
+    });
   }
 
   public void removeContact(final CommunicatorDTO contact) {

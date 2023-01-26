@@ -26,7 +26,7 @@ public class ReconnectResponseProcessor implements ContentProcessor<ReconnectRes
   @Override
   public void processContent(ReconnectResponseDTO toProcess) {
     if (toProcess.getReconnectionState()) {
-      this.dataModel.completeReconnect(toProcess.getReconnectionState());
+      this.dataModel.completeReconnect(true);
     } else {
       this.dataModel.addNotification(
           new SimpleInformationDTO("Authentication failed. Please reenter your credentials."));

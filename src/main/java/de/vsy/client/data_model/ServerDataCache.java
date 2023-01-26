@@ -64,7 +64,7 @@ public class ServerDataCache implements ClientDataProvider {
     }
     final var messageHistory = messages != null ? messages : new ArrayList<TextMessageDTO>();
     contactIndex = this.activeContactController.addContact(contactType, newClient);
-    this.messageController.addMessagesForClient(newClient.getCommunicatorId(), messageHistory);
+    this.messageController.setMessagesForClient(newClient.getCommunicatorId(), messageHistory);
     return contactIndex;
   }
 
