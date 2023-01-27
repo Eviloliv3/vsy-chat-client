@@ -5,7 +5,6 @@ import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CLOSE_AP
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CONTACT_ADDITION;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.CONTACT_REMOVAL;
 import static de.vsy.client.gui.essential_graphical_unit.NavigationGoal.LOGOUT;
-import static de.vsy.shared_transmission.packet.content.relation.EligibleContactEntity.GROUP;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
@@ -370,21 +369,12 @@ public class ClientChatGUI extends JFrame implements ClientInputProvider, ChatTa
 
     if (messageHistory != null) {
       var messageContent = message.getMessage();
-      var isGroupMessage = message.getContactType().equals(GROUP);
 
-      if (isGroupMessage) {
-        if (clientBound) {
-          messageHistory.addClientMessage(messageContent);
-        } else {
-          messageHistory.addContactMessage(contactName, messageContent);
-        }
-      } else {
         if (clientBound) {
           messageHistory.addClientMessage(messageContent);
         } else {
           messageHistory.addContactMessage(messageContent);
         }
-      }
     } else {
       LOGGER.trace("No active chat tab found for {}. Message discarded.", contactName);
     }

@@ -41,7 +41,7 @@ public class MessageHistory extends JPanel implements ScrollableMessageHistory {
     JPanel newClientMessageContainer;
 
     newClientMessageContainer = chatBubbleContent(text);
-    newClientMessageContainer.setAlignmentX(RIGHT_ALIGNMENT);
+    newClientMessageContainer.setAlignmentX(LEFT_ALIGNMENT);
 
     addMessage(newClientMessageContainer);
   }
@@ -64,7 +64,7 @@ public class MessageHistory extends JPanel implements ScrollableMessageHistory {
       contactAndMessage.append(text);
 
       newContactMessageContainer = chatBubbleContent(contactAndMessage.toString());
-      newContactMessageContainer.setAlignmentX(LEFT_ALIGNMENT);
+      newContactMessageContainer.setAlignmentX(RIGHT_ALIGNMENT);
 
       addMessage(newContactMessageContainer);
     }

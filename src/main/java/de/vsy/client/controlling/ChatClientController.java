@@ -2,7 +2,7 @@ package de.vsy.client.controlling;
 
 import static de.vsy.shared_transmission.packet.content.status.ClientService.MESSENGER;
 import static de.vsy.shared_transmission.packet.property.communicator.CommunicationEndpoint.getClientEntity;
-import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_BROADCAST_ID;
+import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_MULTICAST_ID;
 import static de.vsy.shared_utility.standard_value.StandardIdProvider.STANDARD_CLIENT_ID;
 import static java.util.Arrays.asList;
 
@@ -30,7 +30,6 @@ import de.vsy.shared_utility.id_manipulation.IdComparator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -212,7 +211,7 @@ public class ChatClientController implements AuthenticationDataModelAccess, Chat
   private void sendMessengerStatus() {
     this.requester.request(
         new ClientStatusChangeDTO(MESSENGER, true, this.serverDataModel.getCommunicatorData()),
-        getClientEntity(STANDARD_CLIENT_BROADCAST_ID));
+        getClientEntity(STANDARD_CLIENT_MULTICAST_ID));
   }
 
   private void startNewNotificationProcessor() {
