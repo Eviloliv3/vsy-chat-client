@@ -1,81 +1,77 @@
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/ReconnectResponseProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/SimpleMessageProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/ContactRelationRequestProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/essentialGuiActionInterfaces/DialogEssentialActions.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/LoginResponseProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/dataModel/subUnit/ContactDataController.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/processorProvisioning/StatusPacketProcessorFactory.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/MessageHistory.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/processorProvisioning/ContentProcessingConditionProvider.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/ClientStatusProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/StatusMessageTriggeredActions.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/DialogRequestProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/newClientComponent/gui/GUIDialogLogic.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/dataModel/GUIStateDataManager.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/connectionHandling/ConnectionManager.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/Dialog/InformationDialog.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/newClientComponent/ClientController.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/processorProvisioning/RelationPacketProcessorFactory.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/MessengerTearDownProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/ClientPacketProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/PacketProcessingService.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/packetCreation/RequestPacketCreator.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/newClientComponent/gui/GUIStateManager.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/processorProvisioning/CategoryProcessorFactoryProvider.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/externalGUIAccessInterfaces/CloseApplicationFlagProvider.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/chatterMainModel/GUILogic.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/processorProvisioning/AuthenticationPacketProcessorFactory.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetExceptionProcessing/PacketHandlingExceptionProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/HandlerProcessingCondition.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/dataAccessInterfaces/AuthenticationDataModelAccess.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/chatterMainModel/GUILogicRelevantDataProvider.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/SimpleErrorProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/dataModel/ClientDataManager.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/interfaces/ScrollableMessageHistory.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/Dialog/DialogType.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/MessengerSetupProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/newClientComponent/gui/logic/ChatMenuBarLogic.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/Dialog/LoginDialog.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/dataModel/DataInputController.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/chatClient/ChatClient.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/ChatterMenu.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/essentialGuiActionInterfaces/guiActionInterfaces/GUIMenuContactActions.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/Dialog/ErrorDialog.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/processorProvisioning/StandardCategoryProcessorFactoryProvider.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/essentialGuiActionInterfaces/DialogInitNavigation.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/Dialog/DialogStatus.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/dataAccessInterfaces/ChatDataModelAccess.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/Dialog/RequestDialog.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/dataModel/ServerProvidedDataManager.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/LogoutRequestProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/essentialGuiActionInterfaces/guiActionInterfaces/GUIEssentialActions.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/chatterMainModel/GUILabelChangeListener.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/processorProvisioning/PacketProcessorProvider.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/ChatClientController.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/ContactRelationResponseProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/newClientComponent/gui/GUIBaseFrame.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/ReconnectRequestProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/essentialGuiActionInterfaces/guiActionInterfaces/GUIMenuOptionActions.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/processorProvisioning/ChatPacketProcessorFactory.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/Dialog/WelcomeDialog.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/LoginRequestProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/essentialGuiActionInterfaces/guiActionInterfaces/GUIChatActions.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/GUIController.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/dataAccessInterfaces/EssentialDataModelAccess.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/chatterMainModel/customRendering/ContactListRenderer.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/ContactStatusChangeProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/newClientComponent/gui/logic/GUIBaseFrameLogic.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/essentialGuiActionInterfaces/GUIActions.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/dataModel/subUnit/MessageController.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/ClientDataProvider.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/LogoutResponseProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/processorProvisioning/ErrorPacketProcessorFactory.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/essentialGuiActionInterfaces/GUIMenuActions.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/packetProcessing/contentProcessing/NewAccountRequestProcessor.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/newClientComponent/dataModel/DataModel.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/essentialGuiActionInterfaces/GUIMenuOptionActions.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/Dialog/ContactAdditionDialog.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/Dialog/AccountCreationDialog.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/chatterMainModel/ClientChatGUI.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/controlling/dataAccessInterfaces/StatusDataModelAccess.java
-/home/fredward/NetBeansProjects/VSY_Chat_Client/src/main/java/de/vsy/chat/client/gui/essentialGUnits/Dialog/ChatClientDialog.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/LoginResponseProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/essential_graphical_unit/prompt/RequestPanel.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/utility/ComponentInputRemover.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/ClientChatGUI.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/processor_provisioning/RelationPacketProcessorFactory.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/ClientStatusProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/data_model/ClientDataManager.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/GUIController.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/LogoutResponseProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/ContactListRenderer.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/SimpleMessageProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/NotificationProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/data_model/CommunicatorDataSorter.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/data_model/MessageManager.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/ChatBubbleCreator.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/GUIInteractionProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/processor_provisioning/PacketProcessorManager.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/data_model/ClientInput.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/processor_provisioning/StatusPacketProcessorFactory.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/connection_handling/ServerConnectionController.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/PacketProcessingService.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/MessengerTearDownProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/ReconnectRequestProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/ClientPacketDispatcher.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/connection_handling/ClientConnectionWatcher.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/ChatClient.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/processor_provisioning/NotificationPacketProcessorFactory.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/essential_graphical_unit/prompt/AccountCreationPanel.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/data_model/ContactDataManager.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/ContactRelationRequestProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/PacketManagementUtilityProvider.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/LoginRequestProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/ChatTabManager.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/processor_provisioning/CategoryProcessorFactoryProvider.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/processor_provisioning/ContentProcessingConditionProvider.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/controlling/ClientTerminator.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/processor_provisioning/StandardProcessorFactoryProvider.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/essential_graphical_unit/NavigationGoal.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/AccountDeletionRequestProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/ResultingPacketCreator.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/ResultingPacketContentHandler.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/MessengerSetupProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/controlling/ChatClientController.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/ReconnectResponseProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/essential_graphical_unit/interfaces/ScrollableMessageHistory.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/essential_graphical_unit/prompt/WelcomeDialog.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/MessageListRenderer.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/ClientPacketProcessorLink.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/processor_provisioning/ChatPacketProcessorFactory.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/processor_provisioning/AuthenticationPacketProcessorFactory.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/AccountDeletionResponseProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/SimpleInformationTranslator.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/essential_graphical_unit/prompt/NotificationPanel.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/data_model/ServerDataCache.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/RequestPacketCreator.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/LogoutRequestProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/essential_graphical_unit/prompt/LoginPanel.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/controlling/data_access_interfaces/EssentialDataModelAccess.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/controlling/data_access_interfaces/NotificationDataModelAccess.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/controlling/data_access_interfaces/ChatDataModelAccess.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/controlling/NotificationProcessingService.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/data_model/ClientNotificationManager.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/controlling/essential_gui_action_interfaces/Navigator.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/controlling/data_access_interfaces/StatusDataModelAccess.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/essential_graphical_unit/MessageHistory.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/essential_graphical_unit/MenuActionListener.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/ResultingContentHandlingProvider.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/ClientInputProvider.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/ClientNotificationTranslator.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/controlling/essential_gui_action_interfaces/guiActionInterfaces/GUIChatActions.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/HandlerProcessingCondition.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/ClientPacketProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/ContactRelationResponseProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/controlling/data_access_interfaces/AuthenticationDataModelAccess.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/gui/essential_graphical_unit/prompt/ContactAdditionPanel.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/ContactStatusChangeProcessor.java
+/home/fredward/Software Development/Programming/VSY_ChatServer/complete-project/client/src/main/java/de/vsy/client/packet_processing/content_processing/NewAccountRequestProcessor.java

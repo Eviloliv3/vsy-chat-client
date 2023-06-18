@@ -9,3 +9,7 @@
 *.zip
 *.tar.gz
 .attach_pid*
+/target/
+
+# Debug only
+ServerInterruptibleWhileDebugging.java
